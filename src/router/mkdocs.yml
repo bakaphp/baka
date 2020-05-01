@@ -1,0 +1,57 @@
+docs_dir: docs-src
+site_dir: docs
+edit_uri: edit/master/docs-src/
+
+# Project information
+site_name: 'Baka Router'
+site_description: 'A tool to create multiple Phalcon Collections with easy.'
+site_author: 'Esteban De la Rosa'
+site_url: 'https://bakaphp.github.io/router'
+
+pages:
+- Getting Started: 'index.md'
+- Documentation:
+  - routes.md
+
+# Configuration
+theme:
+  name: 'material'
+  palette:
+    primary: 'red'
+    accent: 'red'
+  feature:
+    tabs: false
+
+# Repository
+repo_name: 'bakaphp/router'
+repo_url: 'https://github.com/bakaphp/router'
+
+# Customization
+extra_css:
+    - css/style.css
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/gabbanaesteban'
+    - type: 'twitter'
+      link: 'https://twitter.com/gabbanaesteban'
+    - type: 'linkedin'
+      link: 'https://linkedin.com/in/gabbanaesteban'
+  search:
+    tokenizer: '[\s\-\.]+'
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite:
+      css_class: codehilite
+  - pymdownx.highlight:
+      css_class: codehilite
+      extend_pygments_lang:
+        - name: php-inline
+          lang: php
+          options:
+            startinline: true

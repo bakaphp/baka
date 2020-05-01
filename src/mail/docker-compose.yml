@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+
+  phalcon:
+    image: mctekk/phalconphp:latest
+    volumes:
+      - .:/app
+    tty: true
+    ports:
+      - "9000:9000"
+    networks:
+      - local-network
+
+  memcached:
+    image: memcached
+    ports:
+      - "11211:11211"
+    networks:
+      - local-network
+
+  beanstalkd:
+    image: schickling/beanstalkd:latest
+    restart: always
+    ports:
+      - "11300:11300"
+    networks:
+      - local-network
+
+volumes:
+  db-data:
+
+networks:
+  local-network:

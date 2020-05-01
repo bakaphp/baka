@@ -1,0 +1,29 @@
+{
+    "name": "baka/blameable",
+    "description": "Set audit behavior for your module",
+    "authors": [
+        {
+            "name": "Rogelio Morey",
+            "email": "rogelio@mctekk.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "ext-phalcon": ">=3.0.0",
+        "baka/auth": "^0.2",
+        "phalcon/incubator": ">=3.0"
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.4",
+        "codeception/verify": "*",
+        "vlucas/phpdotenv": "^2.0",
+        "phalcon/incubator": "~3.3",
+        "odan/phinx-migrations-generator": "dev-master",
+        "fzaninotto/faker": "^1.9@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Baka\\Blameable\\": "src/"
+        }
+    }
+}

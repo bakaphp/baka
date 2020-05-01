@@ -1,0 +1,9 @@
+/vendor
+/.env
+composer.phar
+.DS_Store
+Thumbs.db
+tests/_output
+tests/_support/_generated/AcceptanceTesterActions.php
+tests/_support/_generated/FunctionalTesterActions.php
+tests/_support/_generated/UnitTesterActions.php
