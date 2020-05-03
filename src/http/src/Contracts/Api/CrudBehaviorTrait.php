@@ -7,9 +7,11 @@ use Phalcon\Http\RequestInterface;
 use Baka\Http\Converter\RequestUriToSql;
 use Phalcon\Mvc\ModelInterface;
 use ArgumentCountError;
+use Baka\Database\Exception\ModelNotFoundException;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
 use PDO;
 use Exception;
+use ReflectionClass;
 
 trait CrudBehaviorTrait
 {
@@ -169,6 +171,30 @@ trait CrudBehaviorTrait
     }
 
     /**
+     * Get the element by Id
+     * with the current search params user specified in the constructer.
+     *
+     * @param [type] $id
+     * @return void
+     */
+    protected function getRecordById($id)
+    {
+        $this->additionalSearchFields[] = [
+            $this->model->getPrimaryKey(), ':', $id
+        ];
+
+        $results = $this->processIndex();
+
+        if (empty($results)) {
+            throw new ModelNotFoundException(
+                (new ReflectionClass($this->model))->getShortName() . ' Record not found'
+            );
+        }
+
+        return $results[0];
+    }
+
+    /**
      * Get the record by its primary key.
      *
      * @param mixed $id
@@ -179,10 +205,7 @@ trait CrudBehaviorTrait
     public function getById($id): Response
     {
         //find the info
-        $record = $this->model::findFirstOrFail([
-            'conditions' => $this->model->getPrimaryKey() . '= ?0',
-            'bind' => [$id]
-        ]);
+        $record = $this->getRecordById($id);
 
         //get the results and append its relationships
         $result = $this->appendRelationshipsToResult($this->request, $record);
@@ -227,10 +250,7 @@ trait CrudBehaviorTrait
      */
     public function edit($id): Response
     {
-        $record = $this->model::findFirstOrFail([
-            'conditions' => $this->model->getPrimaryKey() . '= ?0',
-            'bind' => [$id]
-        ]);
+        $record = $this->getRecordById($id);
 
         //process the input
         $result = $this->processEdit($this->request, $record);
@@ -264,10 +284,7 @@ trait CrudBehaviorTrait
      */
     public function delete($id): Response
     {
-        $record = $this->model::findFirstOrFail([
-            'conditions' => $this->model->getPrimaryKey() . '= ?0',
-            'bind' => [$id]
-        ]);
+        $record = $this->getRecordById($id);
 
         if ($this->softDelete == 1) {
             $record->softDelete();

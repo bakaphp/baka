@@ -124,7 +124,9 @@ class Model extends PhalconModel
             return $record;
         }
 
-        throw new ModelNotFoundException((new ReflectionClass(new static))->getShortName() . ' Record not found');
+        throw new ModelNotFoundException(
+            (new ReflectionClass(new static))->getShortName() . ' Record not found'
+        );
     }
 
     /**
@@ -137,7 +139,9 @@ class Model extends PhalconModel
     {
         $result = static::findFirst($parameters);
         if (!$result) {
-            throw new ModelNotFoundException((new ReflectionClass(new static))->getShortName() . ' Record not found');
+            throw new ModelNotFoundException(
+                (new ReflectionClass(new static))->getShortName() . ' Record not found'
+            );
         }
 
         return $result;
@@ -153,7 +157,9 @@ class Model extends PhalconModel
     {
         $results = static::find($parameters);
         if (!$results) {
-            throw new ModelNotFoundException((new ReflectionClass(new static))->getShortName() . ' Record not found');
+            throw new ModelNotFoundException(
+                (new ReflectionClass(new static))->getShortName() . ' Record not found'
+            );
         }
 
         return $results;
