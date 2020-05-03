@@ -4,11 +4,11 @@ namespace Baka\Database;
 
 use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Database\Exception\ModelNotProcessedException;
+use Phalcon\Mvc\Model as PhalconModel;
 use Phalcon\Mvc\Model\MetaData\Memory as MetaDataMemory;
 use Phalcon\Mvc\Model\ResultsetInterface;
-use Phalcon\Mvc\Model as PhalconModel;
-use RuntimeException;
 use ReflectionClass;
+use RuntimeException;
 
 class Model extends PhalconModel
 {
@@ -44,7 +44,7 @@ class Model extends PhalconModel
      *
      * @return int
      */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
@@ -116,9 +116,10 @@ class Model extends PhalconModel
      * Get by Id or thrown an exceptoin.
      *
      * @param mixed $id
+     *
      * @return self
      */
-    public static function getByIdOrFail($id): self
+    public static function getByIdOrFail($id) : self
     {
         if ($record = static::findFirst($id)) {
             return $record;
@@ -133,9 +134,10 @@ class Model extends PhalconModel
      * Query the first record that matches the specified conditions.
      *
      * @param array $parameters
+     *
      * @return self
      */
-    public static function findFirstOrFail($parameters = null): self
+    public static function findFirstOrFail($parameters = null) : self
     {
         $result = static::findFirst($parameters);
         if (!$result) {
@@ -151,9 +153,10 @@ class Model extends PhalconModel
      * Query the first record that matches the specified conditions.
      *
      * @param array $parameters
+     *
      * @return self
      */
-    public static function findOrFail($parameters = null): ResultsetInterface
+    public static function findOrFail($parameters = null) : ResultsetInterface
     {
         $results = static::find($parameters);
         if (!$results) {
@@ -166,12 +169,12 @@ class Model extends PhalconModel
     }
 
     /**
-    * save model or throw an exception.
-    *
-    * @param null|mixed $data
-    * @param null|mixed $whiteList
-    */
-    public function saveOrFail($data = null, $whiteList = null): bool
+     * save model or throw an exception.
+     *
+     * @param null|mixed $data
+     * @param null|mixed $whiteList
+     */
+    public function saveOrFail($data = null, $whiteList = null) : bool
     {
         if ($savedModel = static::save($data, $whiteList)) {
             return $savedModel;
@@ -181,12 +184,12 @@ class Model extends PhalconModel
     }
 
     /**
-    * update model or throw an exception.
-    *
-    * @param null|mixed $data
-    * @param null|mixed $whiteList
-    */
-    public function updateOrFail($data = null, $whiteList = null): bool
+     * update model or throw an exception.
+     *
+     * @param null|mixed $data
+     * @param null|mixed $whiteList
+     */
+    public function updateOrFail($data = null, $whiteList = null) : bool
     {
         if ($updatedModel = static::update($data, $whiteList)) {
             return $updatedModel;
@@ -196,9 +199,9 @@ class Model extends PhalconModel
     }
 
     /**
-    * Delete the model or throw an exception.
-    */
-    public function deleteOrFail(): bool
+     * Delete the model or throw an exception.
+     */
+    public function deleteOrFail() : bool
     {
         if (!parent::delete()) {
             $this->throwErrorMessages();
@@ -208,12 +211,12 @@ class Model extends PhalconModel
     }
 
     /**
-     * Since Phalcon 3, they pass model objet throught the toArray function when we call json_encode, that can fuck u up, if you modify the obj
+     * Since Phalcon 3, they pass model objet through the toArray function when we call json_encode, that can fuck u up, if you modify the obj
      * so we need a way to convert it to array without loosing all the extra info we add.
      *
      * @return array
      */
-    public function toFullArray(): array
+    public function toFullArray() : array
     {
         //convert the obj to array in order to conver to json
         $result = get_object_vars($this);
@@ -235,7 +238,7 @@ class Model extends PhalconModel
      *
      * @return array
      */
-    public function getPrimaryKeys(): array
+    public function getPrimaryKeys() : array
     {
         $metaData = new MetaDataMemory();
         return $metaData->getPrimaryKeyAttributes($this);
@@ -246,7 +249,7 @@ class Model extends PhalconModel
      *
      * @return array
      */
-    public function getPrimaryKey(): string
+    public function getPrimaryKey() : string
     {
         $primaryKeys = $this->getPrimaryKeys();
 
@@ -258,10 +261,11 @@ class Model extends PhalconModel
     }
 
     /**
-    * Throws an exception with including all validation messages that were retrieved.
-    * @throws ModelNotProcessedException
-    */
-    protected function throwErrorMessages(): void
+     * Throws an exception with including all validation messages that were retrieved.
+     *
+     * @throws ModelNotProcessedException
+     */
+    protected function throwErrorMessages() : void
     {
         throw new ModelNotProcessedException(
             (new ReflectionClass(new static))->getShortName() . ' ' . current($this->getMessages())->getMessage()
@@ -271,9 +275,9 @@ class Model extends PhalconModel
     /**
      * Does this model have custom fields?
      *
-     * @return boolean
+     * @return bool
      */
-    public function hasCustomFields(): bool
+    public function hasCustomFields() : bool
     {
         return isset($this->customFields);
     }

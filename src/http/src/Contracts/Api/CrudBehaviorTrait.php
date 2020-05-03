@@ -2,15 +2,15 @@
 
 namespace Baka\Http\Contracts\Api;
 
-use Phalcon\Http\Response;
-use Phalcon\Http\RequestInterface;
-use Baka\Http\Converter\RequestUriToSql;
-use Phalcon\Mvc\ModelInterface;
 use ArgumentCountError;
 use Baka\Database\Exception\ModelNotFoundException;
-use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
-use PDO;
+use Baka\Http\Converter\RequestUriToSql;
 use Exception;
+use PDO;
+use Phalcon\Http\RequestInterface;
+use Phalcon\Http\Response;
+use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
+use Phalcon\Mvc\ModelInterface;
 use ReflectionClass;
 
 trait CrudBehaviorTrait
@@ -19,21 +19,23 @@ trait CrudBehaviorTrait
      * We need to find the response if you plan to use this trait.
      *
      * @param mixed $content
-     * @param integer $statusCode
+     * @param int $statusCode
      * @param string $statusMessage
+     *
      * @return Response
      */
-    abstract protected function response($content, int $statusCode = 200, string $statusMessage = 'OK'): Response;
+    abstract protected function response($content, int $statusCode = 200, string $statusMessage = 'OK') : Response;
 
     /**
-    * Given a request it will give you the SQL to process.
-    *
-    * @param RequestInterface $request
-    * @return string
-    */
-    protected function processRequest(RequestInterface $request): array
+     * Given a request it will give you the SQL to process.
+     *
+     * @param RequestInterface $request
+     *
+     * @return string
+     */
+    protected function processRequest(RequestInterface $request) : array
     {
-        //parse the rquest
+        //parse the request
         $parse = new RequestUriToSql($request->getQuery(), $this->model);
         $parse->setCustomColumns($this->customColumns);
         $parse->setCustomTableJoins($this->customTableJoins);
@@ -44,7 +46,7 @@ trait CrudBehaviorTrait
         $parse->appendCustomParams($this->additionalCustomSearchFields);
         $parse->appendRelationParams($this->additionalRelationSearchFields);
 
-        //conver to SQL
+        //convert to SQL
         return $parse->convert();
     }
 
@@ -53,6 +55,7 @@ trait CrudBehaviorTrait
      *
      * @param RequestInterface $request
      * @param array|object $results
+     *
      * @return array
      */
     protected function appendRelationshipsToResult(RequestInterface $request, $results)
@@ -72,6 +75,7 @@ trait CrudBehaviorTrait
      * we will check if a DTO transformer exist and if so we will send it over to change it.
      *
      * @param object|array $results
+     *
      * @return void
      */
     protected function processOutput($results)
@@ -84,9 +88,10 @@ trait CrudBehaviorTrait
      * process it.
      *
      * @param array $request
+     *
      * @return array
      */
-    protected function processInput(array $request): array
+    protected function processInput(array $request) : array
     {
         return $request;
     }
@@ -98,7 +103,7 @@ trait CrudBehaviorTrait
      *
      * @return void
      */
-    protected function getRecords(array $processedRequest): array
+    protected function getRecords(array $processedRequest) : array
     {
         // TODO: Create a const with these values
         $required = ['sql', 'countSql', 'bind'];
@@ -134,7 +139,7 @@ trait CrudBehaviorTrait
      *
      * @return Response
      */
-    public function index(): Response
+    public function index() : Response
     {
         $results = $this->processIndex();
         //return the response + transform it if needed
@@ -148,7 +153,7 @@ trait CrudBehaviorTrait
      */
     protected function processIndex()
     {
-        //conver the request to sql
+        //convert the request to sql
         $processedRequest = $this->processRequest($this->request);
         $records = $this->getRecords($processedRequest);
 
@@ -172,12 +177,13 @@ trait CrudBehaviorTrait
 
     /**
      * Get the element by Id
-     * with the current search params user specified in the constructer.
+     * with the current search params user specified in the constructed.
      *
-     * @param [type] $id
+     * @param mixed $id
+     *
      * @return void
      */
-    protected function getRecordById($id)
+    protected function getRecordById($id) : array
     {
         $this->additionalSearchFields[] = [
             $this->model->getPrimaryKey(), ':', $id
@@ -200,9 +206,10 @@ trait CrudBehaviorTrait
      * @param mixed $id
      *
      * @throws Exception
+     *
      * @return Response
      */
-    public function getById($id): Response
+    public function getById($id) : Response
     {
         //find the info
         $record = $this->getRecordById($id);
@@ -218,7 +225,7 @@ trait CrudBehaviorTrait
      *
      * @return Response
      */
-    public function create(): Response
+    public function create() : Response
     {
         //process the input
         $result = $this->processCreate($this->request);
@@ -230,9 +237,10 @@ trait CrudBehaviorTrait
      * Process the create request and trecurd the boject.
      *
      * @return ModelInterface
+     *
      * @throws Exception
      */
-    protected function processCreate(RequestInterface $request): ModelInterface
+    protected function processCreate(RequestInterface $request) : ModelInterface
     {
         //process the input
         $request = $this->processInput($request->getPostData());
@@ -246,9 +254,10 @@ trait CrudBehaviorTrait
      * Update a record.
      *
      * @param mixed $id
+     *
      * @return Response
      */
-    public function edit($id): Response
+    public function edit($id) : Response
     {
         $record = $this->getRecordById($id);
 
@@ -263,10 +272,12 @@ trait CrudBehaviorTrait
      *
      * @param RequestInterface $request
      * @param ModelInterface $record
+     *
      * @throws Exception
+     *
      * @return ModelInterface
      */
-    protected function processEdit(RequestInterface $request, ModelInterface $record): ModelInterface
+    protected function processEdit(RequestInterface $request, ModelInterface $record) : ModelInterface
     {
         //process the input
         $request = $this->processInput($request->getPutData());
@@ -280,9 +291,10 @@ trait CrudBehaviorTrait
      * Delete a Record.
      *
      * @throws Exception
+     *
      * @return Response
      */
-    public function delete($id): Response
+    public function delete($id) : Response
     {
         $record = $this->getRecordById($id);
 
