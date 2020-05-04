@@ -1,8 +1,6 @@
 <?php
 
-use Test\Model\Leads;
 use Baka\Database\Contracts\CustomFields\CustomFieldsTasksTrait;
-use Baka\Database\Contracts\CustomFields\CustomFieldsTrait;
 
 class CustomFieldCliTest extends PhalconUnitTestCase
 {

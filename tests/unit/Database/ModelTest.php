@@ -1,6 +1,6 @@
 <?php
 
-use Test\Model\LeadsNormal as Leads;
+use Baka\Test\Model\LeadsNormal as Leads;
 
 class ModelTest extends PhalconUnitTestCase
 {
@@ -17,7 +17,7 @@ class ModelTest extends PhalconUnitTestCase
     }
 
     /**
-     * test
+     * test.
      *
      * @return void
      */
@@ -30,12 +30,12 @@ class ModelTest extends PhalconUnitTestCase
         $lead->users_id = 1;
         $lead->companies_id = 1;
         $lead->leads_owner_id = 1;
-        
+
         $this->assertTrue($lead->saveOrFail());
     }
 
     /**
-     * test
+     * test.
      *
      * @return void
      */
@@ -43,8 +43,7 @@ class ModelTest extends PhalconUnitTestCase
     {
         $lead = Leads::findFirst();
         $lead->lastname = $this->faker->lastname;
-        
+
         $this->assertTrue($lead->updateOrFail());
     }
-
 }

@@ -1,8 +1,8 @@
 <?php
 
+use Baka\Database\Apps;
 use Phalcon\Di;
 use Phalcon\Test\UnitTestCase as PhalconTestCase;
-use Baka\Database\Apps;
 
 abstract class PhalconUnitTestCase extends PhalconTestCase
 {
@@ -40,6 +40,7 @@ abstract class PhalconUnitTestCase extends PhalconTestCase
 
         /**
          * DB Config.
+         *
          * @var array
          */
         $this->_config = new \Phalcon\Config([
@@ -101,8 +102,8 @@ abstract class PhalconUnitTestCase extends PhalconTestCase
     }
 
     /**
-    * this runs before everyone.
-    */
+     * this runs before everyone.
+     */
     protected function setUp()
     {
         $this->_getDI();

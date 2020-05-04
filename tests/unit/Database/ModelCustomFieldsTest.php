@@ -1,7 +1,7 @@
 <?php
 
-use Test\Model\Leads;
-use Test\Model\LeadsCustomFields;
+use Baka\Test\Model\Leads;
+use Baka\Test\Model\LeadsCustomFields;
 
 class ModelCustomFieldsTest extends PhalconUnitTestCase
 {
@@ -17,7 +17,7 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
     }
 
     /**
-     * test
+     * test.
      *
      * @return void
      */
@@ -33,12 +33,12 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $lead->setCustomFields([
             'refernce' => $this->faker->name
         ]);
-        
+
         $this->assertTrue($lead->saveOrFail());
     }
 
     /**
-     * test
+     * test.
      *
      * @return void
      */
@@ -54,7 +54,7 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
     }
 
     /**
-     * Check taht a custom field has it atrribute
+     * Check taht a custom field has it atrribute.
      *
      * @return void
      */
@@ -65,5 +65,4 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
 
         $this->assertTrue(isset($lead->refernce));
     }
-
 }

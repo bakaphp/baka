@@ -1,7 +1,7 @@
 <?php
 
-use Test\Model\LeadsNormal as Leads;
 use Baka\Database\Contracts\HashTableTasksTrait;
+use Baka\Test\Model\LeadsNormal as Leads;
 
 class HashTableTest extends PhalconUnitTestCase
 {
@@ -24,7 +24,7 @@ class HashTableTest extends PhalconUnitTestCase
     }
 
     /**
-     * Confirm adde settings
+     * Confirm adde settings.
      *
      * @return void
      */
@@ -36,7 +36,7 @@ class HashTableTest extends PhalconUnitTestCase
     }
 
     /**
-     * Confirm get a settings
+     * Confirm get a settings.
      *
      * @return void
      */

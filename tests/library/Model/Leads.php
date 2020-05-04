@@ -1,14 +1,14 @@
 <?php
 
-namespace Test\Model;
+namespace Baka\Test\Model;
 
-use Baka\Database\Model;
 use Baka\Database\Contracts\CustomFields\CustomFieldsTrait;
+use Baka\Database\Model;
 
 class Leads extends Model
 {
     use CustomFieldsTrait;
-    
+
     /**
      * Specify the table.
      *

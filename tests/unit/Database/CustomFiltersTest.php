@@ -85,7 +85,7 @@ class CustomFiltersTest extends PhalconUnitTestCase
     }
 
     /**
-     * Get a generate query
+     * Get a generate query.
      *
      * @return void
      */
