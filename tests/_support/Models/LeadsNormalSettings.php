@@ -1,6 +1,6 @@
 <?php
 
-namespace Baka\Test\Model;
+namespace Baka\Test\Support\Models;
 
 use Baka\Database\Model;
 

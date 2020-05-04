@@ -1,6 +1,6 @@
 <?php
 
-namespace Baka\Test\Integration\Elasticsearch;
+namespace Baka\Test\Support\ElasticModel;
 
 use PhalconUnitTestCase;
 use Baka\Database\Model;

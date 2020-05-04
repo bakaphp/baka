@@ -1,13 +1,13 @@
 <?php
 
-namespace Baka\Test\Model;
+namespace Baka\Test\Support\Models;
 
-use Baka\Database\Contracts\HashTableTrait;
+use Baka\Database\Contracts\CustomFields\CustomFieldsTrait;
 use Baka\Database\Model;
 
-class LeadsNormal extends Model
+class Leads extends Model
 {
-    use HashTableTrait;
+    use CustomFieldsTrait;
 
     /**
      * Specify the table.

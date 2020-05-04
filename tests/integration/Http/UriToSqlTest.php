@@ -4,7 +4,7 @@ namespace Baka\Test\Integration\Http;
 
 use PhalconUnitTestCase;
 use Baka\Http\Converter\RequestUriToSql;
-use Test\Model\Leads;
+use Baka\Test\Support\Models\Leads;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
 
 class UriToSqlTest extends PhalconUnitTestCase

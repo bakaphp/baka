@@ -7,8 +7,9 @@ use Baka\Http\Converter\RequestUriToSql;
 use Phalcon\Mvc\Model\Resultset\Simpl as SimpleRecords;
 use Baka\Http\Converter\RequestUriToElasticSearch;
 use Baka\Elasticsearch\IndexBuilderStructure;
-use Test\Indices\Leads;
+use Baka\Test\Support\ElasticModel\Indices;
 use Baka\Elasticsearch\Client;
+use Baka\Test\Support\Models\Leads;
 
 class UriToElasticSqlTest extends PhalconUnitTestCase
 {
@@ -52,7 +53,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql = new RequestUriToElasticSearch($params, $leads);
         $request = $requestToSql->convert();
 
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
         $results = $client->findBySql($request['sql']);
 
         //confirme records
@@ -85,7 +86,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql = new RequestUriToElasticSearch($params, $leads);
         $request = $requestToSql->convert();
 
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
         $results = $client->findBySql($request['sql']);
 
         //confirme records
@@ -120,7 +121,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql = new RequestUriToElasticSearch($params, $leads);
         $request = $requestToSql->convert();
 
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
         $results = $client->findBySql($request['sql']);
 
         //confirme records
@@ -152,7 +153,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql = new RequestUriToElasticSearch($params, $leads);
         $request = $requestToSql->convert();
 
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
         $results = $client->findBySql($request['sql']);
 
         //confirme records
@@ -184,7 +185,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql = new RequestUriToElasticSearch($params, $leads);
         $request = $requestToSql->convert();
 
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
         $results = $client->findBySql($request['sql']);
 
         //confirme records
@@ -216,7 +217,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql = new RequestUriToElasticSearch($params, $leads);
         $request = $requestToSql->convert();
 
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
         $results = $client->findBySql($request['sql']);
 
         //confirme records
@@ -248,7 +249,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql = new RequestUriToElasticSearch($params, $leads);
         $request = $requestToSql->convert();
 
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
         $results = $client->findBySql($request['sql']);
 
         //confirme records
@@ -280,7 +281,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql = new RequestUriToElasticSearch($params, $leads);
         $request = $requestToSql->convert();
 
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
         $results = $client->findBySql($request['sql']);
 
         //confirme records
@@ -330,7 +331,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql = new RequestUriToElasticSearch($params, $leads);
         $request = $requestToSql->convert();
 
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
         $results = $client->findBySql($request['sql']);
 
         //confirme records
@@ -362,7 +363,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql->setCustomColumns('companies_id');
         $request = $requestToSql->convert();
 
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
         $results = $client->findBySql($request['sql']);
 
         //confirme records
@@ -395,7 +396,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
         $requestToSql->setCustomConditions('AND is_deleted = 1');
 
         $request = $requestToSql->convert();
-        $client = new Client('http://' . $this->_config->elasticSearch['hosts'][0]);
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
 
         $results = $client->findBySql($request['sql']);
 
