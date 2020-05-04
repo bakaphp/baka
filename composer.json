@@ -3,12 +3,10 @@
     "description": "Baka Packages",
     "license": "MIT",
     "keywords": ["Saas", "Canvas"],
-    "authors": [
-        {
-            "name": "mctekk",
-            "email": "max@mctekk.com"
-        }
-    ],
+    "authors": [{
+        "name": "mctekk",
+        "email": "max@mctekk.com"
+    }],
     "require": {
         "php": ">=7.2",
         "ext-phalcon": ">=3.4",
@@ -54,14 +52,16 @@
     "autoload": {
         "psr-4": {
             "Baka\\": "src/",
-            "Phalcon\\Cashier\\": "cashier/",
-            "Baka\\PhalconThrottler\\": "phalcon-throttler/src"
+            "Phalcon\\Cashier\\": "cashier/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Baka\\Test\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "./vendor/bin/codecept run"
     },
     "suggest": {
         "ext-redis": "Required to use the Redis cache and queue drivers (^4.0|^5.0)."

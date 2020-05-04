@@ -25,7 +25,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Phalcon\\Cashier\\": "src/"
+            "Phalcon\\Cashier\\": "",
+            "Baka\\Cashier\\": ""
         }
     }
 }

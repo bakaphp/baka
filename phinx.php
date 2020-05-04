@@ -5,10 +5,10 @@
 return [
     'paths' => [
         'migrations' => [
-            '/storage/db/migrations',
+            'storage/db/migrations',
         ],
         'seeds' => [
-            '/storage/db/seeds',
+            'storage/db/seeds',
         ]
     ],
     'environments' => [
