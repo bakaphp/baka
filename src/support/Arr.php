@@ -10,7 +10,7 @@ class Arr
      * @param array $items
      * @param mixed $func
      */
-    public static function all(array $items, $func): bool
+    public static function all(array $items, $func) : bool
     {
         return \count(array_filter($items, $func)) === \count($items);
     }
@@ -21,7 +21,7 @@ class Arr
      * @param array $items
      * @param mixed $func
      */
-    public static function any(array $items, $func): bool
+    public static function any(array $items, $func) : bool
     {
         return \count(array_filter($items, $func)) > 0;
     }
@@ -32,7 +32,7 @@ class Arr
      * @param array $items
      * @param int $size
      */
-    public static function chunk(array $items, int $size): array
+    public static function chunk(array $items, int $size) : array
     {
         return array_chunk($items, $size);
     }
@@ -42,7 +42,7 @@ class Arr
      *
      * @param array $items
      */
-    public static function deepFlatten(array $items): array
+    public static function deepFlatten(array $items) : array
     {
         $result = [];
         foreach ($items as $item) {
@@ -62,7 +62,7 @@ class Arr
      * @param array $items
      * @param int $n
      */
-    public static function drop(array $items, int $n = 1): array
+    public static function drop(array $items, int $n = 1) : array
     {
         return \array_slice($items, $n);
     }
@@ -100,7 +100,7 @@ class Arr
      *
      * @param array $items
      */
-    public static function flatten(array $items): array
+    public static function flatten(array $items) : array
     {
         $result = [];
         foreach ($items as $item) {
@@ -120,7 +120,7 @@ class Arr
      * @param array $items
      * @param mixed $func
      */
-    public static function groupBy(array $items, $func): array
+    public static function groupBy(array $items, $func) : array
     {
         $group = [];
         foreach ($items as $item) {
@@ -146,7 +146,7 @@ class Arr
      *
      * @return array
      */
-    public static function orderBy(array $items, $attr, string $order): array
+    public static function orderBy(array $items, $attr, string $order) : array
     {
         $sortedItems = [];
         foreach ($items as $item) {
@@ -169,7 +169,7 @@ class Arr
      *
      * @return bool
      */
-    public static function hasDuplicates(array $items): bool
+    public static function hasDuplicates(array $items) : bool
     {
         return \count($items) > \count(array_unique($items));
     }
@@ -264,7 +264,7 @@ class Arr
      * @param array $items
      * @param int $n
      */
-    public static function take(array $items, int $n = 1): array
+    public static function take(array $items, int $n = 1) : array
     {
         return \array_slice($items, 0, $n);
     }

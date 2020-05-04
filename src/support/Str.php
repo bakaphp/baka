@@ -12,7 +12,7 @@ class Str
      *
      * @return string
      */
-    public static function camelize(string $string, string $delimiter = '_'): string
+    public static function camelize(string $string, string $delimiter = '_') : string
     {
         $delimiterArray = str_split($delimiter);
         foreach ($delimiterArray as $delimiter) {
@@ -34,7 +34,7 @@ class Str
      *
      * @return bool
      */
-    public static function endsWith(string $haystack, string $needle): bool
+    public static function endsWith(string $haystack, string $needle) : bool
     {
         return mb_substr($haystack, -mb_strlen($needle)) === $needle;
     }
@@ -48,7 +48,7 @@ class Str
      *
      * @return string
      */
-    public static function firstStringBetween(string $haystack, string $start, string $end): string
+    public static function firstStringBetween(string $haystack, string $start, string $end) : string
     {
         return trim(mb_strstr(mb_strstr($haystack, $start), $end, true), $start . $end);
     }
@@ -58,11 +58,12 @@ class Str
      *
      * @param string $needle
      * @param string $haystack
+     *
      * @deprecated version 0.2
      *
      * @return bool
      */
-    public static function includes(string $needle, string $haystack): bool
+    public static function includes(string $needle, string $haystack) : bool
     {
         return self::contains($haystack, $needle);
     }
@@ -75,7 +76,7 @@ class Str
      *
      * @return bool
      */
-    public static function contains(string $haystack, string $needle): bool
+    public static function contains(string $haystack, string $needle) : bool
     {
         return '' === $needle || false !== mb_strpos($haystack, $needle);
     }
@@ -88,7 +89,7 @@ class Str
      *
      * @return bool
      */
-    public static function isAnagram(string $string1, string $string2): bool
+    public static function isAnagram(string $string1, string $string2) : bool
     {
         return count_chars($string1, 1) === count_chars($string2, 1);
     }
@@ -100,7 +101,7 @@ class Str
      *
      * @return bool
      */
-    public static function isLowerCase(string $string): bool
+    public static function isLowerCase(string $string) : bool
     {
         return $string === mb_strtolower($string);
     }
@@ -112,7 +113,7 @@ class Str
      *
      * @return bool
      */
-    public static function isUpperCase(string $string): bool
+    public static function isUpperCase(string $string) : bool
     {
         return $string === mb_strtoupper($string);
     }
@@ -124,7 +125,7 @@ class Str
      *
      * @return bool
      */
-    public static function palindrome(string $string): bool
+    public static function palindrome(string $string) : bool
     {
         return strrev($string) === $string;
     }
@@ -137,7 +138,7 @@ class Str
      *
      * @return bool
      */
-    public static function startsWith(string $haystack, string $needle): bool
+    public static function startsWith(string $haystack, string $needle) : bool
     {
         return mb_substr($haystack, 0, mb_strlen($needle)) === $needle;
     }
@@ -150,7 +151,7 @@ class Str
      *
      * @return int
      */
-    public static function countVowels(string $string): int
+    public static function countVowels(string $string) : int
     {
         preg_match_all('/[aeiou]/i', $string, $matches);
 
@@ -166,7 +167,7 @@ class Str
      *
      * @return string
      */
-    public static function decapitalize(string $string, bool $upperRest = false): string
+    public static function decapitalize(string $string, bool $upperRest = false) : string
     {
         return mb_strtolower(mb_substr($string, 0, 1)) . ($upperRest ? mb_strtoupper(mb_substr($string, 1)) : mb_substr($string, 1));
     }
@@ -179,7 +180,7 @@ class Str
      *
      * @return string
      */
-    public static function substringByWord(string $string, int $to): string
+    public static function substringByWord(string $string, int $to) : string
     {
         if (mb_strlen($string) > $to && preg_match("/^.{1,$to}\b/s", $string, $matches)) {
             $string = $matches[0];
@@ -197,7 +198,7 @@ class Str
      *
      * @return string
      */
-    public static function letterPlusNumber(string $letter, int $number): string
+    public static function letterPlusNumber(string $letter, int $number) : string
     {
         for ($i = 0; $i < $number; ++$i) {
             ++$letter;

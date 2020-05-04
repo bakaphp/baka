@@ -3,6 +3,7 @@
 use Baka\Database\Apps;
 use Phalcon\Di;
 use Phalcon\Test\UnitTestCase as PhalconTestCase;
+use Elasticsearch\ClientBuilder;
 
 abstract class PhalconUnitTestCase extends PhalconTestCase
 {
@@ -96,6 +97,16 @@ abstract class PhalconUnitTestCase extends PhalconTestCase
             ]);
 
             return $connection;
+        });
+
+        $di->set('elastic', function () use ($config) {
+            $hosts = $config->elasticSearch->hosts->toArray();
+
+            $client = ClientBuilder::create()
+                                    ->setHosts($hosts)
+                                    ->build();
+
+            return $client;
         });
 
         return $di;

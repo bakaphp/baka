@@ -13,10 +13,11 @@ class Date
      * Example: x mins from last update
      *
      * @param  string  $time
-     * @param  boolean $timestamp
+     * @param  bool $timestamp
+     *
      * @return string
      */
-    public static function howLongAgo(string $date): string
+    public static function howLongAgo(string $date) : string
     {
         if (!self::validate($date)) {
             throw new Exception('Params must be a valid date Y-m-d H:i:s format');
@@ -71,13 +72,14 @@ class Date
     }
 
     /**
-     * Validate a date given a format
+     * Validate a date given a format.
      *
      * @param string $date
      * @param string $format
+     *
      * @return bool
      */
-    public static function validate(string $date, string $format = 'Y-m-d H:i:s'): bool
+    public static function validate(string $date, string $format = 'Y-m-d H:i:s') : bool
     {
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) === $date;
