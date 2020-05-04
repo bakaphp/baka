@@ -16,7 +16,7 @@ $loader = new \Phalcon\Loader();
 $loader->registerNamespaces(
     [
         'Baka' => ROOT_DIR . 'src/',
-        'Baka\Test' => ROOT_DIR . 'tests/library/',
+        'Baka\Test' => ROOT_DIR . 'tests/_support/',
     ]
 );
 
