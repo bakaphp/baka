@@ -1,9 +1,9 @@
 <?php
 
 use Baka\Database\Apps;
+use Elasticsearch\ClientBuilder;
 use Phalcon\Di;
 use Phalcon\Test\UnitTestCase as PhalconTestCase;
-use Elasticsearch\ClientBuilder;
 
 abstract class PhalconUnitTestCase extends PhalconTestCase
 {
