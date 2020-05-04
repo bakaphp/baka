@@ -5,7 +5,7 @@
     "keywords": ["Saas", "Canvas"],
     "authors": [
         {
-            "name": "Máximo Castro Pou",
+            "name": "mctekk",
             "email": "max@mctekk.com"
         }
     ],
@@ -13,7 +13,7 @@
         "php": ">=7.2",
         "ext-phalcon": ">=3.4",
         "vlucas/phpdotenv": "^2.4",
-        "phalcon/incubator": ">=3.0.0",
+        "phalcon/incubator": "^3.4",
         "lcobucci/jwt": "^3.2",
         "dompdf/dompdf": "^0.6.1",
         "nesbot/carbon": "~1.0",
@@ -29,7 +29,6 @@
     "require-dev": {
         "codeception/verify": "*",
         "vlucas/phpdotenv": "^2.0",
-        "phalcon/incubator": ">=3.0.0",
         "dmkit/phalcon-jwt-auth": "dev-master",
         "robmorgan/phinx": "^0.11",
         "odan/phinx-migrations-generator": "^4",
@@ -55,23 +54,17 @@
     "autoload": {
         "psr-4": {
             "Baka\\": "src/",
-            "Baka\\Auth\\": "src/auth/src/",
-            "Baka\\Blameable\\": "src/blameable/src/",
-            "Phalcon\\Cashier\\": "src/cashier/src/",
-            "Baka\\Database\\": "src/database/src/",
-            "Baka\\Elasticsearch\\": "src/elasticsearch/src/",
-            "Baka\\Http\\": "src/http/src/",
-            "Baka\\Mail\\": "src/mail/src/",
-            "Baka\\PhalconThrottler\\": "src/phalcon-throttler/src",
-            "Baka\\Router\\": "src/router/src/",
-            "Baka\\Support\\": "src/support/src/"
-
+            "Phalcon\\Cashier\\": "cashier/",
+            "Baka\\PhalconThrottler\\": "phalcon-throttler/src"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Baka\\Test\\": "tests/"
         }
+    },
+    "suggest": {
+        "ext-redis": "Required to use the Redis cache and queue drivers (^4.0|^5.0)."
     },
     "config": {
         "sort-packages": true
