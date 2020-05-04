@@ -4,6 +4,8 @@ namespace Baka\Mail;
 
 use Phalcon\Mvc\View\Engine\Volt;
 
+use function Baka\appPath;
+
 /**
  * Class Manager.
  *
@@ -97,7 +99,7 @@ class Manager extends \Phalcon\Mailer\Manager
                 $volt = new Volt($view);
 
                 $volt->setOptions([
-                    'compiledPath' => APP_PATH . '/cache/volt/',
+                    'compiledPath' => appPath('/cache/volt/'),
                     'compiledSeparator' => '_',
                     'compileAlways' => !$this->getDI()->get('config')->application->production,
                 ]);

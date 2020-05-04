@@ -2,9 +2,10 @@
 
 namespace Baka\Mail;
 
+use Baka\Queue\Queue;
 use Exception;
-use Swift_SmtpTransport;
 use Swift_Mailer;
+use Swift_SmtpTransport;
 
 /**
  * Class Message.
@@ -77,18 +78,16 @@ class Message extends \Phalcon\Mailer\Message
 
         $this->failedRecipients = [];
 
-        //send to queue
-        $queue = $this->getManager()->getQueue();
-
         if ($this->auth) {
-            $queue->putInTube($this->queueName, [
+            Queue::send($this->queueName, serialize([
                 'message' => $this->getMessage(),
-                'auth' => $this->smtp,
-            ]);
+                'auth' => $this->smtp
+            ]));
         } else {
-            $queue->putInTube($this->queueName, $this->getMessage());
+            Queue::send($this->queueName, serialize([
+                'message' => $this->getMessage()
+            ]));
         }
-
     }
 
     /**
@@ -121,7 +120,8 @@ class Message extends \Phalcon\Mailer\Message
      * Overwrite the baka SMTP connection for this current email.
      *
      * @param  array  $smtp
-     * @return this
+     *
+     * @return $this
      */
     public function smtp(array $params)
     {
@@ -199,8 +199,10 @@ class Message extends \Phalcon\Mailer\Message
 
     /**
      * Set content dynamically by params.
+     *
      * @param $params
      * @param $content
+     *
      * @return string
      */
     public function setDynamicContent(array $params, string $content)

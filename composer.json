@@ -22,7 +22,8 @@
         "guzzlehttp/guzzle": "^6.3",
         "duncan3dc/fork-helper": "^2.2.0",
         "swiftmailer/swiftmailer": "^6",
-        "symfony/var-dumper": "^4.2"
+        "symfony/var-dumper": "^4.2",
+        "php-amqplib/php-amqplib": "^2.9"
     },
     "require-dev": {
         "codeception/codeception": "^4.1",
@@ -53,7 +54,10 @@
         "psr-4": {
             "Baka\\": "src/",
             "Phalcon\\Cashier\\": "cashier/"
-        }
+        },
+        "files": [
+            "src/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

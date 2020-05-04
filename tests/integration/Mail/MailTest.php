@@ -64,7 +64,7 @@ class MailTest extends PhalconUnitTestCase
         //send email
         $mailer = $this->_getDI()->get('mail');
 
-        $mailer->to('bakaphpmail@getnada.com')
+        $mailer->to('info@mctekk.com')
             ->subject('Test Normal Email')
             ->content('Normal email sendnow')
             ->sendNow();
