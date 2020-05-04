@@ -2,12 +2,12 @@
 
 namespace Baka\Auth;
 
-use Baka\Auth\Models\Users;
 use Baka\Auth\Models\Companies;
-use Phalcon\Http\Response;
-use Exception;
+use Baka\Auth\Models\Users;
 use Baka\Http\Api\BaseController;
 use Baka\Http\Contracts\Api\CrudBehaviorTrait;
+use Exception;
+use Phalcon\Http\Response;
 
 /**
  * Base controller.
@@ -110,6 +110,7 @@ abstract class UsersController extends BaseController
      * we will check if a DTO transformer exist and if so we will send it over to change it.
      *
      * @param object|array $results
+     *
      * @return void
      */
     protected function processOutput($results)

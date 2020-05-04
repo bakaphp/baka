@@ -2,10 +2,10 @@
 
 namespace Baka\Blameable;
 
+use Phalcon\DI;
 use Phalcon\Mvc\Model\Behavior;
 use Phalcon\Mvc\Model\BehaviorInterface;
 use Phalcon\Mvc\ModelInterface;
-use Phalcon\DI;
 use Throwable;
 
 class Blameable extends Behavior implements BehaviorInterface
@@ -37,7 +37,7 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * Can update custom fields.
      *
-     * @var boolean
+     * @var bool
      */
     protected $canUpdateCustomField = false;
 
@@ -97,9 +97,10 @@ class Blameable extends Behavior implements BehaviorInterface
      *
      * @param  string                      $type
      * @param  \Phalcon\Mvc\ModelInterface $model
+     *
      * @return Audit
      */
-    public function createAudit($type, ModelInterface $model): Audits
+    public function createAudit($type, ModelInterface $model) : Audits
     {
         // Grab user data from the registered service
         if (!method_exists($model, 'getBlameableUser')) {
@@ -140,7 +141,8 @@ class Blameable extends Behavior implements BehaviorInterface
      * Audits an CREATE operation.
      *
      * @param  \Phalcon\Mvc\ModelInterface $model
-     * @return boolean
+     *
+     * @return bool
      */
     public function auditAfterCreate(ModelInterface $model)
     {
@@ -237,7 +239,7 @@ class Blameable extends Behavior implements BehaviorInterface
      *
      * @param  \Phalcon\Mvc\ModelInterface $model
      *
-     * @return boolean
+     * @return bool
      */
     public function auditAfterUpdate(ModelInterface $model)
     {
@@ -366,6 +368,7 @@ class Blameable extends Behavior implements BehaviorInterface
      *
      * @param  string                      $type
      * @param  \Phalcon\Mvc\ModelInterface $model
+     *
      * @return Audit
      */
     public function auditBeforeDelete(ModelInterface $model)
@@ -494,9 +497,10 @@ class Blameable extends Behavior implements BehaviorInterface
      * Log the info on blameable.
      *
      * @param string $message
+     *
      * @return void
      */
-    protected function log(string $message): void
+    protected function log(string $message) : void
     {
         DI::getDefault()->getLog()->error('Saving Blamable ' . $message);
     }
@@ -507,9 +511,10 @@ class Blameable extends Behavior implements BehaviorInterface
      * @param  string $model
      * @param  string $relations
      * @param  string $field
+     *
      * @return array
      */
-    protected function getRelationData($model, $relations, $field): array
+    protected function getRelationData($model, $relations, $field) : array
     {
         $auditColumns = $model->getAuditColumns();
 
@@ -530,7 +535,7 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * @param ModelInterface $model
      */
-    protected function collectData(ModelInterface $model): void
+    protected function collectData(ModelInterface $model) : void
     {
         $this->snapshot = $model->getSnapshotData();
         try {

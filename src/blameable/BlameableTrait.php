@@ -2,11 +2,6 @@
 
 namespace Baka\Blameable;
 
-use Phalcon\Mvc\Model\Behavior;
-use Phalcon\Mvc\Model\BehaviorInterface;
-use Phalcon\Mvc\ModelInterface;
-use Phalcon\DI;
-
 trait BlameableTrait
 {
     /**
@@ -14,7 +9,7 @@ trait BlameableTrait
      *
      * @return array
      */
-    public static function getAuditColumns(): array
+    public static function getAuditColumns() : array
     {
         /* return [
             'telefono_1' => _('Teléfono Oficina 1'),

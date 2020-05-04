@@ -2,8 +2,10 @@
 
 namespace Baka\Auth;
 
+use Baka\Auth\Models\Sessions;
 use Baka\Auth\Models\UserLinkedSources;
 use Baka\Auth\Models\Users;
+use Baka\Http\Api\BaseController;
 use Exception;
 use Phalcon\Http\Response;
 use Phalcon\Validation;
@@ -11,8 +13,6 @@ use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email as EmailValidator;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
-use Baka\Http\Api\BaseController;
-use Baka\Auth\Models\Sessions;
 
 abstract class AuthController extends BaseController
 {
@@ -36,6 +36,7 @@ abstract class AuthController extends BaseController
 
     /**
      * User Login.
+     *
      * @method POST
      * @url /v1/auth
      *
@@ -80,6 +81,7 @@ abstract class AuthController extends BaseController
 
     /**
      * User Login.
+     *
      * @method POST
      * @url /v1/login
      *
@@ -184,6 +186,7 @@ abstract class AuthController extends BaseController
 
     /**
      * Recover user information, by getting the email for the reset pass form.
+     *
      * @method POST
      * @url /v1/recover
      *
@@ -227,6 +230,7 @@ abstract class AuthController extends BaseController
 
     /**
      * Reset the user password.
+     *
      * @method PUT
      * @url /v1/reset
      *
@@ -287,6 +291,7 @@ abstract class AuthController extends BaseController
 
     /**
      * User activation from the email signup.
+     *
      * @method PUT
      * @url /v1/activate
      *
@@ -325,7 +330,7 @@ abstract class AuthController extends BaseController
     /**
      * Set the email config array we are going to be sending.
      *
-     * @param String $emailAction
+     * @param string $emailAction
      * @param Users  $user
      */
     protected function sendEmail(Users $user, string $type) : void

@@ -29,8 +29,8 @@ class AuditsDetails extends \Phalcon\Mvc\Model
     public $old_value;
 
     /**
-    * @var string
-    */
+     * @var string
+     */
     public $old_value_text;
 
     /**

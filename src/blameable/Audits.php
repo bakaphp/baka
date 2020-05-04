@@ -71,6 +71,7 @@ class Audits extends \Phalcon\Mvc\Model
      * Get custom fields.
      *
      * @param mixed $records
+     *
      * @return void
      */
     public function getCustomFields($records)
