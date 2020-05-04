@@ -5,7 +5,7 @@
  * Setup autoloading.
  */
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/unit/PhalconUnitTestCase.php';
+require __DIR__ . '/PhalconUnitTestCase.php';
 
 if (!defined('ROOT_DIR')) {
     define('ROOT_DIR', dirname(__DIR__) . '/');
