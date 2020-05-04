@@ -1,5 +1,9 @@
 <?php
 
+namespace Baka\Test\Integration\Mail;
+
+use PhalconUnitTestCase;
+
 class MailTest extends PhalconUnitTestCase
 {
     /**

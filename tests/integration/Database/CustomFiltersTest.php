@@ -1,5 +1,8 @@
 <?php
 
+namespace Baka\Test\Integration\Database;
+
+use PhalconUnitTestCase;
 use Baka\Database\Contracts\CustomFilters\CustomFilterTrait;
 use Baka\Database\CustomFilters\CustomFilters;
 

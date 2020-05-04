@@ -1,50 +1,15 @@
 <?php
 
 use Baka\Database\Apps;
+use Baka\TestCase\PhalconUnit;
 use Elasticsearch\ClientBuilder;
 use Phalcon\Di;
-use Phalcon\Test\UnitTestCase as PhalconTestCase;
 
-abstract class PhalconUnitTestCase extends PhalconTestCase
+class PhalconUnitTestCase extends PhalconUnit
 {
-    /**
-     *
-     *
-     * @var Faker\Factory
-     */
-    protected $faker;
-    /**
-     * @var \Voice\Cache
-     */
-    protected $_cache;
-
-    /**
-     * @var \Phalcon\Config
-     */
-    protected $_config;
-
-    /**
-     * @var bool
-     */
-    private $_loaded = false;
-
-    /**
-     * Setup phalconPHP DI to use for testing components.
-     *
-     * @return Phalcon\DI
-     */
-    protected function _getDI()
+    protected function setConfiguration() : void
     {
-        Phalcon\DI::reset();
-
-        $di = new Phalcon\DI();
-
-        /**
-         * DB Config.
-         *
-         * @var array
-         */
-        $this->_config = new \Phalcon\Config([
+        $this->config = new \Phalcon\Config([
             'database' => [
                 'adapter' => 'Mysql',
                 'host' => getenv('DATA_API_MYSQL_HOST'),
@@ -56,37 +21,41 @@ abstract class PhalconUnitTestCase extends PhalconTestCase
                 'host' => getenv('MEMCACHE_HOST'),
                 'port' => getenv('MEMCACHE_PORT'),
             ],
-            'namespace' => [
-                'models' => 'Test\Models',
-                'elasticIndex' => 'Test\Indices',
-            ],
             'elasticSearch' => [
                 'hosts' => [getenv('ELASTIC_HOST')], //change to pass array
             ],
         ]);
+    }
 
-        $config = $this->_config;
+    /**
+     * Setup phalconPHP DI to use for testing components.
+     *
+     * @return Phalcon\DI
+     */
+    protected function configureDI() : void
+    {
+        $config = $this->config;
 
-        $di->set('config', function () use ($config) {
+        $this->di->set('config', function () use ($config) {
             return $config;
         }, true);
 
         /**
          * Everything needed initialize phalconphp db.
          */
-        $di->set('modelsManager', function () {
+        $this->di->set('modelsManager', function () {
             return new Phalcon\Mvc\Model\Manager();
         }, true);
 
-        $di->set('modelsMetadata', function () {
+        $this->di->set('modelsMetadata', function () {
             return new Phalcon\Mvc\Model\Metadata\Memory();
         }, true);
 
-        $di->set('app', function () {
+        $this->di->set('app', function () {
             return Apps::findFirst();
         }, true);
 
-        $di->set('db', function () use ($config, $di) {
+        $this->di->set('db', function () use ($config) {
             //db connection
             $connection = new Phalcon\Db\Adapter\Pdo\Mysql([
                 'host' => $config->database->host,
@@ -99,7 +68,7 @@ abstract class PhalconUnitTestCase extends PhalconTestCase
             return $connection;
         });
 
-        $di->set('elastic', function () use ($config) {
+        $this->di->set('elastic', function () use ($config) {
             $hosts = $config->elasticSearch->hosts->toArray();
 
             $client = ClientBuilder::create()
@@ -108,16 +77,5 @@ abstract class PhalconUnitTestCase extends PhalconTestCase
 
             return $client;
         });
-
-        return $di;
-    }
-
-    /**
-     * this runs before everyone.
-     */
-    protected function setUp()
-    {
-        $this->_getDI();
-        $this->faker = Faker\Factory::create();
     }
 }

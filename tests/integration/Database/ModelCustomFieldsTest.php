@@ -1,5 +1,8 @@
 <?php
 
+namespace Baka\Test\Integration\Database;
+
+use PhalconUnitTestCase;
 use Baka\Test\Model\Leads;
 use Baka\Test\Model\LeadsCustomFields;
 

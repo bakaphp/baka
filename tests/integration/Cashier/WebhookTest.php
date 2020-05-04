@@ -1,5 +1,8 @@
 <?php
 
+namespace Baka\Test\Integration\Cashier;
+
+use PhalconUnitTestCase;
 use App\Models\Users;
 use Phalcon\Cashier\Controllers\WebhookController;
 

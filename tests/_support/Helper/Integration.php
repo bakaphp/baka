@@ -2,8 +2,6 @@
 
 namespace Helper;
 
-use Canvas\Bootstrap\IntegrationTests;
-use Canvas\Models\Users;
 use Codeception\Module;
 use Codeception\TestInterface;
 use Niden\Mvc\Model\AbstractModel;
@@ -27,32 +25,10 @@ class Integration extends Module
      */
     public function _before(TestInterface $test)
     {
-        PhDI::reset();
-        $app = new IntegrationTests();
-        $app->setup();
-        $this->diContainer = $app->getContainer();
-
-        if ($this->config['rollback']) {
-            $this->diContainer->get('db')->begin();
-        }
-
-        //Set default user
-        $user = Users::findFirst(1);
-        $this->diContainer->setShared('userData', $user);
-        $this->savedModels = [];
-        $this->savedRecords = [];
     }
 
     public function _after(TestInterface $test)
     {
-        if (!$this->config['rollback']) {
-            foreach ($this->savedRecords as $record) {
-                $record->delete();
-            }
-        } else {
-            $this->diContainer->get('db')->rollback();
-        }
-        $this->diContainer->get('db')->close();
     }
 
     /**

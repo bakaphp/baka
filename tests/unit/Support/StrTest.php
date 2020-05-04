@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+namespace Baka\Test\Unit\Support;
+
+use PhalconUnitTestCase;
+
 use Baka\Support\Str;
 
 class StrTest extends PhalconUnitTestCase

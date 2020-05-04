@@ -1,5 +1,8 @@
 <?php
 
+namespace Baka\Test\Integration\Database;
+
+use PhalconUnitTestCase;
 use Baka\Database\Contracts\HashTableTasksTrait;
 use Baka\Test\Model\LeadsNormal as Leads;
 

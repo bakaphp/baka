@@ -1,11 +1,14 @@
 <?php
 
+namespace Baka\Test\Integration\Elasticsearch;
+
+use PhalconUnitTestCase;
 use Baka\Database\Model;
 use Baka\Elasticsearch\Contracts\ElasticIndexTrait;
 
 class Indices extends Model
 {
-    use ElasticIndexTrait;
+    //use ElasticIndexTrait;
     
     public $id;
 

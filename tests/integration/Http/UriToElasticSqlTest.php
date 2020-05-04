@@ -1,5 +1,8 @@
 <?php
 
+namespace Baka\Test\Integration\Http;
+
+use PhalconUnitTestCase;
 use Baka\Http\Converter\RequestUriToSql;
 use Phalcon\Mvc\Model\Resultset\Simpl as SimpleRecords;
 use Baka\Http\Converter\RequestUriToElasticSearch;

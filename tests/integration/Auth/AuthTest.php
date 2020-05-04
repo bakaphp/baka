@@ -1,5 +1,8 @@
 <?php
 
+namespace Baka\Test\Integration\Auth;
+
+use PhalconUnitTestCase;
 use Baka\Auth\Models\Users;
 
 class AuthTest extends PhalconUnitTestCase
@@ -110,18 +113,4 @@ class AuthTest extends PhalconUnitTestCase
 
         return $this->assertTrue($recoverUser instanceof Users);
     }
-
-    /**
-     * this runs before everyone
-     */
-    protected function setUp()
-    {
-        $this->_getDI();
-
-    }
-
-    protected function tearDown()
-    {
-    }
-
 }

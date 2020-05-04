@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+namespace Baka\Test\Unit\Support;
+
+use PhalconUnitTestCase;
 use Baka\Support\Arr;
 
 class ArrTest extends PhalconUnitTestCase

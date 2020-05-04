@@ -16,7 +16,7 @@
         "dompdf/dompdf": "^0.6.1",
         "nesbot/carbon": "~1.0",
         "stripe/stripe-php": "~6.0",
-        "robmorgan/phinx": "0.*",
+        "robmorgan/phinx": "^0.11",
         "monolog/monolog": "^1.16",
         "elasticsearch/elasticsearch": "^6.1",
         "guzzlehttp/guzzle": "^6.3",
@@ -25,16 +25,16 @@
         "symfony/var-dumper": "^4.2"
     },
     "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-asserts": "^1.2",
+        "codeception/module-filesystem": "^1.0",
+        "codeception/module-phalcon": "^1.0",
         "codeception/verify": "*",
-        "vlucas/phpdotenv": "^2.0",
-        "dmkit/phalcon-jwt-auth": "dev-master",
-        "robmorgan/phinx": "^0.11",
-        "odan/phinx-migrations-generator": "^4",
-        "fzaninotto/faker": "^1.9@dev",
-        "squizlabs/php_codesniffer": "1.*",
         "duncan3dc/fork-helper": "^2.2.0",
-        "codeception/codeception": "^2.4",
-        "phpunit/phpunit": "^7",
+        "fzaninotto/faker": "^1.9@dev",
+        "odan/phinx-migrations-generator": "^4",
+        "phpunit/phpunit": "^9",
+        "squizlabs/php_codesniffer": "1.*",
         "symfony/var-dumper": "^4.3@dev"
     },
     "replace": {

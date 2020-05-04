@@ -1,5 +1,8 @@
 <?php
 
+namespace Baka\Test\Integration\Cashier;
+
+use PhalconUnitTestCase;
 use App\Models\Apps;
 use App\Models\Companies;
 use App\Models\Users;

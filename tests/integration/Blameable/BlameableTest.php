@@ -1,5 +1,8 @@
 <?php
 
+namespace Baka\Test\Integration\Blameable;
+
+use PhalconUnitTestCase;
 use Baka\Test\Model\Audits;
 use Baka\Test\Model\Leads;
 

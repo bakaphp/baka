@@ -1,5 +1,8 @@
 <?php
 
+namespace Baka\Test\Integration\Elasticsearch;
+
+use PhalconUnitTestCase;
 use Baka\Elasticsearch\IndexBuilderStructure;
 
 class IndicesTest extends PhalconUnitTestCase

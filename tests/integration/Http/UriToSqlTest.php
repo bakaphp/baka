@@ -1,5 +1,8 @@
 <?php
 
+namespace Baka\Test\Integration\Http;
+
+use PhalconUnitTestCase;
 use Baka\Http\Converter\RequestUriToSql;
 use Test\Model\Leads;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
