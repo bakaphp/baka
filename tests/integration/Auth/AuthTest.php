@@ -2,64 +2,13 @@
 
 namespace Baka\Test\Integration\Auth;
 
-use PhalconUnitTestCase;
 use Baka\Auth\Models\Users;
+use PhalconUnitTestCase;
 
 class AuthTest extends PhalconUnitTestCase
 {
-
     /**
-     * Test userlogin
-     *
-     * @return boolean
-     */
-    public function testSessionGenerate()
-    {
-        $session = new \Baka\Auth\Models\Sessions();
-        $request = new \Phalcon\Http\Request();
-
-        $userData = \Baka\Auth\Models\Sessions::start(1, '127.0.0.1');
-
-        $this->assertTrue($userData instanceof Users);
-    }
-
-    /**
-     * Test user logi
-     *
-     * @return boolean
-     */
-    public function testLogin()
-    {
-        $username = 'kaioken';
-        $password = 'nonenone';
-        $remember = 1;
-        $admin = 0;
-        $userIp = '127.0.0.1';
-
-        $userData = Users::login($username, $password, $remember, $admin, $userIp);
-
-        $this->assertTrue($userData instanceof Users);
-    }
-
-    /**
-     * Logout
-     *
-     * @return boolean
-     */
-    public function testLogout()
-    {
-        $username = 'kaioken';
-        $password = 'nonenone';
-        $remember = 1;
-        $admin = 0;
-        $userIp = '127.0.0.1';
-
-        $userData = Users::login($username, $password, $remember, $admin, $userIp);
-        $this->assertTrue($userData->logout());
-    }
-
-    /**
-     * Test user signup
+     * Test user signup.
      *
      * @return boolean
      */
@@ -67,19 +16,12 @@ class AuthTest extends PhalconUnitTestCase
     {
         $user = new Users();
 
-        $randomString = function ($length = 10) {
-            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $charactersLength = strlen($characters);
-            $randomString = '';
-            for ($i = 0; $i < $length; $i++) {
-                $randomString .= $characters[rand(0, $charactersLength - 1)];
-            }
-            return $randomString;
-        };
-
         $user->email = $this->faker->email;
         $user->password = 'nonenone';
-        $user->displayname = $randomString(10);
+        $user->name = $this->faker->name;
+        $user->defaultCompanyName = $this->faker->name;
+        $user->displayname = $this->faker->firstname;
+
         if (!$user->signup()) {
             foreach ($user->getMessages() as $message) {
                 throw new \Exception($message);
@@ -90,19 +32,81 @@ class AuthTest extends PhalconUnitTestCase
     }
 
     /**
-     * Teste usser forgout password
+     * Test userlogin.
+     *
+     * @return boolean
+     */
+    public function testSessionGenerate()
+    {
+        $session = new \Baka\Auth\Models\Sessions();
+
+        $userData = $session->start(
+            Users::findFirst(),
+            $this->faker->uuid,
+            $this->faker->sha256,
+            $this->faker->ipv4,
+            1
+        );
+
+
+        $this->assertTrue($userData instanceof Users);
+    }
+
+    /**
+     * Test user logi.
+     *
+     * @return boolean
+     */
+    public function testLogin()
+    {
+        $user = Users::findFirst();
+
+        $email = $user->email;
+        $password = 'nonenone';
+        $remember = 1;
+        $admin = 0;
+        $userIp = $this->faker->ipv4;
+
+        $userData = Users::login($email, $password, $remember, $admin, $userIp);
+
+        $this->assertTrue($userData instanceof Users);
+    }
+
+    /**
+     * Logout.
+     *
+     * @return boolean
+     */
+    public function testLogout()
+    {
+        $user = Users::findFirst();
+
+        $email = $user->email;
+        $password = 'nonenone';
+        $remember = 1;
+        $admin = 0;
+        $userIp = $this->faker->ipv4;
+
+        $userData = Users::login($email, $password, $remember, $admin, $userIp);
+        $this->assertTrue($userData->logout());
+    }
+
+    /**
+     * Teste usser forgout password.
      *
      * @return boolean
      */
     public function testForgotPassword()
     {
-        $email = 'baka@mctekk.com';
+        $user = Users::findFirst();
+
+        $email = $user->email;
         /**
          * check if the user email exist
-         * if it does creat the user activation key to send
-         * send the user email
+         * if it does create the user activation key to send
+         * send the user email.
          *
-         * if it doesnt existe then send the erro msg
+         * if it doesn't exist then send the error msg
          */
         if ($recoverUser = Users::getByEmail($email)) {
             $recoverUser->user_activation_forgot = $recoverUser->generateActivationKey();

@@ -2,20 +2,19 @@
 
 namespace Baka\Auth\Models;
 
+use Baka\Auth\Contracts\AuthTokenTrait;
+use Baka\Database\Model;
 use Exception;
+use Locale;
+use Phalcon\Http\Request;
 use Phalcon\Validation;
+use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\StringLength;
-use Locale;
+use Phalcon\Validation\Validator\Uniqueness;
 use stdClass;
-use Phalcon\Http\Request;
-use Baka\Database\Model;
-use Baka\Auth\Contracts\AuthTokenTrait;
-use Phalcon\Di;
 
 class Users extends Model
 {
@@ -103,22 +102,22 @@ class Users extends Model
     public $timezone;
 
     /**
-     * @var integer
+     * @var int
      */
     public $city_id;
 
     /**
-     * @var integer
+     * @var int
      */
     public $state_id;
 
     /**
-     * @var integer
+     * @var int
      */
     public $country_id;
 
     /**
-     * @var integer
+     * @var int
      */
     public $welcome = 0;
 
@@ -257,7 +256,7 @@ class Users extends Model
      * we only get result if the user is active.
      *
      * @param int $userId
-     * @param boolean $cache
+     * @param bool $cache
      *
      * @return User
      */
@@ -280,7 +279,7 @@ class Users extends Model
     /**
      * is the user active?
      *
-     * @return boolean
+     * @return bool
      */
     public function isActive() : bool
     {
@@ -292,9 +291,10 @@ class Users extends Model
      *
      * @param string $email
      * @param string $password
-     * @param integer $autologin
-     * @param integer $admin
+     * @param int $autologin
+     * @param int $admin
      * @param string $userIp
+     *
      * @return Users
      */
     public static function login(string $email, string $password, int $autologin = 1, int $admin, string $userIp) : Users
@@ -416,6 +416,7 @@ class Users extends Model
      * cget the social profile of a users, passing its socialnetwork.
      *
      * @param string $site
+     *
      * @return Hybridauth\Entity\Profile
      */
     public static function getSocialProfile($site = 'facebook')
@@ -434,7 +435,8 @@ class Users extends Model
      * logout the user from its social network.
      *
      * @param string $site
-     * @return boolean
+     *
+     * @return bool
      */
     public static function disconnectSocialProfile($site = 'facebook')
     {
@@ -473,7 +475,8 @@ class Users extends Model
      * why? php shit with the new API http://www.php.net/manual/en/function.password-needs-rehash.php.
      *
      * @param string $password
-     * @return boolean
+     *
+     * @return bool
      */
     public function passwordNeedRehash(string $password) : bool
     {
@@ -494,6 +497,7 @@ class Users extends Model
 
     /**
      * get user by there email address.
+     *
      * @return User
      */
     public static function getByEmail(string $email) : Users
@@ -513,7 +517,8 @@ class Users extends Model
     /**
      * get the user profileHeader.
      *
-     * @param boolean $mobile
+     * @param bool $mobile
+     *
      * @return string
      */
     public function getProfileHeader(bool $mobile = false) : ? string
@@ -532,6 +537,7 @@ class Users extends Model
 
     /**
      * get the user avatar.
+     *
      * @return string
      */
     public function getAvatar() : ? string
@@ -551,6 +557,7 @@ class Users extends Model
 
     /**
      * get user nickname.
+     *
      * @return string
      */
     public function getDisplayName() : string
@@ -560,6 +567,7 @@ class Users extends Model
 
     /**
      * get user email.
+     *
      * @return string
      */
     public function getEmail() : string
@@ -569,7 +577,8 @@ class Users extends Model
 
     /**
      * is the user logged in?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isLoggedIn() : bool
     {
@@ -578,7 +587,8 @@ class Users extends Model
 
     /**
      * is thie user admin level?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isAdmin() : bool
     {
@@ -588,7 +598,7 @@ class Users extends Model
     /**
      * Determine if the user is a moderator.
      *
-     * @return boolean
+     * @return bool
      */
     public function isModerator() : bool
     {
@@ -597,6 +607,7 @@ class Users extends Model
 
     /**
      * Generate a user activation key.
+     *
      * @return string
      */
     public function generateActivationKey() : string
@@ -623,7 +634,7 @@ class Users extends Model
     /**
      * Log a user out of the system.
      *
-     * @return boolean
+     * @return bool
      */
     public function logOut() : bool
     {
@@ -696,7 +707,8 @@ class Users extends Model
      * does the user as the configuration on?
      *
      * @param  $key string
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasConfig(string $key)
     {
@@ -717,8 +729,8 @@ class Users extends Model
 
         if ($this->isLoggedIn() && !empty($this->language)) {
             $lang = !$short ? strtolower($this->language) . '_' . $this->language : strtolower($this->language);
-        } elseif (Di::getDefault()->get('session')->has('requestLanguage')) {
-            $lang = !$short ? Di::getDefault()->get('session')->get('requestLanguage') . '_' . strtoupper(Di::getDefault()->get('session')->get('requestLanguage')) : strtolower(Di::getDefault()->get('session')->get('requestLanguage'));
+        } elseif ($this->getDI()->getSession()->has('requestLanguage')) {
+            $lang = !$short ? $this->getDI()->getSession()->get('requestLanguage') . '_' . strtoupper($this->getDI()->getSession()->get('requestLanguage')) : strtolower($this->getDI()->getSession()->get('requestLanguage'));
         } else {
             if (!is_null($request->getServer('HTTP_ACCEPT_LANGUAGE'))) {
                 $lang = !$short ? Locale::acceptFromHttp($request->getServer('HTTP_ACCEPT_LANGUAGE')) : strtolower(Locale::acceptFromHttp($request->getServer('HTTP_ACCEPT_LANGUAGE')));
@@ -776,7 +788,8 @@ class Users extends Model
      * Given a firstname give me a random username.
      *
      * @param string $displayname
-     * @param integer $randNo
+     * @param int $randNo
+     *
      * @return string
      */
     protected function generateDisplayName(string $displayname, $randNo = 200) : string
@@ -796,7 +809,8 @@ class Users extends Model
      * Update the password for a current user.
      *
      * @param string $newPassword
-     * @return boolean
+     *
+     * @return bool
      */
     public function updatePassword(string $currentPassword, string $newPassword, string $verifyPassword) : bool
     {
@@ -866,14 +880,10 @@ class Users extends Model
         $company = new Companies();
         $company->name = $this->defaultCompanyName;
         $company->users_id = $this->getId();
-        if (!$company->save()) {
-            throw new Exception(current($company->getMessages()));
-        }
+        $company->saveOrFail();
 
         $this->default_company = $company->getId();
 
-        if (!$this->update()) {
-            throw new Exception(current($this->getMessages()));
-        }
+        $this->updateOrFail();
     }
 }

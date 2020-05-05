@@ -7,6 +7,7 @@ use Elasticsearch\ClientBuilder;
 use Phalcon\Di;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\View\Simple;
+use Phalcon\Session\Adapter\Redis;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 class PhalconUnitTestCase extends PhalconUnit
@@ -167,18 +168,21 @@ class PhalconUnitTestCase extends PhalconUnit
         /**
          * Start the session the first time some component request the session service.
          */
-        $this->di->setShare('session', function () use ($config) {
-            $memcache = new \Phalcon\Session\Adapter\Memcache([
-                'host' => $config->memcache->host, // mandatory
-                'post' => $config->memcache->port, // optional (standard: 11211)
-                'lifetime' => 8600, // optional (standard: 8600)
-                'prefix' => 'baka', // optional (standard: [empty_string]), means memcache key is my-app_31231jkfsdfdsfds3
-                'persistent' => false, // optional (standard: false)
-            ]);
+        $this->di->setShared('session', function () use ($config) {
+            $session = new Redis(
+                [
+                    'uniqueId' => uniqid(),
+                    'host' => envValue('REDIS_HOST', '127.0.0.1'),
+                    'port' => (int) envValue('REDIS_PORT', 6379),
+                    'persistent' => false,
+                    'lifetime' => 3600,
+                    'prefix' => 'session',
+                ]
+                );
 
-            $memcache->start();
+            $session->start();
 
-            return $memcache;
+            return $session;
         });
     }
 

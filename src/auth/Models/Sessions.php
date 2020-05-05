@@ -19,7 +19,7 @@ class Sessions extends Model
     public $id;
 
     /**
-     * @var integer
+     * @var int
      */
     public $users_id;
 
@@ -34,7 +34,7 @@ class Sessions extends Model
     public $start;
 
     /**
-     * @var integer
+     * @var int
      */
     public $time;
 
@@ -58,8 +58,8 @@ class Sessions extends Model
      */
     public $is_admin;
 
-    /**
-     * almecenamos la info del usuario par ahacer singlation.
+    /**     *
+     * @deprecated v1
      *
      * @var user
      */
@@ -83,10 +83,11 @@ class Sessions extends Model
      * @param string $sessionId
      * @param string $token
      * @param string $userIp
-     * @param integer $pageId
+     * @param int $pageId
+     *
      * @return Users
      */
-    public function start(Users $user, string $sessionId, string $token, string $userIp, int $pageId): Users
+    public function start(Users $user, string $sessionId, string $token, string $userIp, int $pageId) : Users
     {
         $last_visit = 0;
         $currentTime = time();
@@ -122,7 +123,8 @@ class Sessions extends Model
 
         /**
          * Create or update the session.
-         * @todo we dont need a new session for every getenv('ANONYMOUS') user, use less ,
+         *
+         * @todo we don't need a new session for every getenv('ANONYMOUS') user, use less ,
          * right now 27.7.15 90% of the sessions are for that type of users
          */
         $session = new self();
@@ -135,10 +137,7 @@ class Sessions extends Model
         $session->id = $sessionId;
         $session->token = $token;
         $session->ip = $userIp;
-
-        if (!$session->save()) {
-            throw new Exception(current($session->getMessages()));
-        }
+        $session->saveOrFail();
 
         $lastVisit = ($user->session_time > 0) ? $user->session_time : $currentTime;
 
@@ -146,7 +145,7 @@ class Sessions extends Model
         $user->session_time = $currentTime;
         $user->session_page = $pageId;
         $user->lastvisit = date('Y-m-d H:i:s', $lastVisit);
-        $user->update();
+        $user->updateOrFail();
 
         //create a new one
         $session = new SessionKeys();
@@ -154,13 +153,9 @@ class Sessions extends Model
         $session->users_id = $user->getId();
         $session->last_ip = $userIp;
         $session->last_login = $currentTime;
-        $session->save();
+        $session->saveOrFail();
 
-        if (!$session->save()) {
-            throw new Exception(current($session->getMessages()));
-        }
-
-        //you are looged in, no?
+        //you are in, no?
         $user->loggedIn = true;
 
         return $user;
@@ -173,10 +168,11 @@ class Sessions extends Model
      * @param Users $user
      * @param string $sessionId
      * @param string $userIp
-     * @param integer $pageId
+     * @param int $pageId
+     *
      * @return Users
      */
-    public function check(Users $user, string $sessionId, string $userIp, int $pageId): Users
+    public function check(Users $user, string $sessionId, string $userIp, int $pageId) : Users
     {
         $currentTime = time();
 
@@ -243,10 +239,11 @@ class Sessions extends Model
     /**
      * Removes expired sessions and auto-login keys from the database.
      *
-     * @param boolean $daemon
+     * @param bool $daemon
+     *
      * @return void
      */
-    public function clean(): bool
+    public function clean() : bool
     {
         //
         // Delete expired sessions
@@ -283,9 +280,10 @@ class Sessions extends Model
      * remove the corresponding auto-login key and reset the cookies.
      *
      * @param Users $user
-     * @return boolean
+     *
+     * @return bool
      */
-    public function end(Users $user): bool
+    public function end(Users $user) : bool
     {
         $this->find('users_id = ' . $user->getId())->delete();
         SessionKeys::find('users_id = ' . $user->getId())->delete();
@@ -299,9 +297,10 @@ class Sessions extends Model
      * @param Users $user
      * @param string $sessionId
      * @param string $clientAddress
+     *
      * @return array
      */
-    public static function restart(Users $user, string $sessionId, string $clientAddress): array
+    public static function restart(Users $user, string $sessionId, string $clientAddress) : array
     {
         $session = new self();
         $session->check($user, $sessionId, $clientAddress, 1);
@@ -315,9 +314,10 @@ class Sessions extends Model
      *
      * @param string $sessionId
      * @param string $email
+     *
      * @return array
      */
-    public function refresh(string $sessionId, string $email): array
+    public function refresh(string $sessionId, string $email) : array
     {
         $signer = new Sha512();
         $builder = new Builder();
