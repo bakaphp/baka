@@ -2,6 +2,7 @@
 
 namespace Helper;
 
+use Baka\TestCase\Phinx;
 use Codeception\Module;
 use Codeception\TestInterface;
 use Niden\Mvc\Model\AbstractModel;
@@ -29,6 +30,16 @@ class Integration extends Module
 
     public function _after(TestInterface $test)
     {
+    }
+
+    /**
+     * After all is done
+     *
+     * @return void
+     */
+    public function _afterSuite()
+    {
+        Phinx::dropTables();
     }
 
     /**

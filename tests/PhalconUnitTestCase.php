@@ -1,19 +1,21 @@
 <?php
 
 use Baka\Database\Apps;
+
+use function Baka\appPath;
+use function Baka\envValue;
 use Baka\TestCase\PhalconUnit;
+use Baka\TestCase\Phinx;
 use Elasticsearch\ClientBuilder;
 use Phalcon\Di;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-use Phalcon\Mvc\View\Simple;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
-
-use function Baka\envValue;
+use Phalcon\Mvc\View\Simple;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 class PhalconUnitTestCase extends PhalconUnit
 {
     /**
-     * Set configuration
+     * Set configuration.
      *
      * @return void
      */
@@ -63,7 +65,7 @@ class PhalconUnitTestCase extends PhalconUnit
     }
 
     /**
-     * Setup phalconPHP DI
+     * Setup phalconPHP DI.
      *
      * @return void
      */
@@ -161,4 +163,15 @@ class PhalconUnitTestCase extends PhalconUnit
             return $view;
         });
     }
+
+    /**
+     * this runs before everyone.
+     */
+    protected function setUp() : void
+    {
+        parent::setUp();
+        Phinx::migrate();
+        Phinx::seed();
+    }
+    
 }

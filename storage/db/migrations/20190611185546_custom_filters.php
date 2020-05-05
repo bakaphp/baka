@@ -7,7 +7,7 @@ class CustomFilters extends AbstractMigration
 {
     public function change()
     {
-        $table = $this->table('custom_filters_conditions', ['custom_filter_id' => false, 'primary_key' => ['custom_filter_id'], 'engine' => 'InnoDB', 'encoding' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '', 'row_format' => 'Dynamic']);
+        $table = $this->table('custom_filters_conditions', ['custom_filter_id' => false,  'engine' => 'InnoDB', 'encoding' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '', 'row_format' => 'Dynamic']);
         $table->addColumn('custom_filter_id', 'integer', ['null' => false, 'limit' => MysqlAdapter::INT_REGULAR, 'precision' => 11])
             ->addColumn('position', 'string', ['null' => false, 'limit' => 64, 'collation' => 'utf8mb4_unicode_ci', 'encoding' => 'utf8mb4', 'after'=> 'custom_filter_id'])
             ->addColumn('conditional', 'string', ['null' => false, 'limit' => 64, 'collation' => 'utf8mb4_unicode_ci', 'encoding' => 'utf8mb4', 'after'=> 'position'])
