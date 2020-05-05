@@ -163,6 +163,23 @@ class PhalconUnitTestCase extends PhalconUnit
 
             return $view;
         });
+
+        /**
+         * Start the session the first time some component request the session service.
+         */
+        $this->di->setShare('session', function () use ($config) {
+            $memcache = new \Phalcon\Session\Adapter\Memcache([
+                'host' => $config->memcache->host, // mandatory
+                'post' => $config->memcache->port, // optional (standard: 11211)
+                'lifetime' => 8600, // optional (standard: 8600)
+                'prefix' => 'baka', // optional (standard: [empty_string]), means memcache key is my-app_31231jkfsdfdsfds3
+                'persistent' => false, // optional (standard: false)
+            ]);
+
+            $memcache->start();
+
+            return $memcache;
+        });
     }
 
     /**

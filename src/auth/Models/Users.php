@@ -15,6 +15,7 @@ use stdClass;
 use Phalcon\Http\Request;
 use Baka\Database\Model;
 use Baka\Auth\Contracts\AuthTokenTrait;
+use Phalcon\Di;
 
 class Users extends Model
 {
@@ -716,8 +717,8 @@ class Users extends Model
 
         if ($this->isLoggedIn() && !empty($this->language)) {
             $lang = !$short ? strtolower($this->language) . '_' . $this->language : strtolower($this->language);
-        } elseif ($this->getDI()->getSession()->has('requestLanguage')) {
-            $lang = !$short ? $this->getDI()->getSession()->get('requestLanguage') . '_' . strtoupper($this->getDI()->getSession()->get('requestLanguage')) : strtolower($this->getDI()->getSession()->get('requestLanguage'));
+        } elseif (Di::getDefault()->get('session')->has('requestLanguage')) {
+            $lang = !$short ? Di::getDefault()->get('session')->get('requestLanguage') . '_' . strtoupper(Di::getDefault()->get('session')->get('requestLanguage')) : strtolower(Di::getDefault()->get('session')->get('requestLanguage'));
         } else {
             if (!is_null($request->getServer('HTTP_ACCEPT_LANGUAGE'))) {
                 $lang = !$short ? Locale::acceptFromHttp($request->getServer('HTTP_ACCEPT_LANGUAGE')) : strtolower(Locale::acceptFromHttp($request->getServer('HTTP_ACCEPT_LANGUAGE')));

@@ -31,7 +31,7 @@ class AuthTest extends PhalconUnitTestCase
     public function testLogin()
     {
         $username = 'kaioken';
-        $password = 'nosenose';
+        $password = 'nonenone';
         $remember = 1;
         $admin = 0;
         $userIp = '127.0.0.1';
@@ -49,7 +49,7 @@ class AuthTest extends PhalconUnitTestCase
     public function testLogout()
     {
         $username = 'kaioken';
-        $password = 'nosenose';
+        $password = 'nonenone';
         $remember = 1;
         $admin = 0;
         $userIp = '127.0.0.1';
@@ -77,8 +77,8 @@ class AuthTest extends PhalconUnitTestCase
             return $randomString;
         };
 
-        $user->email = $randomString(10) . '@nose.com';
-        $user->password = 'nosenose';
+        $user->email = $this->faker->email;
+        $user->password = 'nonenone';
         $user->displayname = $randomString(10);
         if (!$user->signup()) {
             foreach ($user->getMessages() as $message) {
@@ -96,7 +96,7 @@ class AuthTest extends PhalconUnitTestCase
      */
     public function testForgotPassword()
     {
-        $email = 'max@mctekk.com';
+        $email = 'baka@mctekk.com';
         /**
          * check if the user email exist
          * if it does creat the user activation key to send

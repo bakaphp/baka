@@ -141,7 +141,7 @@ class Subscription extends Model
      * @param  Companies $company
      * @return Subscription
      */
-    public static function startFreeTrial(Companies $company): Suscriptions
+    public static function startFreeTrial(Companies $company): self
     {
         $subscription = new self();
         $subscription->plans_id = self::FREE_TRIAL;
@@ -168,6 +168,6 @@ class Subscription extends Model
      */
     public function getSource(): string
     {
-        return 'suscriptions';
+        return 'subscription';
     }
 }
