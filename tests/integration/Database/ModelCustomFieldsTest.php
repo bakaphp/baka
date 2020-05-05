@@ -69,6 +69,6 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $leadCustomField = LeadsCustomFields::findFirst();
         $lead = Leads::findFirst($leadCustomField->leads_id);
 
-        $this->assertTrue(isset($lead->refernce));
+        $this->assertTrue(isset($lead->reference));
     }
 }

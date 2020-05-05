@@ -26,6 +26,7 @@ class CustomFiltersTest extends PhalconUnitTestCase
             'name' => 'Test Filter',
             'sequence_logic' => '1 AND 2',
             'description' => $this->faker->text,
+            'fields_type_id' => 1,
             'criterias' => [
                 [
                     'comparator' => '=',
@@ -42,7 +43,7 @@ class CustomFiltersTest extends PhalconUnitTestCase
         ];
 
         $filter = $this->processFilter($params);
-        $this->processsCriterias($filter, $params['criterias']);
+        $this->processCriterias($filter, $params['criterias']);
 
         $this->assertTrue($filter instanceof CustomFilters);
     }

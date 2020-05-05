@@ -2,12 +2,13 @@
 
 namespace Baka\Database\Contracts\CustomFields;
 
-use Baka\Database\CustomFields\Modules;
-use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\Apps;
-use Phalcon\Utils\Slug;
-use Baka\Database\CustomFields\FieldsValues;
+use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\FieldsType;
+use Baka\Database\CustomFields\FieldsValues;
+use Baka\Database\CustomFields\Modules;
+use Phalcon\Utils\Slug;
+use ReflectionClass;
 
 /**
  * Custom field class.
@@ -33,6 +34,7 @@ trait CustomFieldsTasksTrait
      * Create a new custom field Module to work with.
      *
      * @param array $params
+     *
      * @return void
      */
     public function createModuleAction(array $params)
@@ -55,6 +57,7 @@ trait CustomFieldsTasksTrait
 
         $customFieldModel = new Modules();
         $customFieldModel->apps_id = $apps->getId();
+        $customFieldModel->companies_id = 1;
         $customFieldModel->name = $name;
         $customFieldModel->model_name = get_class($model);
         $customFieldModel->saveOrFail();
@@ -62,7 +65,7 @@ trait CustomFieldsTasksTrait
         $table = $model->getSource() . '_custom_fields';
 
         $sql = '
-                CREATE TABLE `' . $table . '` (
+                CREATE TABLE IF NOT EXISTS `' . $table . '` (
                     `id` bigint(11) UNSIGNED NOT NULL,
                     `' . $model->getSource() . '_id` int(10) UNSIGNED NOT NULL,
                     `custom_fields_id` int(10) UNSIGNED NOT NULL,
@@ -83,7 +86,7 @@ trait CustomFieldsTasksTrait
 
         if ($this->getDI()->getDb()->query($sql)) {
             $namespace = str_replace('\\', '\\\\', $this->getDI()->getConfig()->namespace->models);
-            $extends = explode('\\', (new \ReflectionClass($model))->getParentClass()->getName());
+            $extends = explode('\\', (new ReflectionClass($model))->getParentClass()->getName());
             $extends = end($extends);
 
             system('cd ' . getenv('BASE_DIR') . '; /usr/bin/php ' . getenv('BASE_DIR') . '/vendor/phalcon/devtools/phalcon.php model ' . $table . ' --namespace=' . $namespace . ' --extends=' . $extends . ' --mapcolumn --excludefields=created_at,updated_at > /dev/null');
@@ -97,6 +100,7 @@ trait CustomFieldsTasksTrait
      * Given the params create the fields for that specific module.
      *
      * @param array $params
+     *
      * @return void
      */
     public function createFieldsAction(array $params)
@@ -120,7 +124,7 @@ trait CustomFieldsTasksTrait
 
         $model = new $model();
 
-        $modules = Modules::getByCustomeFieldModuleByModuleAndApp(get_class($model), $apps);
+        $modules = Modules::getByCustomFieldModuleByModuleAndApp(get_class($model), $apps);
         $type = FieldsType::findFirstByName($type);
         $customFields = null;
 
@@ -132,19 +136,21 @@ trait CustomFieldsTasksTrait
         if (!is_object($customFields)) {
             $customFields = new CustomFields();
         }
-        $customFields->users_id = 1; //alwasy 1
-        $customFields->apps_id = $apps->getId(); //alwasy 1
+
+        $customFields->users_id = 0; //always 1
+        $customFields->companies_id = 0; //always 1
+        $customFields->apps_id = $apps->getId(); //always 1
         $customFields->custom_fields_modules_id = $modules->getId();
         $customFields->fields_type_id = $type->getId(); //right now just text
         $customFields->label = $label;
         $customFields->name = $name;
 
-        if (!$customFields->save()) {
+        if (!$customFields->saveOrFail()) {
             echo implode("\n", $customFields->getMessages());
             return;
         }
 
-        //campo|nose:nosenose;campos|nose:nose:nose;
+        //campo|none:nonenone;campos|none:none:none;
         if ($customFieldDefaultValues) {
             $values = $customFieldDefaultValues;
             $values = preg_split('/\n|,|\|/', $values);
@@ -154,6 +160,7 @@ trait CustomFieldsTasksTrait
 
                 $customFieldsValues = new FieldsValues();
                 $customFieldsValues->custom_fields_id = $customFields->id;
+                $customFieldsValues->is_default = 0;
 
                 if (count($value) > 1) {
                     $customFieldsValues->label = trim($value[0]);
@@ -163,9 +170,7 @@ trait CustomFieldsTasksTrait
                     $customFieldsValues->value = Slug::generate($value[0], '_');
                 }
 
-                if (!$customFieldsValues->save()) {
-                    echo 'Error creating custom fields value ' . current($customFieldsValues->getMessages())->getMessage();
-                }
+                $customFieldsValues->saveOrFail();
             }
         }
 

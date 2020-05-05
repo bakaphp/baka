@@ -30,7 +30,7 @@ trait HashTableTasksTrait
         $table = $model->getSource() . '_settings';
 
         $sql = '
-                CREATE TABLE `' . $table . '` (
+                CREATE TABLE IF NOT EXISTS  `' . $table . '` (
                     `' . $model->getSource() . '_id` int(10) UNSIGNED NOT NULL,
                     `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
                     `value` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,

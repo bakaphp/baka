@@ -42,7 +42,7 @@ class UpdateCustomFields extends Phinx\Migration\AbstractMigration
                 'after' => 'value',
             ])
             ->addColumn('updated_at', 'datetime', [
-                'null' => false,
+                'null' => true,
                 'after' => 'created_at',
             ])
             ->addColumn('is_deleted', 'integer', [

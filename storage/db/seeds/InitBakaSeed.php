@@ -1,6 +1,6 @@
 <?php
 
-use Baka\Test\Support\Model\Leads;
+use Baka\Test\Support\Models\Leads;
 use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
 
@@ -55,7 +55,7 @@ class InitBakaSeed extends AbstractSeed
             ->save();
         $data = [
             [
-                'name' => 'Baka',
+                'name' => 'CRM',
                 'description' => substr($faker->text, 0, 50),
                 'created_at' => date('Y-m-d H:m:s'),
                 'is_deleted' => 0,
@@ -82,6 +82,17 @@ class InitBakaSeed extends AbstractSeed
         ];
 
         $table = $this->table('system_modules');
+        $table->insert($data)
+                  ->save();
+    
+        $data = [
+            [
+                'name' => 'text',
+                'created_at' => date('Y-m-d H:m:s'),
+            ]
+        ];
+
+        $table = $this->table('custom_fields_types');
         $table->insert($data)
                   ->save();
     }

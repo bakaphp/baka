@@ -2,14 +2,13 @@
 
 namespace Baka\Database\CustomFilters;
 
-use Baka\Database\Model;
-use Baka\Database\Contracts\HashTableTrait;
 use Baka\Database\Exception\Exception;
+use Baka\Database\Model;
 
 class CustomFilters extends Model
 {
     /**
-     * @var integer
+     * @var int
      */
     public $id;
 
@@ -68,7 +67,7 @@ class CustomFilters extends Model
      *
      * @return string
      */
-    public function getSource(): string
+    public function getSource() : string
     {
         return 'custom_filters';
     }
@@ -78,7 +77,7 @@ class CustomFilters extends Model
      *
      * @return void
      */
-    public function initialize(): void
+    public function initialize() : void
     {
         $this->hasMany('id', '\Baka\Database\CustomFilters\Conditions', 'custom_filter_id', ['alias' => 'conditions']);
         $this->belongsTo('system_modules_id', '\Baka\Database\SystemModules', 'id', ['alias' => 'systemModule']);
@@ -88,6 +87,7 @@ class CustomFilters extends Model
      * Get the query for this filter.
      *
      * @return string
+     *
      * @throws Exception
      */
     public function getQuery() : string

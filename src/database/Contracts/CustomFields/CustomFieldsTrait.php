@@ -186,7 +186,7 @@ trait CustomFieldsTrait
                 $customModel->value = $value;
                 $customModel->created_at = date('Y-m-d H:i:s');
 
-                if (!$customModel->save()) {
+                if (!$customModel->saveOrFail()) {
                     throw new Exception('Custome ' . $key . ' - ' . $this->customModel->getMessages()[0]);
                 }
 

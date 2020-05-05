@@ -1,11 +1,8 @@
 <?php
 
 use Baka\Database\Apps;
-
-use function Baka\appPath;
 use function Baka\envValue;
 use Baka\TestCase\PhalconUnit;
-use Baka\TestCase\Phinx;
 use Elasticsearch\ClientBuilder;
 use Phalcon\Di;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
@@ -36,6 +33,10 @@ class PhalconUnitTestCase extends PhalconUnit
                     'logQueries' => getenv('DEBUG_QUERY'),
                     'logRequest' => getenv('DEBUG_REQUEST')
                 ],
+            ],
+            'namespace' => [
+                'models' => 'Baka\Test\Support\Models',
+                'elasticIndex' => 'Baka\Test\Support\ElasticModel\Indices',
             ],
             'email' => [
                 'driver' => 'smtp',
@@ -171,5 +172,4 @@ class PhalconUnitTestCase extends PhalconUnit
     {
         parent::setUp();
     }
-    
 }

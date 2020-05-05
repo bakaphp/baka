@@ -2,9 +2,8 @@
 
 namespace Baka\Database\Contracts\CustomFilters;
 
-use Baka\Database\CustomFilters\CustomFilters;
 use Baka\Database\CustomFilters\Conditions;
-use Baka\Database\Exception\CustomFilterException;
+use Baka\Database\CustomFilters\CustomFilters;
 use RuntimeException;
 
 /**
@@ -24,11 +23,12 @@ trait CustomFilterTrait
      * ]
      *
      * @param array $params
+     *
      * @return void
      */
-    public function processFilter(array $params): CustomFilters
+    public function processFilter(array $params) : CustomFilters
     {
-        //check sytem module?
+        //check system module?
         if (!array_key_exists('criterias', $params)) {
             throw new RuntimeException('Expected Criteria key on this array');
         }
@@ -82,9 +82,10 @@ trait CustomFilterTrait
      *
      * @param CustomFilters $filter
      * @param array $criterias
+     *
      * @return void
      */
-    public function processsCriterias(CustomFilters $filter, array $criterias) : bool
+    public function processCriterias(CustomFilters $filter, array $criterias) : bool
     {
         for ($i = 0 ; $i < count($criterias) ; $i++) {
             //not an array then you are the conditional between the 2 operators
@@ -114,13 +115,14 @@ trait CustomFilterTrait
      *
      * @param CustomFilters $filter
      * @param array $criterias
-     * @return boolean
+     *
+     * @return bool
      */
-    public function updateCriterias(CustomFilters $filter, array $criterias): bool
+    public function updateCriterias(CustomFilters $filter, array $criterias) : bool
     {
         //clean all the conditions
         $filter->conditions->delete();
 
-        return $this->processsCriterias($filter, $criterias);
+        return $this->processCriterias($filter, $criterias);
     }
 }

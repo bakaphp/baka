@@ -13,6 +13,7 @@ class InitBaka extends Phinx\Migration\AbstractMigration
         $this->table('custom_fields_modules', [
                 'id' => false,
                 'engine' => 'InnoDB',
+                'primary_key' => ['id'],
                 'encoding' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'comment' => '',
@@ -21,6 +22,8 @@ class InitBaka extends Phinx\Migration\AbstractMigration
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
+                'identity' => 'enable',
+
             ])
             ->addColumn('companies_id', 'integer', [
                 'null' => false,
