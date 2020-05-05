@@ -170,8 +170,6 @@ class PhalconUnitTestCase extends PhalconUnit
     protected function setUp() : void
     {
         parent::setUp();
-        Phinx::migrate();
-        Phinx::seed();
     }
     
 }

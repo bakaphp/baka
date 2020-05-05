@@ -32,7 +32,7 @@
         "codeception/module-phalcon": "^1.0",
         "codeception/verify": "*",
         "duncan3dc/fork-helper": "^2.2.0",
-        "fzaninotto/faker": "^1.9@dev",
+        "fzaninotto/faker": "^1.9",
         "odan/phinx-migrations-generator": "^4",
         "phpunit/phpunit": "^9",
         "squizlabs/php_codesniffer": "1.*",
