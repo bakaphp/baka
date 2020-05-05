@@ -46,7 +46,7 @@ class Modules extends Model
      * @throws Exception
      * @return Modules
      */
-    public static function getByCustomeFieldModuleByModuleAndApp(string $customFieldClassName, Apps $app): Modules
+    public static function getByCustomFieldModuleByModuleAndApp(string $customFieldClassName, Apps $app): Modules
     {
         $model = self::findFirst([
             'conditions' => 'model_name = ?0 and apps_id = ?1',

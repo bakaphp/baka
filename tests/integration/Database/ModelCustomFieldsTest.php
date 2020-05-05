@@ -3,8 +3,8 @@
 namespace Baka\Test\Integration\Database;
 
 use PhalconUnitTestCase;
-use Baka\Test\Model\Leads;
-use Baka\Test\Model\LeadsCustomFields;
+use Baka\Test\Support\Models\Leads;
+use Baka\Test\Support\Models\LeadsCustomFields;
 
 class ModelCustomFieldsTest extends PhalconUnitTestCase
 {
@@ -32,9 +32,12 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $lead->email = $this->faker->email;
         $lead->users_id = 1;
         $lead->companies_id = 1;
+        $lead->apps_id = $this->getDI()->get('app')->getId();
+        $lead->companies_branch_id = 1;
         $lead->leads_owner_id = 1;
+        $lead->system_modules_id = 1;
         $lead->setCustomFields([
-            'refernce' => $this->faker->name
+            'reference' => $this->faker->name
         ]);
 
         $this->assertTrue($lead->saveOrFail());
@@ -50,7 +53,7 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $lead = Leads::findFirst();
         $lead->lastname = $this->faker->lastname;
         $lead->setCustomFields([
-            'refernce' => $this->faker->name
+            'reference' => $this->faker->name
         ]);
 
         $this->assertTrue($lead->updateOrFail());

@@ -51,7 +51,7 @@ class Integration extends Module
      */
     public function _afterSuite()
     {
-        Phinx::dropTables();
+        //Phinx::dropTables();
     }
 
     /**

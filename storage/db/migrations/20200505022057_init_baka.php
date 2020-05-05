@@ -8,36 +8,8 @@ class InitBaka extends Phinx\Migration\AbstractMigration
     {
         $this->execute("ALTER DATABASE CHARACTER SET 'utf8mb4';");
         $this->execute("ALTER DATABASE COLLATE='utf8mb4_unicode_ci';");
-        $this->table('leads_custom_fields', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
-            ->addColumn('id', 'integer', [
-                'null' => false,
-                'limit' => MysqlAdapter::INT_REGULAR,
-                'identity' => 'enable',
-            ])
-            ->create();
-        $this->table('leads_settings', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
-            ->addColumn('id', 'integer', [
-                'null' => false,
-                'limit' => MysqlAdapter::INT_REGULAR,
-                'identity' => 'enable',
-            ])
-            ->create();
+
+ 
         $this->table('custom_fields_modules', [
                 'id' => false,
                 'engine' => 'InnoDB',
@@ -288,13 +260,6 @@ class InitBaka extends Phinx\Migration\AbstractMigration
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'identity' => 'enable',
-            ])
-            ->addColumn('name', 'string', [
-                'null' => false,
-                'limit' => 64,
-                'collation' => 'utf8mb4_unicode_ci',
-                'encoding' => 'utf8mb4',
-                'after' => 'id',
             ])
             ->addColumn('system_modules_id', 'integer', [
                 'null' => false,

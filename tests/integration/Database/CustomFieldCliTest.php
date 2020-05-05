@@ -17,11 +17,10 @@ class CustomFieldCliTest extends PhalconUnitTestCase
     public function testCreateModuleAction()
     {
         //drop the table
-        $this->getDI()->getDb()->query('DROP TABLE leads_custom_fields');
 
         $createTable = $this->createModuleAction([
             'leads', //name
-            'Test\Model\Leads', //model with namespace
+            'Baka\Test\Support\Models\Leads', //model with namespace
             'CRM', //app
         ]);
 
@@ -36,8 +35,8 @@ class CustomFieldCliTest extends PhalconUnitTestCase
     public function testCustomFieldCreationAction()
     {
         $createFields = $this->createFieldsAction([
-            'refernce', //field name
-            'Test\Model\Leads', //model
+            'reference', //field name
+            'Baka\Test\Support\Models\Leads', //model
             'CRM', //app
             'text', //type
             'null', //default files
@@ -54,8 +53,8 @@ class CustomFieldCliTest extends PhalconUnitTestCase
     public function testCustomFieldCreationActionWithDefaultValues()
     {
         $createFields = $this->createFieldsAction([
-            'refernce', //field name
-            'Test\Model\Leads', //model
+            'reference', //field name
+            'Baka\Test\Support\Models\Leads', //model
             'CRM', //app
             'text', //type
             'label1:value1|label2:value2', //default files

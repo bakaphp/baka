@@ -4,7 +4,7 @@ namespace Baka\Test\Integration\Database;
 
 use PhalconUnitTestCase;
 use Baka\Database\Contracts\HashTableTasksTrait;
-use Baka\Test\Model\LeadsNormal as Leads;
+use Baka\Test\Support\Models\LeadsNormal as Leads;
 
 class HashTableTest extends PhalconUnitTestCase
 {
@@ -17,10 +17,9 @@ class HashTableTest extends PhalconUnitTestCase
      */
     public function testCreateHashTable()
     {
-        $this->getDI()->getDb()->query('DROP TABLE leads_settings');
 
         $hashTable = $this->createModuleAction([
-            'Test\Model\Leads', //model
+            'Baka\Test\Support\Models\Leads', //model
         ]);
 
         $this->assertTrue((bool) preg_match('/Hash table for Module Created/i', $hashTable));

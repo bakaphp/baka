@@ -2,13 +2,13 @@
 
 namespace Baka\Database\Contracts\CustomFields;
 
-use Baka\Database\CustomFields\Modules;
 use Baka\Database\CustomFields\CustomFields;
+use Baka\Database\CustomFields\Modules;
+use Baka\Database\Model;
 use Baka\Database\Model as BakaModel;
 use Exception;
-use ReflectionClass;
 use PDO;
-use Baka\Database\Model;
+use ReflectionClass;
 
 /**
  * Custom field class.
@@ -20,10 +20,10 @@ trait CustomFieldsTrait
     /**
      * Get the custom fields of the current object.
      *
-     * @return Array
+     * @return array
      *
      */
-    public function getCustomFields(): array
+    public function getCustomFields() : array
     {
         $classReflection = new ReflectionClass($this);
         $className = $classReflection->getShortName();
@@ -53,12 +53,13 @@ trait CustomFieldsTrait
      * Get all custom fields of the given object.
      *
      * @param  array  $fields
+     *
      * @return Phalcon\Mvc\Model
      */
     public function getAllCustomFields(array $fields = [])
     {
         try {
-            $module = Modules::getByCustomeFieldModuleByModuleAndApp(get_class($this), $this->di->getApp());
+            $module = Modules::getByCustomFieldModuleByModuleAndApp(get_class($this), $this->di->getApp());
         } catch (Exception $e) {
             return [];
         }
@@ -105,6 +106,7 @@ trait CustomFieldsTrait
      * Allows to query a set of records that match the specified conditions.
      *
      * @param mixed $parameters
+     *
      * @return Content[]
      */
     public static function find($parameters = null)
@@ -134,6 +136,7 @@ trait CustomFieldsTrait
      * Allows to query the first record that match the specified conditions.
      *
      * @param mixed $parameters
+     *
      * @return Content
      */
     public static function findFirst($parameters = null)
@@ -150,7 +153,7 @@ trait CustomFieldsTrait
                 }
             }
         }
-        
+
         return $result;
     }
 
@@ -161,11 +164,11 @@ trait CustomFieldsTrait
      *
      * @return void
      */
-    protected function saveCustomFields(): bool
+    protected function saveCustomFields() : bool
     {
         //find the custom field module
         try {
-            $module = Modules::getByCustomeFieldModuleByModuleAndApp(get_class($this), $this->di->getApp());
+            $module = Modules::getByCustomFieldModuleByModuleAndApp(get_class($this), $this->di->getApp());
         } catch (Exception $e) {
             return false;
         }
@@ -199,13 +202,13 @@ trait CustomFieldsTrait
      * Remove all the custom fields from the entity.
      *
      * @param  int $id
+     *
      * @return \Phalcon\MVC\Models
      */
-    public function cleanCustomFields(int $id): bool
+    public function cleanCustomFields(int $id) : bool
     {
         $customModel = $this->getCustomFieldModel();
 
-        //return $customModel->find(['conditions' => $this->getSource() . '_id = ?0', 'bind' => [$id]])->delete();
         //we need to run the query since we dont have primary key
         $result = $this->getReadConnection()->prepare("DELETE FROM {$customModel->getSource()} WHERE " . $this->getSource() . '_id = ?');
         return $result->execute([$id]);
