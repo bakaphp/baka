@@ -4,10 +4,10 @@ namespace Baka\Database;
 
 use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Database\Exception\ModelNotProcessedException;
+use function Baka\getShortClassName;
 use Phalcon\Mvc\Model as PhalconModel;
 use Phalcon\Mvc\Model\MetaData\Memory as MetaDataMemory;
 use Phalcon\Mvc\Model\ResultsetInterface;
-use ReflectionClass;
 use RuntimeException;
 
 class Model extends PhalconModel
@@ -113,7 +113,7 @@ class Model extends PhalconModel
     }
 
     /**
-     * Get by Id or thrown an exceptoin.
+     * Get by Id or thrown an exception.
      *
      * @param mixed $id
      *
@@ -126,7 +126,7 @@ class Model extends PhalconModel
         }
 
         throw new ModelNotFoundException(
-            (new ReflectionClass(new static))->getShortName() . ' Record not found'
+            getShortClassName(new static) . ' Record not found'
         );
     }
 
@@ -142,7 +142,7 @@ class Model extends PhalconModel
         $result = static::findFirst($parameters);
         if (!$result) {
             throw new ModelNotFoundException(
-                (new ReflectionClass(new static))->getShortName() . ' Record not found'
+                getShortClassName(new static) . ' Record not found'
             );
         }
 
@@ -161,7 +161,7 @@ class Model extends PhalconModel
         $results = static::find($parameters);
         if (!$results) {
             throw new ModelNotFoundException(
-                (new ReflectionClass(new static))->getShortName() . ' Record not found'
+                getShortClassName(new static) . ' Record not found'
             );
         }
 
@@ -218,7 +218,7 @@ class Model extends PhalconModel
      */
     public function toFullArray() : array
     {
-        //convert the obj to array in order to conver to json
+        //convert the obj to array in order to convert to json
         $result = get_object_vars($this);
 
         foreach ($result as $key => $value) {
@@ -268,7 +268,7 @@ class Model extends PhalconModel
     protected function throwErrorMessages() : void
     {
         throw new ModelNotProcessedException(
-            (new ReflectionClass(new static))->getShortName() . ' ' . current($this->getMessages())->getMessage()
+            getShortClassName(new static) . ' ' . current($this->getMessages())->getMessage()
         );
     }
 

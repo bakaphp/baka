@@ -4,6 +4,7 @@ namespace Baka;
 
 use function function_exists;
 use function getenv;
+use ReflectionClass;
 
 if (!function_exists('Baka\appPath')) {
     /**
@@ -13,16 +14,17 @@ if (!function_exists('Baka\appPath')) {
      *
      * @return string
      */
-    function appPath(string $path = ''): string
+    function appPath(string $path = '') : string
     {
         $currentDir = dirname(dirname(getcwd())) . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 
         /**
          * since we are calling this file from the diferent path we have to verify if its cli.
+         *
          * @todo look for a better solution , hate this
          */
         if (php_sapi_name() == 'cli') {
-            $currentDir = getcwd() . DIRECTORY_SEPARATOR. $path;
+            $currentDir = getcwd() . DIRECTORY_SEPARATOR . $path;
         }
 
         return $currentDir;
@@ -83,7 +85,7 @@ if (!function_exists('Baka\paymentGatewayIsActive')) {
      *
      * @return boolean
      */
-    function paymentGatewayIsActive(): bool
+    function paymentGatewayIsActive() : bool
     {
         return !empty(getenv('STRIPE_SECRET')) ? true : false;
     }
@@ -94,9 +96,10 @@ if (!function_exists('Baka\isJson')) {
      * Given a string determine if its a json.
      *
      * @param string $string
+     *
      * @return boolean
      */
-    function isJson(string $string): bool
+    function isJson(string $string) : bool
     {
         json_decode($string);
         return (bool ) (json_last_error() == JSON_ERROR_NONE);
@@ -109,8 +112,20 @@ if (!function_exists('Baka\isSwooleServer')) {
      *
      * @return boolean
      */
-    function isSwooleServer(): bool
+    function isSwooleServer() : bool
     {
         return defined('ENGINE') && ENGINE === 'SWOOLE' ? true : false;
+    }
+}
+
+if (!function_exists('Baka\getClassName')) {
+    /**
+     * Are we running a Swoole Server for this app?
+     *
+     * @return boolean
+     */
+    function getShortClassName(object $object) : string
+    {
+        return (new ReflectionClass($object))->getShortName();
     }
 }

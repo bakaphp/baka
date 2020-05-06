@@ -4,6 +4,7 @@ namespace Baka\Http\Contracts\Api;
 
 use ArgumentCountError;
 use Baka\Database\Exception\ModelNotFoundException;
+use function Baka\getShortClassName;
 use Baka\Http\Converter\RequestUriToSql;
 use Exception;
 use PDO;
@@ -11,7 +12,6 @@ use Phalcon\Http\RequestInterface;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
 use Phalcon\Mvc\ModelInterface;
-use ReflectionClass;
 
 trait CrudBehaviorTrait
 {
@@ -193,7 +193,7 @@ trait CrudBehaviorTrait
 
         if (empty($results)) {
             throw new ModelNotFoundException(
-                (new ReflectionClass($this->model))->getShortName() . ' Record not found'
+                getShortClassName($this->model) . ' Record not found'
             );
         }
 
