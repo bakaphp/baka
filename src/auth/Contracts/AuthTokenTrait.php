@@ -23,12 +23,13 @@ use Lcobucci\JWT\ValidationData;
 trait AuthTokenTrait
 {
     /**
-    * Returns the string token.
-    *
-    * @return string
-    * @throws ModelException
-    */
-    public function getToken(): array
+     * Returns the string token.
+     *
+     * @return string
+     *
+     * @throws ModelException
+     */
+    public function getToken() : array
     {
         $random = new \Phalcon\Security\Random();
         $sessionId = $random->uuid();
@@ -70,9 +71,10 @@ trait AuthTokenTrait
      * Returns the ValidationData object for this record (JWT).
      *
      * @return ValidationData
+     *
      * @throws ModelException
      */
-    public static function getValidationData(string $id): ValidationData
+    public static function getValidationData(string $id) : ValidationData
     {
         $validationData = new ValidationData();
         $validationData->setIssuer(getenv('TOKEN_AUDIENCE'));
