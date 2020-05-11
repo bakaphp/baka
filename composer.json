@@ -53,7 +53,7 @@
     "autoload": {
         "psr-4": {
             "Baka\\": "src/",
-            "Phalcon\\Cashier\\": "cashier/"
+            "Phalcon\\Cashier\\": "src/cashier/"
         },
         "files": [
             "src/functions.php"
