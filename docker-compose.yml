@@ -10,12 +10,12 @@ services:
       - ../../baka:/baka
     depends_on:
       - 'redis'
+      - 'mysql'
     tty: true
     ports:
       - "9000:9000"
     networks:
       - local-network
-      - my-proxy-net
 
   nginx:
     image: nginx:latest
@@ -55,6 +55,7 @@ services:
       - '.env'
     volumes:
       - "db-data:/var/lib/mysql"
+      - "./storage/ci/mysql.cnf:/etc/mysql/conf.d/kanvas.cnf"
     networks:
         - local-network
 
@@ -81,6 +82,3 @@ volumes:
 networks:
   local-network:
   public-network:
-  my-proxy-net:
-    external:
-      name: canvas_network
