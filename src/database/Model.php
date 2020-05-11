@@ -121,8 +121,20 @@ class Model extends PhalconModel
      */
     public static function getByIdOrFail($id) : self
     {
-        if ($record = static::findFirst($id)) {
-            return $record;
+        if (property_exists(new static, 'is_deleted')) {
+            if ($record = static::findFirst([
+                'conditions' => 'id = :id:  and is_deleted = :is_deleted:',
+                'bind' => [
+                    'id' => $id,
+                    'is_deleted' => 0
+                ]
+            ])) {
+                return $record;
+            }
+        } else {
+            if ($record = static::findFirst($id)) {
+                return $record;
+            }
         }
 
         throw new ModelNotFoundException(
@@ -196,6 +208,46 @@ class Model extends PhalconModel
         }
 
         $this->throwErrorMessages();
+    }
+
+    /**
+     * Find or create a new object.
+     *
+     * @param $parameters
+     *
+     * @return Model
+     */
+    public static function findFirstOrCreate($parameters = null, array $fields = []) : self
+    {
+        $model = static::findFirst($parameters);
+
+        if (!$model) {
+            $model = new static;
+            $model->assign($fields);
+            $model->saveOrFail();
+        }
+        return $model;
+    }
+
+    /**
+     * Update or create a new object.
+     *
+     * @param $parameters
+     *
+     * @return Model
+     */
+    public static function updateOrCreate($parameters = null, array $fields = []) : self
+    {
+        $model = static::findFirst($parameters);
+
+        if (!$model) {
+            $model = new static;
+        }
+
+        $model->assign($fields);
+        $model->saveOrFail();
+
+        return $model;
     }
 
     /**

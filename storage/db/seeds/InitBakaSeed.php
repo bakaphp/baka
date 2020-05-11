@@ -22,6 +22,7 @@ class InitBakaSeed extends AbstractSeed
             [
                 'firstname' => $faker->firstName,
                 'lastname' => $faker->lastName,
+                'email' => $faker->email,
                 'apps_id' => 1,
                 'leads_owner_id' => 1,
                 'companies_id' => 1,
@@ -38,6 +39,7 @@ class InitBakaSeed extends AbstractSeed
             $data[] = [
                 'firstname' => $faker->firstName,
                 'lastname' => $faker->lastName,
+                'email' => $faker->email,
                 'apps_id' => 1,
                 'leads_owner_id' => 1,
                 'companies_id' => rand(1, 2),
@@ -84,7 +86,7 @@ class InitBakaSeed extends AbstractSeed
         $table = $this->table('system_modules');
         $table->insert($data)
                   ->save();
-    
+
         $data = [
             [
                 'name' => 'text',

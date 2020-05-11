@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Baka\Database\Contracts;
 
 use RuntimeException;
-use Baka\Database\Exception\Exception;
 
 /**
  * Trait ResponseTrait.
@@ -35,7 +34,7 @@ trait HashTableTrait
      *
      * @return string
      */
-    private function getSettingsPrimaryKey(): string
+    private function getSettingsPrimaryKey() : string
     {
         return $this->getSource() . '_' . $this->getPrimaryKey();
     }
@@ -45,7 +44,7 @@ trait HashTableTrait
      *
      * @return void
      */
-    private function createSettingsModel(): void
+    private function createSettingsModel() : void
     {
         $class = get_class($this) . 'Settings';
 
@@ -57,7 +56,8 @@ trait HashTableTrait
      *
      * @param string $key
      * @param string $value
-     * @return boolean
+     *
+     * @return bool
      */
     public function set(string $key, $value) : bool
     {
@@ -67,7 +67,7 @@ trait HashTableTrait
             throw new RuntimeException('ModelSettingsTrait need to have a settings model configure, check the model setting existe for this class' . get_class($this));
         }
 
-        //if we dont find it we create it
+        //if we don't find it we create it
         if (empty($this->settingsModel = $this->getSettingsByKey($key))) {
             /**
              * @todo this is stupid look for a better solution
@@ -78,9 +78,7 @@ trait HashTableTrait
 
         $this->settingsModel->name = $key;
         $this->settingsModel->value = $value;
-        if (!$this->settingsModel->save()) {
-            throw new Exception((string)current($this->settingsModel->getMessages()));
-        }
+        $this->settingsModel->saveOrFail();
 
         return true;
     }
@@ -101,7 +99,7 @@ trait HashTableTrait
      *
      * @return array
      */
-    public function getAllSettings(): array
+    public function getAllSettings() : array
     {
         $this->createSettingsModel();
 
@@ -122,9 +120,10 @@ trait HashTableTrait
      * Get the settings base on the key.
      *
      * @param string $key
+     *
      * @return void
      */
-    public function get(string $key): ?string
+    public function get(string $key) : ?string
     {
         $this->createSettingsModel();
         $value = $this->getSettingsByKey($key);
