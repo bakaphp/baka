@@ -25,7 +25,7 @@ return [
         ],
         'development' => [
             'adapter' => 'mysql',
-            'host' => 'mysql',
+            'host' => 'localhost',
             'name' => 'bakatest',
             'user' => 'root',
             'pass' => 'nosenose',
