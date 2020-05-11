@@ -49,7 +49,7 @@ before_script:
 - sudo redis-server /etc/redis/redis.conf --port 6379
 - composer install --no-interaction
 - composer update --no-interaction
-- ./vendor/bin/phinx migrate status -e development
+- ./vendor/bin/phinx status -e development
 - "./vendor/bin/phinx migrate -e development"
 - "./vendor/bin/phinx seed:run"
 - sudo rabbitmqctl status
