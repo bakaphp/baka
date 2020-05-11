@@ -15,7 +15,7 @@ if (!defined('ROOT_DIR')) {
     define('ROOT_DIR', dirname(__DIR__) . '/');
 }
 
-/* //load classes
+//load classes
 $loader = new Loader();
 $loader->registerNamespaces([
     'Baka' => appPath('src/'),
@@ -25,7 +25,7 @@ $loader->registerNamespaces([
 ]);
 
 $loader->register();
- */
+
 require appPath('vendor/autoload.php');
 
 (new Dotenv(appPath()))->overload();

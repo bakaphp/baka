@@ -61,7 +61,10 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Baka\\Test\\": "tests/"
+            "Baka\\": "src/",
+            "Phalcon\\Cashier\\": "src/cashier/",
+            "Baka\\Test\\": "tests/",
+            "Baka\\Test\\Support\\": "tests/_support/"
         }
     },
     "scripts": {
