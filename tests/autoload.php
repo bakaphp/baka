@@ -4,7 +4,11 @@
 /**
  * Setup autoloading.
  */
-require __DIR__ . '/../vendor/autoload.php';
+
+use function Baka\appPath;
+use Dotenv\Dotenv;
+use Phalcon\Loader;
+
 require __DIR__ . '/PhalconUnitTestCase.php';
 
 if (!defined('ROOT_DIR')) {
@@ -12,17 +16,16 @@ if (!defined('ROOT_DIR')) {
 }
 
 //load classes
-$loader = new \Phalcon\Loader();
-$loader->registerNamespaces(
-    [
-        'Baka' => ROOT_DIR . 'src/',
-        'Baka\Test' => ROOT_DIR . 'tests/',
-        'Baka\Test\Support' => ROOT_DIR . 'tests/_support',
-        'Phalcon\Cashier' => ROOT_DIR . 'src/Cashier',
-    ]
-);
+$loader = new Loader();
+$loader->registerNamespaces([
+    'Baka' => appPath('src/'),
+    'Baka\Test' => appPath('tests/'),
+    'Baka\Test\Support' => appPath('tests/_support'),
+    'Phalcon\Cashier' => appPath('src/Cashier'),
+]);
 
 $loader->register();
 
-$dotenv = new Dotenv\Dotenv(__DIR__ . '/../');
-$dotenv->load();
+require appPath('vendor/autoload.php');
+
+(new Dotenv(appPath()))->overload();
