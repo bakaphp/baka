@@ -2,12 +2,11 @@
 
 namespace Baka\Test\Integration\Elasticsearch;
 
-use PhalconUnitTestCase;
 use Baka\Elasticsearch\Contracts\CustomFiltersSchemaTrait;
-use Baka\Elasticsearch\IndexBuilderStructure;
 use Baka\Elasticsearch\Contracts\IndexBuilderTaskTrait;
-use Test\Model\Leads;
 use Baka\Elasticsearch\IndexBuilder;
+use PhalconUnitTestCase;
+use Test\Model\Leads;
 
 class IndicesModelTest extends PhalconUnitTestCase
 {
@@ -21,13 +20,13 @@ class IndicesModelTest extends PhalconUnitTestCase
      *
      * @return void
      */
-    public function testCreateIndexFromModel()
+    public function testCreateIndiceFromModel()
     {
         $this->elastic = $this->getDI()->getElastic();
 
         //create index
         $this->createIndexAction([
-            new Leads(),
+            'Leads', //model
             '1' //depth
         ]);
 
@@ -47,14 +46,15 @@ class IndicesModelTest extends PhalconUnitTestCase
         $this->config = $this->getDI()->getConfig();
         $this->elastic = $this->getDI()->getElastic();
 
-        $this->indexAction([
-            new Leads(),
+        $this->insertAction([
+            'Leads', //model
             1, //depth
         ]);
 
         $lead = Leads::findFirst();
         $params = [
-            'index' => IndexBuilder::getIndexName($lead),
+            'index' => 'leads',
+            'type' => 'leads',
             'id' => $lead->getId()
         ];
 
@@ -83,7 +83,8 @@ class IndicesModelTest extends PhalconUnitTestCase
         $elasticsearch->indexDocument($lead, 1); //depth
 
         $params = [
-            'index' => IndexBuilder::getIndexName($lead),
+            'index' => 'leads',
+            'type' => 'leads',
             'id' => $lead->getId()
         ];
 
