@@ -2,12 +2,12 @@
 
 namespace Phalcon\Cashier;
 
-use DOMPDF;
 use Carbon\Carbon;
+use DOMPDF;
+use Phalcon\Di\FactoryDefault;
+use Phalcon\Http\Response;
 use Phalcon\Mvc\View;
 use Stripe\Invoice as StripeInvoice;
-use Phalcon\Http\Response;
-use Phalcon\Di\FactoryDefault;
 
 class Invoice
 {
@@ -28,6 +28,7 @@ class Invoice
      *
      * @param  Model           $user
      * @param  \Stripe\Invoice $invoice
+     *
      * @return void
      */
     public function __construct($user, StripeInvoice $invoice)
@@ -40,6 +41,7 @@ class Invoice
      * Get a Carbon date for the invoice.
      *
      * @param  \DateTimeZone|string $timezone
+     *
      * @return \Carbon\Carbon
      */
     public function date($timezone = null)
@@ -109,7 +111,7 @@ class Invoice
     public function hasDiscount()
     {
         return $this->invoice->subtotal > 0 && $this->invoice->subtotal != $this->invoice->total
-        && ! is_null($this->invoice->discount);
+        && !is_null($this->invoice->discount);
     }
 
     /**
@@ -196,6 +198,7 @@ class Invoice
      * Get all of the invoie items by a given type.
      *
      * @param  string $type
+     *
      * @return array
      */
     public function invoiceItemsByType($type)
@@ -217,6 +220,7 @@ class Invoice
      * Format the given amount into a string based on the user's preferences.
      *
      * @param  int $amount
+     *
      * @return string
      */
     protected function formatAmount($amount)
@@ -237,7 +241,7 @@ class Invoice
     }
 
     /**
-     * Return a {@link \Phalcon\Mvc\View\Simple} instance
+     * Return a {@link \Phalcon\Mvc\View\Simple} instance.
      *
      * @return \Phalcon\Mvc\View\Simple
      */
@@ -263,11 +267,12 @@ class Invoice
      * Capture the invoice as a PDF and return the raw bytes.
      *
      * @param  array $data
+     *
      * @return string
      */
     public function pdf(array $data)
     {
-        if (! defined('DOMPDF_ENABLE_AUTOLOAD')) {
+        if (!defined('DOMPDF_ENABLE_AUTOLOAD')) {
             define('DOMPDF_ENABLE_AUTOLOAD', false);
         }
         $path = $_SERVER['DOCUMENT_ROOT'];
@@ -291,11 +296,11 @@ class Invoice
      */
     public function download(array $data)
     {
-        $filename = $data['product'].'_'.$this->date()->month.'_'.$this->date()->year.'.pdf';
+        $filename = $data['product'] . '_' . $this->date()->month . '_' . $this->date()->year . '.pdf';
 
         $response = new Response();
         $response->setHeader('Content-Description', 'File Transfer');
-        $response->setHeader('Content-Disposition', 'attachment; filename="'.$filename.'"');
+        $response->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
         $response->setStatusCode(200, 'OK');
         $response->setContent($this->pdf($data));
         $response->setContentType('application/pdf');
@@ -327,6 +332,7 @@ class Invoice
      * Dynamically get values from the Stripe invoice.
      *
      * @param  string $key
+     *
      * @return mixed
      */
     public function __get($key)

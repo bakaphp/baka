@@ -25,6 +25,7 @@ class Card
      *
      * @param  Users  $user
      * @param  \Stripe\Card  $card
+     *
      * @return void
      */
     public function __construct($user, StripeCard $card)
@@ -57,6 +58,7 @@ class Card
      * Dynamically get values from the Stripe card.
      *
      * @param  string  $key
+     *
      * @return mixed
      */
     public function __get($key)

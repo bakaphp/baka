@@ -2,21 +2,21 @@
 
 namespace Phalcon\Cashier;
 
-use Phalcon\Di\FactoryDefault;
-use Exception;
-use Carbon\Carbon;
-use InvalidArgumentException;
-use Stripe\Token as StripeToken;
-use Stripe\Charge as StripeCharge;
-use Stripe\Refund as StripeRefund;
-use Stripe\Invoice as StripeInvoice;
-use Stripe\Customer as StripeCustomer;
-use Stripe\InvoiceItem as StripeInvoiceItem;
-use Stripe\Error\InvalidRequest as StripeErrorInvalidRequest;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Phalcon\Mvc\Model;
 use Baka\Database\Apps;
+use Carbon\Carbon;
+use Exception;
+use InvalidArgumentException;
+use Phalcon\Di\FactoryDefault;
+use Phalcon\Mvc\Model;
+use Stripe\Charge as StripeCharge;
+use Stripe\Customer as StripeCustomer;
+use Stripe\Error\InvalidRequest as StripeErrorInvalidRequest;
+use Stripe\Invoice as StripeInvoice;
+use Stripe\InvoiceItem as StripeInvoiceItem;
+use Stripe\Refund as StripeRefund;
+use Stripe\Token as StripeToken;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 trait Billable
 {
@@ -32,6 +32,7 @@ trait Billable
      *
      * @param  int   $amount
      * @param  array $options
+     *
      * @return \Stripe\Charge
      *
      * @throws \Stripe\Error\Card
@@ -57,6 +58,7 @@ trait Billable
      *
      * @param  string $charge
      * @param  array  $options
+     *
      * @return \Stripe\Charge
      *
      * @throws \Stripe\Error\Refund
@@ -84,6 +86,7 @@ trait Billable
      * @param  string  $description
      * @param  int  $amount
      * @param  array  $options
+     *
      * @return \Stripe\InvoiceItem
      *
      * @throws \InvalidArgumentException
@@ -112,6 +115,7 @@ trait Billable
      * @param  string  $description
      * @param  int  $amount
      * @param  array  $options
+     *
      * @return \Laravel\Cashier\Invoice|bool
      */
     public function invoiceFor($description, $amount, array $options = [])
@@ -136,6 +140,7 @@ trait Billable
      *
      * @param  string      $subscription
      * @param  string|null $plan
+     *
      * @return bool
      */
     public function onTrial($subscription = 'default', $plan = null)
@@ -171,6 +176,7 @@ trait Billable
      *
      * @param  string      $subscription
      * @param  string|null $plan
+     *
      * @return bool
      */
     public function subscribed($subscription = 'default', $plan = null)
@@ -300,6 +306,7 @@ trait Billable
      * @param string $id
      * @param array  $data
      * @param string $storagePath
+     *
      * @todo
      */
     public function downloadInvoice($id, array $data, $storagePath = null)
@@ -342,11 +349,12 @@ trait Billable
     }
 
     /**
-    * Get a collection of the entity's cards.
-    *
-    * @param  array  $parameters
-    * @return array
-    */
+     * Get a collection of the entity's cards.
+     *
+     * @param  array  $parameters
+     *
+     * @return array
+     */
     public function cards($parameters = [])
     {
         $cards = [];
@@ -383,6 +391,7 @@ trait Billable
      * Update customer's credit card.
      *
      * @param  string $token
+     *
      * @return void
      */
     public function updateCard($token)
@@ -438,6 +447,7 @@ trait Billable
      * Fills the model's properties with the source from Stripe.
      *
      * @param  \Stripe\Card|\Stripe\BankAccount|null  $card
+     *
      * @return $this
      */
     protected function fillCardDetails($card)
@@ -453,10 +463,10 @@ trait Billable
     }
 
     /**
-    * Deletes the entity's cards.
-    *
-    * @return void
-    */
+     * Deletes the entity's cards.
+     *
+     * @return void
+     */
     public function deleteCards()
     {
         foreach ($this->cards() as $card) {
@@ -470,6 +480,7 @@ trait Billable
      * Apply a coupon to the billable entity.
      *
      * @param  string $coupon
+     *
      * @return void
      */
     public function applyCoupon($coupon)
@@ -486,6 +497,7 @@ trait Billable
      *
      * @param  array|string $plans
      * @param  string       $subscription
+     *
      * @return bool
      */
     public function subscribedToPlan($plans, $subscription = 'default')
@@ -509,6 +521,7 @@ trait Billable
      * Determine if the entity is on the given plan.
      *
      * @param  string $plan
+     *
      * @return bool
      */
     public function onPlan($plan)
@@ -537,6 +550,7 @@ trait Billable
      *
      * @param  string $token
      * @param  array  $options
+     *
      * @return StripeCustomer
      */
     public function createAsStripeCustomer($token, array $options = [])
@@ -616,6 +630,7 @@ trait Billable
      * Set the Stripe API key.
      *
      * @param  string $key
+     *
      * @return void
      */
     public static function setStripeKey($key)
@@ -625,7 +640,9 @@ trait Billable
 
     /**
      * @link https://stripe.com/docs/api/php#create_card_token
+     *
      * @param $option
+     *
      * @return bool
      */
     public function createCardToken($option)
@@ -640,8 +657,10 @@ trait Billable
 
     /**
      * Update default payment method with new card.
+     *
      * @param string $customerId
      * @param string $token
+     *
      * @return StripeCustomer
      */
     public function updatePaymentMethod(string $customerId, string $token)
@@ -656,6 +675,7 @@ trait Billable
 
     /**
      * Create a new Invoice Item.
+     *
      * @param array $data Stripe Invoice Item data
      */
     public function createInvoiceItem(array $data)
@@ -671,6 +691,7 @@ trait Billable
 
     /**
      * Create and send new Invoice to a customer.
+     *
      * @param string $customerId Stripe customer id
      * @param array $options
      */

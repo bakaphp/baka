@@ -2,10 +2,10 @@
 
 namespace Phalcon\Cashier;
 
-use Carbon\Carbon;
-use LogicException;
-use DateTimeInterface;
 use Baka\Database\Model;
+use Carbon\Carbon;
+use DateTimeInterface;
+use LogicException;
 
 class Subscription extends Model
 {
@@ -45,7 +45,7 @@ class Subscription extends Model
         $this->belongsTo('user_id', '\App\Models\Users', 'id', ['alias' => 'user']);
     }
 
-    public function getSource(): string
+    public function getSource() : string
     {
         return 'subscriptions';
     }
@@ -123,6 +123,7 @@ class Subscription extends Model
      * Increment the quantity of the subscription.
      *
      * @param  int  $count
+     *
      * @return $this
      */
     public function incrementQuantity($count = 1)
@@ -136,6 +137,7 @@ class Subscription extends Model
      *  Increment the quantity of the subscription, and invoice immediately.
      *
      * @param  int  $count
+     *
      * @return $this
      */
     public function incrementAndInvoice($count = 1)
@@ -151,6 +153,7 @@ class Subscription extends Model
      * Decrement the quantity of the subscription.
      *
      * @param  int  $count
+     *
      * @return $this
      */
     public function decrementQuantity($count = 1)
@@ -165,6 +168,7 @@ class Subscription extends Model
      *
      * @param  int  $quantity
      * @param  \Stripe\Customer|null  $customer
+     *
      * @return $this
      */
     public function updateQuantity($quantity, $customer = null)
@@ -198,6 +202,7 @@ class Subscription extends Model
      * Change the billing cycle anchor on a plan change.
      *
      * @param  int|string  $date
+     *
      * @return $this
      */
     public function anchorBillingCycleOn($date = 'now')
@@ -215,6 +220,7 @@ class Subscription extends Model
      * Swap the subscription to a new Stripe plan.
      *
      * @param  string  $plan
+     *
      * @return $this
      */
     public function swap($plan)

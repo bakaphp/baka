@@ -18,6 +18,7 @@ $loader->registerNamespaces(
         'Baka' => ROOT_DIR . 'src/',
         'Baka\Test' => ROOT_DIR . 'tests/',
         'Baka\Test\Support' => ROOT_DIR . 'tests/_support',
+        'Phalcon\Cashier' => ROOT_DIR . 'src/Cashier',
     ]
 );
 

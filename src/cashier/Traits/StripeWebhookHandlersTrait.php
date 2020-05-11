@@ -2,12 +2,12 @@
 
 namespace Phalcon\Cashier\Traits;
 
-use Phalcon\Http\Response;
-use Exception;
 use Baka\Auth\Models\Users;
+use Exception;
+use Phalcon\Http\Response;
 
 /**
- * Trait WebhookHandlers
+ * Trait WebhookHandlers.
  *
  * @package Phalcon\Cashier\Traits
  *
@@ -18,11 +18,11 @@ use Baka\Auth\Models\Users;
 trait StripeWebhookHandlersTrait
 {
     /**
-     * Handle stripe webhoook calls
+     * Handle stripe webhoook calls.
      *
      * @return Response
      */
-    public function handleWebhook(): Response
+    public function handleWebhook() : Response
     {
         //we cant processs if we dont find the stripe header
         if (!$this->request->hasHeader('Stripe-Signature')) {
@@ -52,9 +52,10 @@ trait StripeWebhookHandlersTrait
      * Handle customer subscription updated.
      *
      * @param  array $payload
+     *
      * @return Response
      */
-    protected function handleCustomerSubscriptionUpdated(array $payload, string $method): Response
+    protected function handleCustomerSubscriptionUpdated(array $payload, ?string $method = null) : Response
     {
         $user = Users::findFirstByStripeId($payload['data']['object']['customer']);
         if ($user) {
@@ -68,9 +69,10 @@ trait StripeWebhookHandlersTrait
      * Handle a cancelled customer from a Stripe subscription.
      *
      * @param  array  $payload
+     *
      * @return Response
      */
-    protected function handleCustomerSubscriptionDeleted(array $payload, string $method): Response
+    protected function handleCustomerSubscriptionDeleted(array $payload, ?string $method = null) : Response
     {
         $user = Users::findFirstByStripeId($payload['data']['object']['customer']);
         if ($user) {
@@ -87,9 +89,10 @@ trait StripeWebhookHandlersTrait
      * Handle customer subscription free trial ending.
      *
      * @param  array $payload
+     *
      * @return Response
      */
-    protected function handleCustomerSubscriptionTrialwillend(array $payload, string $method): Response
+    protected function handleCustomerSubscriptionTrialwillend(array $payload, ?string $method = null) : Response
     {
         $user = Users::findFirstByStripeId($payload['data']['object']['customer']);
         if ($user) {
@@ -103,9 +106,10 @@ trait StripeWebhookHandlersTrait
      * Handle customer updated.
      *
      * @param  array $payload
+     *
      * @return Response
      */
-    protected function handleCustomerUpdated(array $payload, string $method): Response
+    protected function handleCustomerUpdated(array $payload, ?string $method = null) : Response
     {
         if ($user = Users::findFirstByStripeId($payload['data']['object']['id'])) {
             $user->updateCardFromStripe();
@@ -117,9 +121,10 @@ trait StripeWebhookHandlersTrait
      * Handle customer source deleted.
      *
      * @param  array $payload
+     *
      * @return Response
      */
-    protected function handleCustomerSourceDeleted(array $payload, string $method) : Response
+    protected function handleCustomerSourceDeleted(array $payload, ?string $method = null) : Response
     {
         if ($user = Users::findFirstByStripeId($payload['data']['object']['customer'])) {
             $user->updateCardFromStripe();
@@ -131,9 +136,10 @@ trait StripeWebhookHandlersTrait
      * Handle deleted customer.
      *
      * @param  array $payload
+     *
      * @return Response
      */
-    protected function handleCustomerDeleted(array $payload, string $method) : Response
+    protected function handleCustomerDeleted(array $payload, ?string $method = null) : Response
     {
         $user = Users::findFirstByStripeId($payload['data']['object']['id']);
         if ($user) {
@@ -151,13 +157,15 @@ trait StripeWebhookHandlersTrait
     }
 
     /**
-     * Handle sucessfull payment
+     * Handle sucessfull payment.
      *
      * @todo send email
+     *
      * @param array $payload
+     *
      * @return Response
      */
-    protected function handleChargeSucceeded(array $payload, string $method): Response
+    protected function handleChargeSucceeded(array $payload, ?string $method = null) : Response
     {
         $user = Users::findFirstByStripeId($payload['data']['object']['customer']);
         if ($user) {
@@ -168,13 +176,15 @@ trait StripeWebhookHandlersTrait
     }
 
     /**
-     * Handle bad payment
+     * Handle bad payment.
      *
      * @todo send email
+     *
      * @param array $payload
+     *
      * @return Response
      */
-    protected function handleChargeFailed(array $payload, string $method) : Response
+    protected function handleChargeFailed(array $payload, ?string $method = null) : Response
     {
         $user = Users::findFirstByStripeId($payload['data']['object']['customer']);
         if ($user) {
@@ -185,25 +195,29 @@ trait StripeWebhookHandlersTrait
     }
 
     /**
-     * Handle looking for refund
+     * Handle looking for refund.
      *
      * @todo send email
+     *
      * @param array $payload
+     *
      * @return Response
      */
-    protected function handleChargeDisputeCreated(array $payload, string $method) : Response
+    protected function handleChargeDisputeCreated(array $payload, ?string $method = null) : Response
     {
         return $this->response(['Webhook Handled']);
     }
 
     /**
-     * Handle pending payments
+     * Handle pending payments.
      *
      * @todo send email
+     *
      * @param array $payload
+     *
      * @return Response
      */
-    protected function handleChargePending(array $payload, string $method) : Response
+    protected function handleChargePending(array $payload, ?string $method = null) : Response
     {
         $user = Users::findFirstByStripeId($payload['data']['object']['customer']);
         if ($user) {
@@ -214,12 +228,14 @@ trait StripeWebhookHandlersTrait
     }
 
     /**
-     * Send webhook related emails to user
+     * Send webhook related emails to user.
+     *
      * @param Users $user
      * @param array $payload
+     *
      * @return void
      */
-    protected static function sendWebhookResponseEmail(Users $user, array $payload, string $method): void
+    protected static function sendWebhookResponseEmail(Users $user, array $payload, ?string $method = null) : void
     {
         // $subject = '';
         // $content = '';

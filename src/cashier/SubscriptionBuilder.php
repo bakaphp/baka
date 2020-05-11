@@ -2,10 +2,9 @@
 
 namespace Phalcon\Cashier;
 
-use Carbon\Carbon;
-use Exception;
-use Phalcon\Mvc\Model;
 use Baka\Database\Apps;
+use Carbon\Carbon;
+use Phalcon\Mvc\Model;
 
 class SubscriptionBuilder
 {
@@ -91,6 +90,7 @@ class SubscriptionBuilder
      * @param  mixed  $user
      * @param  string  $name
      * @param  string  $plan
+     *
      * @return void
      */
     public function __construct($user, $name, $plan, Model $company, Apps $apps)
@@ -106,6 +106,7 @@ class SubscriptionBuilder
      * Specify the quantity of the subscription.
      *
      * @param  int  $quantity
+     *
      * @return $this
      */
     public function quantity($quantity)
@@ -119,6 +120,7 @@ class SubscriptionBuilder
      * Specify the ending date of the trial.
      *
      * @param  int  $trialDays
+     *
      * @return $this
      */
     public function trialDays($trialDays)
@@ -144,6 +146,7 @@ class SubscriptionBuilder
      * The coupon to apply to a new subscription.
      *
      * @param  string  $coupon
+     *
      * @return $this
      */
     public function withCoupon($coupon)
@@ -157,6 +160,7 @@ class SubscriptionBuilder
      * The metadata to apply to a new subscription.
      *
      * @param  array  $metadata
+     *
      * @return $this
      */
     public function withMetadata($metadata)
@@ -170,6 +174,7 @@ class SubscriptionBuilder
      * Add a new Stripe subscription to the user.
      *
      * @param  array  $options
+     *
      * @return \Laravel\Cashier\Subscription
      */
     public function add(array $options = [])
@@ -182,6 +187,7 @@ class SubscriptionBuilder
      *
      * @param  string|null  $token
      * @param  array  $options
+     *
      * @return \Phalcon\Cashier\Subscription
      */
     public function create($token = null, array $options = [])
@@ -211,9 +217,7 @@ class SubscriptionBuilder
         $this->user->subscriptions = $object;
         $this->user->active_subscription_id = $subscription->id;
 
-        if (!$this->user->save()) {
-            throw new Exception((string) current($this->user->getMessages()));
-        }
+        $this->user->saveOrFail();
 
         return $this->user;
     }
@@ -223,6 +227,7 @@ class SubscriptionBuilder
      *
      * @param  string|null  $token
      * @param  array  $options
+     *
      * @return \Stripe\Customer
      */
     protected function getStripeCustomer($token = null, array $options = [])

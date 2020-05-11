@@ -5,6 +5,7 @@ use function Baka\envValue;
 use Baka\TestCase\PhalconUnit;
 use Elasticsearch\ClientBuilder;
 use Phalcon\Di;
+use Phalcon\Http\Response;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\View\Simple;
 use Phalcon\Session\Adapter\Redis;
@@ -56,6 +57,11 @@ class PhalconUnitTestCase extends PhalconUnit
                     ],
                 ],
             ],
+            'stripe' => [
+                'secretKey' => getenv('STRIPE_SECRET'),
+                'secret' => getenv('STRIPE_SECRET'),
+                'public' => getenv('STRIPE_PUBLIC'),
+            ],
             'memcache' => [
                 'host' => getenv('MEMCACHE_HOST'),
                 'port' => getenv('MEMCACHE_PORT'),
@@ -84,6 +90,10 @@ class PhalconUnitTestCase extends PhalconUnit
             $mailer = new \Baka\Mail\Manager($config->email->toArray());
 
             return $mailer->createMessage();
+        });
+
+        $this->di->setShared('response', function () {
+            return new Response();
         });
 
         $this->di->setShared(

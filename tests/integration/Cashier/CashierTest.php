@@ -2,12 +2,12 @@
 
 namespace Baka\Test\Integration\Cashier;
 
-use PhalconUnitTestCase;
-use App\Models\Apps;
-use App\Models\Companies;
-use App\Models\Users;
+use Baka\Database\Apps;
+use Baka\Test\Support\Models\Companies;
+use Baka\Test\Support\Models\Users;
 use Carbon\Carbon;
 use Phalcon\Cashier\Subscription;
+use PhalconUnitTestCase;
 
 class CashierTest extends PhalconUnitTestCase
 {
@@ -16,9 +16,9 @@ class CashierTest extends PhalconUnitTestCase
      */
     public function testSubscriptionsCanBeCreatedAndUpdated()
     {
-        $user = Users::findFirst(2);
-        $company = Companies::findFirst(1);
-        $apps = Apps::findFirst(1);
+        $user = Users::findFirstOrFail(2);
+        $company = Companies::findFirstOrFail(1);
+        $apps = Apps::findFirstOrFail(1);
 
         //Create Subscription
         $user->newSubscription('main', 'monthly-10-1', $company, $apps)->create($this->getTestToken());
@@ -52,9 +52,9 @@ class CashierTest extends PhalconUnitTestCase
 
     public function testCreatingSubscriptionWithTrial()
     {
-        $user = Users::findFirst(2);
-        $company = Companies::findFirst(1);
-        $apps = Apps::findFirst(1);
+        $user = Users::findFirstOrFail(2);
+        $company = Companies::findFirstOrFail(1);
+        $apps = Apps::findFirstOrFail(1);
 
         // Create Subscription
         $user->newSubscription('main', 'monthly-10-1', $company, $apps)
@@ -76,7 +76,7 @@ class CashierTest extends PhalconUnitTestCase
 
     public function testCreatingOneOffInvoices()
     {
-        $user = Users::findFirst(2);
+        $user = Users::findFirstOrFail(2);
 
         // Create Invoice
         $user->createAsStripeCustomer($this->getTestToken());
@@ -90,7 +90,7 @@ class CashierTest extends PhalconUnitTestCase
 
     public function testRefunds()
     {
-        $user = Users::findFirst(2);
+        $user = Users::findFirstOrFail(2);
 
         // Create Invoice
         $user->createAsStripeCustomer($this->getTestToken());
@@ -105,7 +105,7 @@ class CashierTest extends PhalconUnitTestCase
 
     protected function getTestToken()
     {
-        return Stripe\Token::create([
+        return \Stripe\Token::create([
             'card' => [
                 'number' => '4242424242424242',
                 'exp_month' => 5,

@@ -2,12 +2,28 @@
 
 namespace Baka\Test\Integration\Cashier;
 
+use Baka\Http\Contracts\Api\ResponseTrait;
+use Baka\Test\Support\Models\Users;
+use Phalcon\Cashier\Traits\StripeWebhookHandlersTrait;
+use Phalcon\Http\Response;
 use PhalconUnitTestCase;
-use App\Models\Users;
-use Phalcon\Cashier\Controllers\WebhookController;
 
 class WebhookTest extends PhalconUnitTestCase
 {
+    use StripeWebhookHandlersTrait;
+    use ResponseTrait;
+
+    public $response;
+
+    /**
+     * this runs before everyone.
+     */
+    protected function setUp() : void
+    {
+        parent::setUp();
+        $this->response = new Response();
+    }
+
     /**
      * Pending Payment.
      *
@@ -16,7 +32,7 @@ class WebhookTest extends PhalconUnitTestCase
     public function testPendingPayment()
     {
         $user = Users::findFirst(2);
-        $webhook = new WebHookController();
+
         $payload = [
             'data' => [
                 'object' => [
@@ -26,9 +42,9 @@ class WebhookTest extends PhalconUnitTestCase
             ]
         ];
 
-        $result = $webhook->handleChargePending($payload);
+        $result = $this->handleChargePending($payload);
 
-        $this->assertEquals('Webhook Handled', $result);
+        $this->assertTrue($result instanceof Response);
     }
 
     /**
@@ -41,7 +57,7 @@ class WebhookTest extends PhalconUnitTestCase
     public function testFailedPayment()
     {
         $user = Users::findFirst(2);
-        $webhook = new WebHookController();
+
         $payload = [
             'data' => [
                 'object' => [
@@ -51,9 +67,9 @@ class WebhookTest extends PhalconUnitTestCase
             ]
         ];
 
-        $result = $webhook->handleChargeFailed($payload);
+        $result = $this->handleChargeFailed($payload);
 
-        $this->assertEquals('Webhook Handled', $result);
+        $this->assertTrue($result instanceof Response);
     }
 
     /**
@@ -64,7 +80,7 @@ class WebhookTest extends PhalconUnitTestCase
     public function testSucceededPayment()
     {
         $user = Users::findFirst(2);
-        $webhook = new WebHookController();
+
         $payload = [
             'data' => [
                 'object' => [
@@ -74,9 +90,9 @@ class WebhookTest extends PhalconUnitTestCase
             ]
         ];
 
-        $result = $webhook->handleChargeSucceeded($payload);
+        $result = $this->handleChargeSucceeded($payload);
 
-        $this->assertEquals('Webhook Handled', $result);
+        $this->assertTrue($result instanceof Response);
     }
 
     /**
@@ -87,7 +103,7 @@ class WebhookTest extends PhalconUnitTestCase
     public function testSubscriptionUpdate()
     {
         $user = Users::findFirst(2);
-        $webhook = new WebHookController();
+
         $payload = [
             'data' => [
                 'object' => [
@@ -97,9 +113,9 @@ class WebhookTest extends PhalconUnitTestCase
             ]
         ];
 
-        $result = $webhook->handleCustomerSubscriptionUpdated($payload);
+        $result = $this->handleCustomerSubscriptionUpdated($payload);
 
-        $this->assertEquals('Webhook Handled', $result);
+        $this->assertTrue($result instanceof Response);
     }
 
     /**
@@ -112,7 +128,6 @@ class WebhookTest extends PhalconUnitTestCase
         $user = Users::findFirst(2);
         $trialEnd = time();
 
-        $webhook = new WebHookController();
         $payload = [
             'data' => [
                 'object' => [
@@ -122,8 +137,8 @@ class WebhookTest extends PhalconUnitTestCase
             ]
         ];
 
-        $result = $webhook->handleCustomerSubscriptionTrialwillend($payload);
+        $result = $this->handleCustomerSubscriptionTrialwillend($payload);
 
-        $this->assertEquals('Webhook Handled', $result);
+        $this->assertTrue($result instanceof Response);
     }
 }
