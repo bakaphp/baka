@@ -2,9 +2,9 @@
 
 namespace Baka\Test\Integration\Blameable;
 
+use Baka\Test\Support\Models\Audits;
+use Baka\Test\Support\Models\LeadsAudit as Leads;
 use PhalconUnitTestCase;
-use Baka\Test\Model\Audits;
-use Baka\Test\Model\Leads;
 
 class BlameableTest extends PhalconUnitTestCase
 {
@@ -29,19 +29,20 @@ class BlameableTest extends PhalconUnitTestCase
     {
         //create a lead
         $lead = new Leads();
-        $lead->users_id = 1;
-        $lead->companies_id = 1;
         $lead->firstname = $this->faker->name;
         $lead->lastname = $this->faker->lastname;
         $lead->email = $this->faker->email;
-        $lead->phone = $this->faker->phoneNumber;
+        $lead->system_modules_id = 1;
+        $lead->apps_id = $this->getDI()->get('app')->getId();
+        $lead->companies_branch_id = 1;
+        $lead->users_id = 1;
+        $lead->companies_id = 1;
         $lead->leads_owner_id = 1;
-        $lead->leads_status_id = 1;
-        $lead->save();
+        $lead->saveOrFail();
 
         $leadId = $lead->getId();
 
-        $auditRecord = Audits::findFirst([
+        $auditRecord = Audits::findFirstOrFail([
             'conditions' => 'entity_id = ?0 and model_name = ?1',
             'bind' => [$leadId, get_class($lead)]
         ]);
@@ -66,7 +67,7 @@ class BlameableTest extends PhalconUnitTestCase
         $lead->leads_owner_id = 2;
         $lead->update();
 
-        $auditRecord = Audits::findFirst([
+        $auditRecord = Audits::findFirstOrFail([
             'conditions' => 'entity_id = ?0 and model_name = ?1',
             'bind' => [$lead->getId(), get_class($lead)]
         ]);
@@ -90,7 +91,7 @@ class BlameableTest extends PhalconUnitTestCase
         $lead->delete();
 
         //filter it by delete , because the first record is the same as the previous test
-        $auditRecord = Audits::findFirst([
+        $auditRecord = Audits::findFirstOrFail([
             'conditions' => 'entity_id = ?0 and model_name = ?1 and type = ?2',
             'bind' => [$lead->getId(), get_class($lead), 'D']
         ]);

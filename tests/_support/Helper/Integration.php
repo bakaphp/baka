@@ -33,9 +33,10 @@ class Integration extends Module
     }
 
     /**
-     * Run migration
+     * Run migration.
      *
      * @param array $settings
+     *
      * @return void
      */
     public function _beforeSuite($settings = [])
@@ -45,7 +46,7 @@ class Integration extends Module
     }
 
     /**
-     * After all is done
+     * After all is done.
      *
      * @return void
      */
