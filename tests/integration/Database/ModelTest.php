@@ -83,6 +83,7 @@ class ModelTest extends PhalconUnitTestCase
             );
 
         $this->assertTrue($lead->email == $email);
+        $this->assertTrue(get_class($lead) == Leads::class);
     }
 
     public function testUpdateOrCreate()
@@ -107,5 +108,6 @@ class ModelTest extends PhalconUnitTestCase
             );
 
         $this->assertTrue($lead->email == $email);
+        $this->assertTrue(get_class($lead) == Leads::class);
     }
 }
