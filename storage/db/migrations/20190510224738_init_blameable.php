@@ -118,32 +118,24 @@ class InitBlameable extends AbstractMigration
             ])
             ->addColumn('old_value', 'text', [
                 'null' => true,
-                'default' => 'NULL',
-                'limit' => 65535,
                 'collation' => 'utf8mb4_general_ci',
                 'encoding' => 'utf8mb4',
                 'after' => 'field_name',
             ])
             ->addColumn('old_value_text', 'text', [
                 'null' => true,
-                'default' => 'NULL',
-                'limit' => 65535,
                 'collation' => 'utf8mb4_general_ci',
                 'encoding' => 'utf8mb4',
                 'after' => 'old_value',
             ])
             ->addColumn('new_value', 'text', [
                 'null' => true,
-                'default' => 'NULL',
-                'limit' => 65535,
                 'collation' => 'utf8mb4_general_ci',
                 'encoding' => 'utf8mb4',
                 'after' => 'old_value_text',
             ])
             ->addColumn('new_value_text', 'text', [
                 'null' => true,
-                'default' => 'NULL',
-                'limit' => 65535,
                 'collation' => 'utf8mb4_general_ci',
                 'encoding' => 'utf8mb4',
                 'after' => 'new_value',
