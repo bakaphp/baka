@@ -14,10 +14,10 @@ addons:
 sudo: false
 env:
   global:
-  - DATA_API_MYSQL_HOST: localhost
+  - DATA_API_MYSQL_HOST: 127.0.0.1
   - DATA_API_MYSQL_NAME: bakatest
   - DATA_API_MYSQL_USER: root
-  - DATA_API_MYSQL_PASS: nosenose
+  - DATA_API_MYSQL_PASS: ""
   - DATA_API_MEMCACHED_HOST: localhost
   - DATA_API_MEMCACHED_PORT: 11211
   - DATA_API_MEMCACHED_WEIGHT: 100
