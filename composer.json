@@ -64,7 +64,15 @@
             "Baka\\": "src/",
             "Phalcon\\Cashier\\": "src/cashier/",
             "Baka\\Test\\": "tests/",
-            "Baka\\Test\\Support\\": "tests/_support/"
+            "Baka\\Test\\Support\\": "tests/_support/",
+            "Baka\\Http\\": "src/http/",
+            "Baka\\Auth\\": "src/auth/",
+            "Baka\\Blameable\\": "src/blameable/",
+            "Baka\\Database\\": "src/database",
+            "Baka\\Elasticsearch\\": "src/elasticsearch",
+            "Baka\\Mail\\": "src/mail",
+            "Baka\\Router\\": "src/router",
+            "Baka\\Support\\": "src/support"
         }
     },
     "scripts": {
