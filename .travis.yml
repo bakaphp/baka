@@ -45,8 +45,6 @@ install:
 before_script:
 - cd $TRAVIS_BUILD_DIR
 - cp .env.example .env
-- mkdir cache
-- mkdir cache/volt
 - mysql -e "CREATE DATABASE bakatest"
 - sudo redis-server /etc/redis/redis.conf --port 6379
 - composer install --no-interaction
