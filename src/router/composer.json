@@ -7,16 +7,10 @@
         "router",
         "phalcon"
     ],
-    "homepage": "https://bakaphp.github.io/router",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Esteban De la Rosa",
-            "email": "gabbanaesteban@gmail.com",
-            "homepage": "https://estebandelarosa.dev",
-            "role": "Developer"
-        }
-    ],
+    "authors": [{
+        "name": "Esteban De la Rosa"
+    }],
     "require": {
         "php": ">=7.1",
         "ext-phalcon": ">=3.4",
@@ -29,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Baka\\Router\\": "src/"
+            "Baka\\Router\\": ""
         }
     },
     "scripts": {

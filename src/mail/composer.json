@@ -26,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Baka\\Mail\\": "src/"
+            "Baka\\Mail\\": ""
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Baka\\Mail\\": "src/"
+            "Baka\\Mail\\": ""
         }
     }
 }

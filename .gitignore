@@ -7,3 +7,6 @@ Thumbs.db
 /.idea
 /.vscode
 .phpunit.result.cache
+.env
+.php_cs.cache
+*.volt.php

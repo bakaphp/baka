@@ -1,0 +1,84 @@
+version: "3"
+
+services:
+
+  #php server
+  baka-database:
+    image: mctekk/phalconphp:latest
+    volumes:
+      - .:/app
+      - ../../baka:/baka
+    depends_on:
+      - 'redis'
+      - 'mysql'
+    tty: true
+    ports:
+      - "9000:9000"
+    networks:
+      - local-network
+
+  nginx:
+    image: nginx:latest
+    ports:
+        - "81:80"
+    links:
+        - baka-database
+    volumes:
+        - .:/app
+        - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - local-network
+      - public-network
+
+  redis:
+    image: 'redis:5.0.5-alpine'
+    ports: 
+      - "6379:6379"
+    volumes:
+      - 'redis:/data'
+    networks:
+      - local-network
+
+  memcached:
+    image: memcached
+    ports:
+      - "11211:11211"
+    networks:
+      - local-network
+
+  mysql:
+    image: mariadb:10.4
+    restart: always
+    ports:
+      - "3306:3306"
+    env_file:
+      - '.env'
+    volumes:
+      - "db-data:/var/lib/mysql"
+      - "./storage/ci/mysql.cnf:/etc/mysql/conf.d/kanvas.cnf"
+    networks:
+        - local-network
+
+  rabbitmq:
+    image: rabbitmq:3.7.16-management
+    hostname: "rabbit"
+    env_file:
+      - '.env'
+    labels:
+      NAME: "rabbitmq1"
+    volumes:
+      - "rabbitsvolumns:/var/lib/rabbitmq"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - local-network
+
+volumes:
+  db-data:
+  redis:
+  rabbitsvolumns:
+
+networks:
+  local-network:
+  public-network:
