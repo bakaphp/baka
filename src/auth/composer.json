@@ -23,12 +23,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Baka\\Auth\\": "src/"
+            "Baka\\Auth\\": ""
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Baka\\Auth\\": "src/"
+            "Baka\\Auth\\": ""
         }
     }
 }

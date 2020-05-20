@@ -3,41 +3,39 @@
     "description": "Baka Packages",
     "license": "MIT",
     "keywords": ["Saas", "Canvas"],
-    "authors": [
-        {
-            "name": "Máximo Castro Pou",
-            "email": "max@mctekk.com"
-        }
-    ],
+    "authors": [{
+        "name": "mctekk",
+        "email": "max@mctekk.com"
+    }],
     "require": {
         "php": ">=7.2",
         "ext-phalcon": ">=3.4",
         "vlucas/phpdotenv": "^2.4",
-        "phalcon/incubator": ">=3.0.0",
+        "phalcon/incubator": "^3.4",
         "lcobucci/jwt": "^3.2",
         "dompdf/dompdf": "^0.6.1",
         "nesbot/carbon": "~1.0",
         "stripe/stripe-php": "~6.0",
-        "robmorgan/phinx": "0.*",
+        "robmorgan/phinx": "^0.11",
         "monolog/monolog": "^1.16",
         "elasticsearch/elasticsearch": "^6.1",
         "guzzlehttp/guzzle": "^6.3",
         "duncan3dc/fork-helper": "^2.2.0",
         "swiftmailer/swiftmailer": "^6",
-        "symfony/var-dumper": "^4.2"
+        "symfony/var-dumper": "^4.2",
+        "php-amqplib/php-amqplib": "^2.9"
     },
     "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-asserts": "^1.2",
+        "codeception/module-filesystem": "^1.0",
+        "codeception/module-phalcon": "^1.0",
         "codeception/verify": "*",
-        "vlucas/phpdotenv": "^2.0",
-        "phalcon/incubator": ">=3.0.0",
-        "dmkit/phalcon-jwt-auth": "dev-master",
-        "robmorgan/phinx": "^0.11",
-        "odan/phinx-migrations-generator": "^4",
-        "fzaninotto/faker": "^1.9@dev",
-        "squizlabs/php_codesniffer": "1.*",
         "duncan3dc/fork-helper": "^2.2.0",
-        "codeception/codeception": "^2.4",
-        "phpunit/phpunit": "^7",
+        "fzaninotto/faker": "^1.9",
+        "odan/phinx-migrations-generator": "^4",
+        "phpunit/phpunit": "^8.5", 
+        "squizlabs/php_codesniffer": "1.*",
         "symfony/var-dumper": "^4.3@dev"
     },
     "replace": {
@@ -55,23 +53,33 @@
     "autoload": {
         "psr-4": {
             "Baka\\": "src/",
-            "Baka\\Auth\\": "src/auth/src/",
-            "Baka\\Blameable\\": "src/blameable/src/",
-            "Phalcon\\Cashier\\": "src/cashier/src/",
-            "Baka\\Database\\": "src/database/src/",
-            "Baka\\Elasticsearch\\": "src/elasticsearch/src/",
-            "Baka\\Http\\": "src/http/src/",
-            "Baka\\Mail\\": "src/mail/src/",
-            "Baka\\PhalconThrottler\\": "src/phalcon-throttler/src",
-            "Baka\\Router\\": "src/router/src/",
-            "Baka\\Support\\": "src/support/src/"
-
-        }
+            "Phalcon\\Cashier\\": "src/cashier/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Baka\\Test\\": "tests/"
+            "Baka\\": "src/",
+            "Phalcon\\Cashier\\": "src/cashier/",
+            "Baka\\Test\\": "tests/",
+            "Baka\\Test\\Support\\": "tests/_support/",
+            "Baka\\Http\\": "src/http/",
+            "Baka\\Auth\\": "src/auth/",
+            "Baka\\Blameable\\": "src/blameable/",
+            "Baka\\Database\\": "src/database",
+            "Baka\\Elasticsearch\\": "src/elasticsearch",
+            "Baka\\Mail\\": "src/mail",
+            "Baka\\Router\\": "src/router",
+            "Baka\\Support\\": "src/support"
         }
+    },
+    "scripts": {
+        "test": "./vendor/bin/codecept run"
+    },
+    "suggest": {
+        "ext-redis": "Required to use the Redis cache and queue drivers (^4.0|^5.0)."
     },
     "config": {
         "sort-packages": true

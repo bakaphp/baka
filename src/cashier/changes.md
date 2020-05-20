@@ -1,1 +1,0 @@
-# Cashier Change Log.

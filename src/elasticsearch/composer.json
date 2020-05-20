@@ -26,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Baka\\Elasticsearch\\": "src/"
+            "Baka\\Elasticsearch\\": ""
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Baka\\Elasticsearch\\": "src/"
+            "Baka\\Elasticsearch\\": ""
         }
     }
 }
