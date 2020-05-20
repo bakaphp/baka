@@ -54,7 +54,7 @@ trait AuthTokenTrait
             ->setId($sessionId, true)
             ->setIssuedAt(time())
             ->setNotBefore(time() + 500)
-            ->setExpiration(time() + $this->di->getConfig()->jwt->payload->refresh_exp ?? 604800)
+            ->setExpiration(time() + $this->di->getConfig()->jwt->payload->exp ?? 604800)
             ->set('sessionId', $sessionId)
             ->set('email', $this->getEmail())
             ->sign($signer, getenv('TOKEN_PASSWORD'))
