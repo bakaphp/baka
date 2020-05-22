@@ -1,5 +1,9 @@
 # Baka
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bakaphp/baka/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bakaphp/baka/?branch=master)
+[![Build Status](https://travis-ci.com/bakaphp/baka.svg?branch=master)](https://travis-ci.com/bakaphp/baka)
+[![Build Status](https://scrutinizer-ci.com/g/bakaphp/baka/badges/build.png?b=master)](https://scrutinizer-ci.com/g/bakaphp/baka/build-status/master)
+
 Set of Packages to help any team develop faster SaaS Web Application
 
 ### COMPONENTS
