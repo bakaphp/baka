@@ -33,7 +33,7 @@
         "codeception/verify": "*",
         "duncan3dc/fork-helper": "^2.2.0",
         "fzaninotto/faker": "^1.9",
-        "odan/phinx-migrations-generator": "^4",
+        "odan/phinx-migrations-generator": "^5",
         "phpunit/phpunit": "^8.5", 
         "squizlabs/php_codesniffer": "1.*",
         "symfony/var-dumper": "^4.3@dev"
