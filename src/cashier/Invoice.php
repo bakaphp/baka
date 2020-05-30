@@ -1,12 +1,8 @@
 <?php
 
-namespace Phalcon\Cashier;
+namespace Baka\Cashier;
 
 use Carbon\Carbon;
-use DOMPDF;
-use Phalcon\Di\FactoryDefault;
-use Phalcon\Http\Response;
-use Phalcon\Mvc\View;
 use Stripe\Invoice as StripeInvoice;
 
 class Invoice
@@ -226,85 +222,6 @@ class Invoice
     protected function formatAmount($amount)
     {
         return Cashier::formatAmount($amount);
-    }
-
-    /**
-     * Get the View instance for the invoice.
-     *
-     * @param array $data
-     */
-    public function view(array $data)
-    {
-        $data = array_merge($data, ['invoice' => $this, 'user' => $this->user]);
-        $view = $this->getView();
-        return $view->render('cashier/receipt', $data);
-    }
-
-    /**
-     * Return a {@link \Phalcon\Mvc\View\Simple} instance.
-     *
-     * @return \Phalcon\Mvc\View\Simple
-     */
-    public function getView()
-    {
-        $di = FactoryDefault::getDefault();
-        if (!$this->view) {
-            $viewApp = $di->get('view');
-            if (!($viewsDir = $di->get('config')['viewDir'])) {
-                $viewsDir = $viewApp->getViewsDir();
-            }
-            $view = $di->get('\Phalcon\Mvc\View\Simple');
-            $view->setViewsDir($viewsDir);
-            if ($engines = $viewApp->getRegisteredEngines()) {
-                $view->registerEngines($engines);
-            }
-            $this->view = $view;
-        }
-        return $this->view;
-    }
-
-    /**
-     * Capture the invoice as a PDF and return the raw bytes.
-     *
-     * @param  array $data
-     *
-     * @return string
-     */
-    public function pdf(array $data)
-    {
-        if (!defined('DOMPDF_ENABLE_AUTOLOAD')) {
-            define('DOMPDF_ENABLE_AUTOLOAD', false);
-        }
-        $path = $_SERVER['DOCUMENT_ROOT'];
-        if (file_exists($configPath = dirname($path) . '/vendor/dompdf/dompdf/dompdf_config.inc.php')) {
-            include_once $configPath;
-        }
-
-        $dompdf = new DOMPDF;
-
-        $dompdf->load_html($this->view($data));
-
-        $dompdf->render();
-
-        return $dompdf->output();
-    }
-
-    /**
-     * Create an invoice download response.
-     *
-     * @param array $data
-     */
-    public function download(array $data)
-    {
-        $filename = $data['product'] . '_' . $this->date()->month . '_' . $this->date()->year . '.pdf';
-
-        $response = new Response();
-        $response->setHeader('Content-Description', 'File Transfer');
-        $response->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
-        $response->setStatusCode(200, 'OK');
-        $response->setContent($this->pdf($data));
-        $response->setContentType('application/pdf');
-        return $response->send();
     }
 
     /**

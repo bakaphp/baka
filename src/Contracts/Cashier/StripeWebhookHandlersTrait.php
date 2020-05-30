@@ -1,30 +1,23 @@
 <?php
 
-namespace Phalcon\Cashier\Traits;
+declare(strict_types=1);
+
+namespace Baka\Contracts\Cashier;
 
 use Baka\Auth\Models\Users;
 use Exception;
 use Phalcon\Http\Response;
 
-/**
- * Trait WebhookHandlers.
- *
- * @package Phalcon\Cashier\Traits
- *
- * @property Users $user
- * @property Subscriptions $subscriptions
- *
- */
 trait StripeWebhookHandlersTrait
 {
     /**
-     * Handle stripe webhoook calls.
+     * Handle stripe webhook calls.
      *
      * @return Response
      */
     public function handleWebhook() : Response
     {
-        //we cant processs if we dont find the stripe header
+        //we cant processes if we don't find the stripe header
         if (!$this->request->hasHeader('Stripe-Signature')) {
             throw new Exception('Route not found for this call');
         }

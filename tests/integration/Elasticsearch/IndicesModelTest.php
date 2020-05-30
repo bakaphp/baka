@@ -6,7 +6,7 @@ use Baka\Elasticsearch\Contracts\CustomFiltersSchemaTrait;
 use Baka\Elasticsearch\Contracts\IndexBuilderTaskTrait;
 use Baka\Elasticsearch\IndexBuilder;
 use PhalconUnitTestCase;
-use Test\Model\Leads;
+use Baka\Test\Support\Models\Leads;
 
 class IndicesModelTest extends PhalconUnitTestCase
 {

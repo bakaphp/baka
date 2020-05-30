@@ -2,11 +2,13 @@
 
 namespace Baka\Test\Support\Models;
 
-use Phalcon\Cashier\Billable;
+use Baka\Cashier\Billable;
 
 class Users extends \Baka\Database\Model
 {
     use Billable;
+
+    public $stripe_id;
 
     public function initialize()
     {

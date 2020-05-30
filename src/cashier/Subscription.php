@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Cashier;
+namespace Baka\Cashier;
 
 use Baka\Database\Model;
 use Carbon\Carbon;

@@ -10,6 +10,13 @@ use PhpAmqpLib\Message\AMQPMessage;
 class Queue
 {
     /**
+     * default canvas queues system name.
+     */
+    const EVENTS = 'events';
+    const NOTIFICATIONS = 'notifications';
+    const JOBS = 'jobs';
+    
+    /**
      * Send a msg to Queue.
      *
      * @param string $name

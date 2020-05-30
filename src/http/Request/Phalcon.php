@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Baka\Http\Request;
 
-use Phalcon\Http\Request as PhalconRequest;
+use Phalcon\Http\Request;
 
-class Baka extends PhalconRequest
+class Phalcon extends Request
 {
     /**
      * Get the data from a POST request.
