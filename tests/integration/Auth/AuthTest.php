@@ -93,7 +93,7 @@ class AuthTest extends PhalconUnitTestCase
     }
 
     /**
-     * Teste usser forgout password.
+     * Test user forgot password.
      *
      * @return boolean
      */
