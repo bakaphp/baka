@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Baka\Auth\Contracts;
+namespace Baka\Contracts\Auth;
 
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\ValidationData;
+use Phalcon\Security\Random;
 
 /**
  * Trait For JWT User Auth Token.
@@ -31,7 +32,7 @@ trait AuthTokenTrait
      */
     public function getToken() : array
     {
-        $random = new \Phalcon\Security\Random();
+        $random = new Random();
         $sessionId = $random->uuid();
 
         $signer = new Sha512();
@@ -42,7 +43,7 @@ trait AuthTokenTrait
             ->setId($sessionId, true)
             ->setIssuedAt(time())
             ->setNotBefore(time() + 500)
-            ->setExpiration(time() + $this->di->getConfig()->jwt->payload->exp)
+            ->setExpiration(time() + $this->di->getConfig()->jwt->payload->exp ?? 604800)
             ->set('sessionId', $sessionId)
             ->set('email', $this->getEmail())
             ->sign($signer, getenv('TOKEN_PASSWORD'))

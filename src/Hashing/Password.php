@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Baka\Hashing;
 
+use Baka\Contracts\Auth\UserInterface;
+
 class Password
 {
     /**
@@ -73,7 +75,7 @@ class Password
      *
      * @return boolean
      */
-    public static function rehash(string $password, object $entity) : bool
+    public static function rehash(string $password, UserInterface $entity) : bool
     {
         if (self::needsRehash($entity->password)) {
             $entity->password = self::make($password);

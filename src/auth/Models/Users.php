@@ -2,7 +2,7 @@
 
 namespace Baka\Auth\Models;
 
-use Baka\Auth\Contracts\AuthTokenTrait;
+use Baka\Contracts\Auth\AuthTokenTrait;
 use Baka\Database\Model;
 use Exception;
 use Locale;
@@ -286,131 +286,7 @@ class Users extends Model
         return $this->user_active;
     }
 
-    /**
-     * User login.
-     *
-     * @param string $email
-     * @param string $password
-     * @param int $autologin
-     * @param int $admin
-     * @param string $userIp
-     *
-     * @return Users
-     */
-    public static function login(string $email, string $password, int $autologin = 1, int $admin, string $userIp) : Users
-    {
-        //trim email
-        $email = ltrim(trim($email));
-        $password = ltrim(trim($password));
-
-        //load config
-        $config = new stdClass();
-        $config->login_reset_time = getenv('AUTH_MAX_AUTOLOGIN_TIME');
-        $config->max_login_attempts = getenv('AUTH_MAX_AUTOLOGIN_ATTEMPS');
-
-        //if its a email lets by it by email, if not by displayname
-        $user = self::getByEmail($email);
-
-        //first we find the user
-        if ($user) {
-            // If the last login is more than x minutes ago, then reset the login tries/time
-            if ($user->user_last_login_try && $config->login_reset_time && $user->user_last_login_try < (time() - ($config->login_reset_time * 60))) {
-                $user->user_login_tries = 0; //turn back to 0 attems, succes
-                $user->user_last_login_try = 0;
-                $user->update();
-            }
-
-            // Check to see if user is allowed to login again... if his tries are exceeded
-            if ($user->user_last_login_try && $config->login_reset_time && $config->max_login_attempts && $user->user_last_login_try >= (time() - ($config->login_reset_time * 60)) && $user->user_login_tries >= $config->max_login_attempts) {
-                throw new Exception(sprintf(_('You have exhausted all login attempts.'), $config->max_login_attempts));
-            }
-
-            //will only work with php.5.5 new password api
-            if (password_verify($password, trim($user->password)) && $user->user_active) {
-                //rehas passw if needed
-                $user->passwordNeedRehash($password);
-
-                $autologin = (isset($autologin)) ? true : 0;
-
-                $admin = (isset($admin)) ? 1 : 0;
-
-                // Reset login tries
-                $user->lastvisit = date('Y-m-d H:i:s');
-                $user->user_login_tries = 0;
-                $user->user_last_login_try = 0;
-                $user->update();
-
-                return $user;
-            } // Only store a failed login attempt for an active user - inactive users can't login even with a correct password
-            elseif ($user->user_active) {
-                // Save login tries and last login
-                if ($user->getId() != self::ANONYMOUS) {
-                    $user->user_login_tries += 1;
-                    $user->user_last_login_try = time();
-                    $user->update();
-                }
-
-                throw new Exception(_('Invalid Username or Password.'));
-            } elseif ($user->isBanned()) {
-                throw new Exception(_('User has not been banned, please check your email for the activation link.'));
-            } else {
-                throw new Exception(_('User has not been activated, please check your email for the activation link.'));
-            }
-        } else {
-            throw new Exception(_('Invalid Username or Password.'));
-        }
-    }
-
-    /**
-     * user signup to the service.
-     *
-     * @return Users
-     */
-    public function signUp() : Users
-    {
-        $this->sex = 'U';
-
-        if (empty($this->firstname)) {
-            $this->firstname = ' ';
-        }
-
-        if (empty($this->lastname)) {
-            $this->lastname = ' ';
-        }
-
-        $this->displayname = empty($this->displayname) && !empty($this->firstname) ? $this->generateDisplayName($this->firstname) : $this->displayname;
-        $this->dob = date('Y-m-d');
-        $this->lastvisit = date('Y-m-d H:i:s');
-        $this->registered = date('Y-m-d H:i:s');
-        $this->timezone = 'America/New_York';
-        $this->user_level = 3;
-        $this->user_active = 1;
-        $this->status = 1;
-        $this->banned = 'N';
-        $this->profile_header = ' ';
-        $this->user_login_tries = 0;
-        $this->user_last_login_try = 0;
-
-        //if the user didnt specify a default company
-        if (empty($this->default_company)) {
-            $this->default_company = 0;
-        }
-        $this->session_time = time();
-        $this->session_page = time();
-        $this->password = self::passwordHash($this->password);
-
-        if (empty($this->language)) {
-            $this->language = $this->usingSpanish() ? 'ES' : 'EN';
-        }
-
-        $this->user_activation_key = $this->generateActivationKey();
-
-        if (!$this->save()) {
-            throw new Exception(current($this->getMessages()));
-        }
-
-        return $this;
-    }
+ 
 
     /**
      * cget the social profile of a users, passing its socialnetwork.

@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Baka\Hashing;
+
+use Baka\Contracts\Auth\UserInterface;
+use Phalcon\Security\Random;
+
+class Keys
+{
+    /**
+     * Given a length generate a save url Hash 
+     * based on Phalcon
+     *
+     * @param integer $length
+     * @return string
+     */
+    public static function make(int $length = 32) : string
+    {
+        $random = new Random();
+
+        return $random->base64Safe($length);
+    }
+}

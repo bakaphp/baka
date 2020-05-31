@@ -8,11 +8,11 @@
         "email": "max@mctekk.com"
     }],
     "require": {
-        "php": ">=7.2",
-        "ext-phalcon": ">=3.4",
+        "php": ">=7.4",
+        "ext-phalcon": ">=4",
         "ext-swoole": ">=4.4",
         "vlucas/phpdotenv": "^4.1",
-        "phalcon/incubator": "^3.4",
+        "phalcon/incubator": "^4",
         "lcobucci/jwt": "^3.3",
         "nesbot/carbon": "^2.3",
         "stripe/stripe-php": "~6.0",
