@@ -6,25 +6,12 @@ use Baka\Database\Model;
 
 class Banlist extends Model
 {
-    public $id;
+    public int $users_id;
+    public string $ip;
+    public string $email;
 
     /**
-     * @var integer
-     */
-    public $users_id;
-
-    /**
-     * @var string
-     */
-    public $ip;
-
-    /**
-     * @var string
-     */
-    public $email;
-
-    /**
-     * Initialize
+     * Initialize.
      */
     public function initialize()
     {

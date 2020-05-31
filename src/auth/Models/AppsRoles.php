@@ -6,33 +6,15 @@ use Baka\Database\Model;
 
 class AppsRoles extends Model
 {
-    /**
-     *
-     * @var integer
-     */
-    public $apps_id;
-
-    /**
-     *
-     * @var string
-     */
-    public $roles_name;
+    public int $apps_id;
+    public string $roles_name;
 
     /**
      * Initialize method for model.
      */
     public function initialize()
     {
+        $this->setSource('apps_roles');
         $this->belongsTo('apps_id', 'Baka\Auth\Models\Apps', 'id', ['alias' => 'app']);
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource(): string
-    {
-        return 'apps_roles';
     }
 }

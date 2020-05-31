@@ -6,11 +6,9 @@ namespace Baka\Auth;
 
 use Baka\Contracts\Auth\UserInterface;
 use Baka\Exception\AuthException;
-use Baka\Hashing\ActivationKeys;
 use Baka\Hashing\Keys;
 use Baka\Hashing\Password;
 use Exception;
-use Phalcon\Di;
 use stdClass;
 
 class Auth
@@ -63,7 +61,7 @@ class Auth
     }
 
     /**
-     * Create a new user
+     * Create a new user.
      *
      * @return Users
      */
@@ -91,9 +89,9 @@ class Auth
         $user->session_time = time();
         $user->session_page = time();
         $user->password = Password::make($userData['password']);
-        $user->language =  $userData['language'] ?: 'EN';
+        $user->language = $userData['language'] ?: 'EN';
         $user->user_activation_key = Keys::make();
-        
+
         //if you need to run any extra feature with the data we get from the request
         $user->setCustomFields($userData);
 

@@ -17,27 +17,15 @@ class Model extends PhalconModel
      *
      * @var ?string
      */
-    protected static $modelNameAlias = null;
+    protected static ?string $modelNameAlias = null;
 
     /**
-     * @return int
+     * @var mixed
      */
     public $id;
-
-    /**
-     * @var string
-     */
-    public $created_at;
-
-    /**
-     * @var string
-     */
-    public $updated_at;
-
-    /**
-     * @var int
-     */
-    public $is_deleted = 0;
+    public string $created_at;
+    public string $updated_at;
+    public int $is_deleted = 0;
 
     /**
      * Get the primary id of this model.
@@ -188,7 +176,8 @@ class Model extends PhalconModel
      */
     public function saveOrFail($data = null, $whiteList = null) : bool
     {
-        if ($savedModel = static::save($data, $whiteList)) {
+        static::assign($data, $whiteList);
+        if ($savedModel = static::save()) {
             return $savedModel;
         }
 

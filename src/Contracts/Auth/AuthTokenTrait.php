@@ -7,6 +7,7 @@ namespace Baka\Contracts\Auth;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\ValidationData;
+use Phalcon\Di;
 use Phalcon\Security\Random;
 
 /**
@@ -35,36 +36,13 @@ trait AuthTokenTrait
         $random = new Random();
         $sessionId = $random->uuid();
 
-        $signer = new Sha512();
-        $builder = new Builder();
-        $token = $builder
-            ->setIssuer(getenv('TOKEN_AUDIENCE'))
-            ->setAudience(getenv('TOKEN_AUDIENCE'))
-            ->setId($sessionId, true)
-            ->setIssuedAt(time())
-            ->setNotBefore(time() + 500)
-            ->setExpiration(time() + $this->di->getConfig()->jwt->payload->exp ?? 604800)
-            ->set('sessionId', $sessionId)
-            ->set('email', $this->getEmail())
-            ->sign($signer, getenv('TOKEN_PASSWORD'))
-            ->getToken();
-
-        $refreshToken = $builder
-            ->setIssuer(getenv('TOKEN_AUDIENCE'))
-            ->setAudience(getenv('TOKEN_AUDIENCE'))
-            ->setId($sessionId, true)
-            ->setIssuedAt(time())
-            ->setNotBefore(time() + 500)
-            ->setExpiration(time() + $this->di->getConfig()->jwt->payload->exp ?? 604800)
-            ->set('sessionId', $sessionId)
-            ->set('email', $this->getEmail())
-            ->sign($signer, getenv('TOKEN_PASSWORD'))
-            ->getToken();
+        $token = self::createJwtToken($sessionId, $this->getEmail());
+        $refreshToken = self::createJwtToken($sessionId, $this->getEmail());
 
         return [
             'sessionId' => $sessionId,
-            'token' => $token->__toString(),
-            'refresh_token' => $refreshToken->__toString()
+            'token' => $token['token'],
+            'refresh_token' => $refreshToken['token']
         ];
     }
 
@@ -84,5 +62,35 @@ trait AuthTokenTrait
         $validationData->setCurrentTime(time() + 500);
 
         return $validationData;
+    }
+
+    /**
+     * Create a new session based off the refresh token session id.
+     *
+     * @param string $sessionId
+     * @param string $email
+     *
+     * @return array
+     */
+    public static function createJwtToken(string $sessionId, string $email) : array
+    {
+        $signer = new Sha512();
+        $builder = new Builder();
+        $token = $builder
+            ->setIssuer(getenv('TOKEN_AUDIENCE'))
+            ->setAudience(getenv('TOKEN_AUDIENCE'))
+            ->setId($sessionId, true)
+            ->setIssuedAt(time())
+            ->setNotBefore(time() + 500)
+            ->setExpiration(time() + Di::getDefault()->get('config')->jwt->payload->exp ?? 604800)
+            ->set('sessionId', $sessionId)
+            ->set('email', $email)
+            ->sign($signer, getenv('TOKEN_PASSWORD'))
+            ->getToken();
+
+        return [
+            'sessionId' => $sessionId,
+            'token' => $token->__toString()
+        ];
     }
 }

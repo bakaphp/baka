@@ -1,7 +1,7 @@
 <?php
 
-use Phinx\Migration\AbstractMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
+use Phinx\Migration\AbstractMigration;
 
 class Auth extends AbstractMigration
 {
@@ -82,8 +82,9 @@ class Auth extends AbstractMigration
             ->addColumn('title', 'string', ['null' => false, 'limit' => 45, 'collation' => 'utf8_general_ci', 'encoding' => 'utf8', 'after' => 'id'])
             ->addColumn('url', 'string', ['null' => false, 'limit' => 45, 'collation' => 'utf8_general_ci', 'encoding' => 'utf8', 'after' => 'title'])
             ->addColumn('language_id', 'string', ['null' => true, 'limit' => 5, 'collation' => 'utf8_general_ci', 'encoding' => 'utf8', 'after' => 'url'])
-            ->addColumn('added_date', 'datetime', ['null' => false, 'after' => 'language_id'])
-            ->addColumn('updated_date', 'datetime', ['null' => true, 'after' => 'added_date'])
+            ->addColumn('created_at', 'datetime', ['null' => false, 'after' => 'language_id'])
+            ->addColumn('update_at', 'datetime', ['null' => true, 'after' => 'created_at'])
+            ->addColumn('is_deleted', 'integer', ['null' => true, 'limit' => MysqlAdapter::INT_REGULAR, 'precision' => 10, 'after' => 'updated_at'])
             ->save();
 
         $table = $this->table('sources');
@@ -97,8 +98,9 @@ class Auth extends AbstractMigration
         $table->addColumn('users_id', 'integer', ['null' => false, 'limit' => MysqlAdapter::INT_BIG, 'precision' => 20, 'signed' => false])
             ->addColumn('name', 'string', ['null' => false, 'limit' => 45, 'collation' => 'utf8_general_ci', 'encoding' => 'utf8', 'after' => 'users_id'])
             ->addColumn('value', 'string', ['null' => true, 'limit' => 45, 'collation' => 'utf8_general_ci', 'encoding' => 'utf8', 'after' => 'name'])
-            ->addColumn('added_date', 'datetime', ['null' => false, 'after' => 'value'])
-            ->addColumn('updated_date', 'datetime', ['null' => true, 'after' => 'added_date'])
+            ->addColumn('created_at', 'datetime', ['null' => false, 'after' => 'value'])
+            ->addColumn('update_at', 'datetime', ['null' => true, 'after' => 'created_at'])
+            ->addColumn('is_deleted', 'integer', ['null' => true, 'limit' => MysqlAdapter::INT_REGULAR, 'precision' => 10, 'after' => 'updated_at'])
             ->save();
 
         $table = $this->table('user_linked_sources', ['id' => false, 'primary_key' => ['users_id', 'source_id'], 'engine' => 'InnoDB', 'encoding' => 'utf8', 'collation' => 'utf8_general_ci', 'comment' => '', 'row_format' => 'Compact']);
@@ -232,6 +234,5 @@ class Auth extends AbstractMigration
      */
     public function down()
     {
-
     }
 }

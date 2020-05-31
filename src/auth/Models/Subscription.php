@@ -12,110 +12,28 @@ class Subscription extends Model
     const FREE_TRIAL = 1;
     const DEFAULT_APP = 1;
 
-    /**
-     *
-     * @var integer
-     * @Primary
-     * @Identity
-     * @Column(type="integer", length=11, nullable=false)
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=true)
-     */
-    public $plans_id;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=false)
-     */
-    public $users_id;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=true)
-     */
-    public $apps_id;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", length=45, nullable=true)
-     */
-    public $stripe_id;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=false)
-     */
-    public $company_id;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", length=45, nullable=true)
-     */
-    public $stripe_plan;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=true)
-     */
-    public $quantity;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", nullable=true)
-     */
-    public $trial_ends_at;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", nullable=true)
-     */
-    public $ends_at;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", nullable=true)
-     */
-    public $created_at;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", nullable=true)
-     */
-    public $updated_at;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=true)
-     */
-    public $is_deleted;
+    public int $plans_id;
+    public int $users_id;
+    public int $apps_id;
+    public int $stripe_id;
+    public int $company_id;
+    public string $stripe_plan;
+    public int $quantity;
+    public string $trial_ends_at;
+    public string $ends_at;
 
     /**
      * Initialize method for model.
      */
     public function initialize()
     {
+        $this->setSource('subscription');
         $this->belongsTo('users_id', 'Baka\Auth\Models\Users', 'id', ['alias' => 'user']);
         $this->belongsTo('company_id', 'Baka\Auth\Models\Companies', 'id', ['alias' => 'company']);
     }
 
     /**
-     * Model validation
+     * Model validation.
      *
      * @return void
      */
@@ -136,12 +54,13 @@ class Subscription extends Model
     }
 
     /**
-     * Start a free trial to the system
+     * Start a free trial to the system.
      *
      * @param  Companies $company
+     *
      * @return Subscription
      */
-    public static function startFreeTrial(Companies $company): self
+    public static function startFreeTrial(Companies $company) : self
     {
         $subscription = new self();
         $subscription->plans_id = self::FREE_TRIAL;
@@ -159,15 +78,5 @@ class Subscription extends Model
         }
 
         return $subscription;
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource(): string
-    {
-        return 'subscription';
     }
 }

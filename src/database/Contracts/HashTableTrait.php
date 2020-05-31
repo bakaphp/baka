@@ -6,18 +6,6 @@ namespace Baka\Database\Contracts;
 
 use RuntimeException;
 
-/**
- * Trait ResponseTrait.
- *
- * @package Gewaer\Traits
- *
- * @property Users $user
- * @property Config $config
- * @property Request $request
- * @property Auth $auth
- * @property \Phalcon\Di $di
- *
- */
 trait HashTableTrait
 {
     protected $settingsModel;
@@ -44,7 +32,7 @@ trait HashTableTrait
      *
      * @return void
      */
-    private function createSettingsModel() : void
+    protected function createSettingsModel() : void
     {
         $class = get_class($this) . 'Settings';
 
@@ -133,5 +121,22 @@ trait HashTableTrait
         }
 
         return null;
+    }
+
+    /**
+     * Delete element.
+     *
+     * @param string $key
+     *
+     * @return boolean
+     */
+    public function deleteHash(string $key) : bool
+    {
+        $this->createSettingsModel();
+        if ($record = $this->getSettingsByKey($key)) {
+            return $record->delete();
+        }
+
+        return false;
     }
 }
