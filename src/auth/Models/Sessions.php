@@ -21,7 +21,6 @@ class Sessions extends Model
     public string $ip;
     public string $page;
     public int $logged_in;
-    public int $is_admin;
 
     /**
      * Initialize.
@@ -89,7 +88,6 @@ class Sessions extends Model
         $session->time = $currentTime;
         $session->page = $pageId;
         $session->logged_in = 1;
-        $session->is_admin = (int) $user->isAdmin();
         $session->id = $sessionId;
         $session->token = $token;
         $session->ip = $userIp;

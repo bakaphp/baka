@@ -24,7 +24,7 @@ class Model extends PhalconModel
      */
     public $id;
     public string $created_at;
-    public string $updated_at;
+    public ?string $updated_at;
     public int $is_deleted = 0;
 
     /**
@@ -176,7 +176,10 @@ class Model extends PhalconModel
      */
     public function saveOrFail($data = null, $whiteList = null) : bool
     {
-        static::assign($data, $whiteList);
+        if (is_array($data)) {
+            static::assign($data, $whiteList);
+        }
+
         if ($savedModel = static::save()) {
             return $savedModel;
         }

@@ -7,6 +7,7 @@ use Baka\Contracts\Auth\UserInterface;
 use Baka\Database\Contracts\HashTableTrait;
 use Baka\Database\Model;
 use Baka\Exception\AuthException;
+use Baka\Support\Random;
 use Baka\Validation as BakaValidation;
 use Canvas\Hashing\Password;
 use Exception;
@@ -36,19 +37,19 @@ class Users extends Model implements UserInterface
     public string $registered;
     public string $lastvisit;
     public int $default_company;
-    public string $defaultCompanyName;
+    public ?string $defaultCompanyName = null;
     public string $dob;
     public string $sex;
     public string $phone_number;
     public string $cell_phone_number;
     public string $timezone;
-    public int $city_id = 0;
-    public int $state_id;
-    public int $country_id;
+    public ?int $city_id = 0;
+    public ?int $state_id = 0;
+    public ?int $country_id = 0;
     public int $welcome = 0;
     public int $user_active;
     public string $user_activation_key;
-    public string $user_activation_email;
+    public ?string $user_activation_email = null;
     public bool $loggedIn = false;
     public string $location = '';
     public string $interest = '';
@@ -57,18 +58,18 @@ class Users extends Model implements UserInterface
     public string $language;
     public string $session_id = '';
     public string $session_key = '';
-    public int $banned;
-    public string $user_last_login_try;
+    public string $banned;
+    public int $user_last_login_try;
     public int $user_level;
     public static string $locale = 'ja_jp';
 
     /**
      * @deprecated with filesystem
      */
-    public string $profile_image;
-    public string $profile_image_mobile;
-    public string $profile_remote_image;
-    public string $profile_image_thumb = ' ';
+    public ?string $profile_image = null;
+    public ?string $profile_image_mobile = null;
+    public ?string $profile_remote_image = null;
+    public ?string $profile_image_thumb = ' ';
 
     /**
      * initialize the model.
@@ -300,7 +301,7 @@ class Users extends Model implements UserInterface
      */
     public function isBanned() : bool
     {
-        return !$this->isActive() && $this->banned;
+        return !$this->isActive() && $this->banned === 'Y';
     }
 
     /**
@@ -379,7 +380,7 @@ class Users extends Model implements UserInterface
     {
         //create company
         $company = new Companies();
-        $company->name = $this->defaultCompanyName;
+        $company->name = $this->defaultCompanyName ?? Random::generateDisplayNameFromEmail($this->email);
         $company->users_id = $this->getId();
         $company->saveOrFail();
 

@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Baka\Auth;
 
 use Baka\Contracts\Auth\UserInterface;
+use Phalcon\Di;
 
 class UserProvider
 {
-    protected static $userProvider;
+    protected static UserInterface $userProvider;
 
     /**
      * Set provider.
@@ -27,7 +28,7 @@ class UserProvider
      *
      * @return UserInterface
      */
-    protected static function get() : UserInterface
+    public static function get() : UserInterface
     {
         return Di::getDefault()->has('userProvider') ? Di::getDefault()->get('userProvider') : self::$userProvider;
     }

@@ -8,6 +8,7 @@ use Baka\Contracts\Auth\UserInterface;
 use Baka\Exception\AuthException;
 use Baka\Hashing\Keys;
 use Baka\Hashing\Password;
+use Baka\Support\Random;
 use Exception;
 use stdClass;
 
@@ -65,15 +66,15 @@ class Auth
      *
      * @return Users
      */
-    public function signUp(array $userData) : UserInterface
+    public static function signUp(array $userData) : UserInterface
     {
         $user = UserProvider::get();
 
         $user->email = $userData['email'];
         $user->sex = 'U';
-        $user->firstname = $userData['firstname'] ?: ' ';
-        $user->lastname = $userData['lastname'] ?: ' ';
-        $user->displayname = $userData['displayname'] ?: self::generateDisplayName($userData['email']);
+        $user->firstname = $userData['firstname'] ?? ' ';
+        $user->lastname = $userData['lastname'] ?? ' ';
+        $user->displayname = $userData['displayname'] ?? Random::generateDisplayName($userData['email']);
         $user->dob = date('Y-m-d');
         $user->lastvisit = date('Y-m-d H:i:s');
         $user->registered = date('Y-m-d H:i:s');
@@ -85,15 +86,17 @@ class Auth
         $user->profile_header = ' ';
         $user->user_login_tries = 0;
         $user->user_last_login_try = 0;
-        $user->default_company = $userData['default_company'] ?: 0;
+        $user->default_company = $userData['default_company'] ?? 0;
         $user->session_time = time();
         $user->session_page = time();
         $user->password = Password::make($userData['password']);
-        $user->language = $userData['language'] ?: 'EN';
+        $user->language = $userData['language'] ?? 'EN';
         $user->user_activation_key = Keys::make();
 
         //if you need to run any extra feature with the data we get from the request
-        $user->setCustomFields($userData);
+        if (method_exists($user, 'setCustomFields')) {
+            $user->setCustomFields($userData);
+        }
 
         $user->saveOrFail();
 
@@ -164,26 +167,5 @@ class Auth
         }
 
         return false;
-    }
-
-    /**
-     * Given a firstname give me a random username.
-     *
-     * @param string $displayname
-     * @param int $randNo
-     *
-     * @return string
-     */
-    public static function generateDisplayName(string $displayname, $randNo = 200) : string
-    {
-        $usernameParts = array_filter(explode(' ', strtolower($displayname))); //explode and lowercase name
-        $usernameParts = array_slice($usernameParts, 0, 2); //return only first two arry part
-
-        $part1 = (!empty($usernameParts[0])) ? substr($usernameParts[0], 0, 8) : ''; //cut first name to 8 letters
-        $part2 = (!empty($usernameParts[1])) ? substr($usernameParts[1], 0, 5) : ''; //cut second name to 5 letters
-        $part3 = ($randNo) ? rand(0, $randNo) : '';
-
-        $username = $part1 . str_shuffle($part2) . $part3; //str_shuffle to randomly shuffle all characters
-        return $username;
     }
 }

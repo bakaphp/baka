@@ -12,8 +12,8 @@ class Companies extends Model
     const DEFAULT_COMPANY = 'DefaulCompany';
 
     public string $name;
-    public string $profile_image;
-    public string $website;
+    public ?string $profile_image = null;
+    public ?string $website = null;
     public int $users_id;
 
     /**
