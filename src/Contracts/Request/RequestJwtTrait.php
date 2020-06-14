@@ -26,5 +26,5 @@ trait RequestJwtTrait
         return empty($this->getBearerTokenFromHeader());
     }
 
-    abstract public function getHeader($header);
+    abstract public function getHeader(string $header) : string;
 }
