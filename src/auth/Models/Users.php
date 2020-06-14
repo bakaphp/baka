@@ -4,7 +4,7 @@ namespace Baka\Auth\Models;
 
 use Baka\Contracts\Auth\AuthTokenTrait;
 use Baka\Contracts\Auth\UserInterface;
-use Baka\Database\Contracts\HashTableTrait;
+use Baka\Contracts\Database\HashTableTrait;
 use Baka\Database\Model;
 use Baka\Exception\AuthException;
 use Baka\Support\Random;
@@ -40,8 +40,8 @@ class Users extends Model implements UserInterface
     public ?string $defaultCompanyName = null;
     public string $dob;
     public string $sex;
-    public string $phone_number;
-    public string $cell_phone_number;
+    public ?string $phone_number;
+    public ?string $cell_phone_number;
     public string $timezone;
     public ?int $city_id = 0;
     public ?int $state_id = 0;

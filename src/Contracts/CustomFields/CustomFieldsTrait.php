@@ -1,6 +1,6 @@
 <?php
 
-namespace Baka\Database\Contracts\CustomFields;
+namespace Baka\Contracts\CustomFields;
 
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\Modules;
@@ -9,6 +9,7 @@ use Baka\Database\Model as BakaModel;
 use Exception;
 use PDO;
 use ReflectionClass;
+use Phalcon\Mvc\Model\ResultsetInterface ;
 
 /**
  * Custom field class.
@@ -109,7 +110,7 @@ trait CustomFieldsTrait
      *
      * @return Content[]
      */
-    public static function find($parameters = null)
+    public static function find($parameters = null) : ResultsetInterface
     {
         $results = parent::find($parameters);
         $newResult = [];

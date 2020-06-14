@@ -1,6 +1,6 @@
 <?php
 
-namespace Baka\Database\Contracts\CustomFilters;
+namespace Baka\Contracts\CustomFilters;
 
 use Baka\Database\CustomFilters\Conditions;
 use Baka\Database\CustomFilters\CustomFilters;
@@ -62,7 +62,7 @@ trait CustomFilterTrait
     }
 
     /**
-     * Given a filter and it soptions save process the critiria.
+     * Given a filter and it options save process the criteria.
      *
      * [
      *     [

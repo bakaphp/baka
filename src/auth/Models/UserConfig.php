@@ -2,7 +2,7 @@
 
 namespace Baka\Auth\Models;
 
-use Baka\Database\Contracts\HashTableTrait;
+use Baka\Contracts\Database\HashTableTrait;
 use Baka\Database\Model;
 
 class UserConfig extends Model

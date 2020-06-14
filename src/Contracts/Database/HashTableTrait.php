@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Baka\Database\Contracts;
+namespace Baka\Contracts\Database;
 
 use RuntimeException;
 

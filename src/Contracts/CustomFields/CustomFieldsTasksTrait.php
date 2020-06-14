@@ -1,6 +1,6 @@
 <?php
 
-namespace Baka\Database\Contracts\CustomFields;
+namespace Baka\Contracts\CustomFields;
 
 use Baka\Database\Apps;
 use Baka\Database\CustomFields\CustomFields;

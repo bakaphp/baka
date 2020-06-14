@@ -11,6 +11,7 @@ class UserLinkedSources extends Model
     public int $users_id;
     public int $source_id;
     public int $source_users_id;
+    public string $source_users_id_text;
     public string $source_username;
 
     /**

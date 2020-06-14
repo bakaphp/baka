@@ -1,9 +1,9 @@
 <?php
 
-namespace Baka\Database\Contracts\CustomFields;
+namespace Baka\Contracts\CustomFields;
 
 /**
- * Trait to implemente everything needed from a simple CRUD in a API
+ * Trait to implemented everything needed from a simple CRUD in a API
  *
  */
 interface CustomFieldsTableInterface

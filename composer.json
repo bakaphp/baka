@@ -28,6 +28,7 @@
         "codeception/module-asserts": "^1.2",
         "codeception/module-filesystem": "^1.0",
         "codeception/module-phalcon": "^1.0",
+        "codeception/module-phalcon4": "^1.0",
         "codeception/verify": "*",
         "fzaninotto/faker": "^1.9",
         "odan/phinx-migrations-generator": "^5",
