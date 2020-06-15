@@ -69,7 +69,6 @@ class Auth
     public static function signUp(array $userData) : UserInterface
     {
         $user = UserProvider::get();
-
         $user->email = $userData['email'];
         $user->sex = 'U';
         $user->firstname = $userData['firstname'] ?? ' ';
