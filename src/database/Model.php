@@ -284,12 +284,12 @@ class Model extends PhalconModel
      */
     public function getPrimaryKeys() : array
     {
-        $metaData = new MetaDataMemory();
+        $metaData = $this->di->get('modelsMetadata');
         return $metaData->getPrimaryKeyAttributes($this);
     }
 
     /**
-     * Get get the primarey key, if we have more than 1 , use keys.
+     * Get get the primary key, if we have more than 1 , use keys.
      *
      * @return array
      */

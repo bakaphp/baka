@@ -52,7 +52,7 @@ trait HashTableTrait
         $this->createSettingsModel();
 
         if (!is_object($this->settingsModel)) {
-            throw new RuntimeException('ModelSettingsTrait need to have a settings model configure, check the model setting existe for this class' . get_class($this));
+            throw new RuntimeException('ModelSettingsTrait need to have a settings model configure, check the model setting exists for this class' . get_class($this));
         }
 
         //if we don't find it we create it
