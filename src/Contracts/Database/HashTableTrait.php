@@ -65,7 +65,7 @@ trait HashTableTrait
         }
 
         $this->settingsModel->name = $key;
-        $this->settingsModel->value = $value;
+        $this->settingsModel->value = (string) $value;
         $this->settingsModel->saveOrFail();
 
         return true;

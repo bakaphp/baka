@@ -82,7 +82,6 @@ class Auth
         $user->user_active = 1;
         $user->status = 1;
         $user->banned = 'N';
-        $user->profile_header = ' ';
         $user->user_login_tries = 0;
         $user->user_last_login_try = 0;
         $user->default_company = $userData['default_company'] ?? 0;

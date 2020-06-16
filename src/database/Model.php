@@ -6,8 +6,8 @@ use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Database\Exception\ModelNotProcessedException;
 use function Baka\getShortClassName;
 use Phalcon\Mvc\Model as PhalconModel;
-use Phalcon\Mvc\Model\MetaData\Memory as MetaDataMemory;
 use Phalcon\Mvc\Model\ResultsetInterface;
+use Phalcon\Mvc\ModelInterface;
 use RuntimeException;
 
 class Model extends PhalconModel
@@ -34,7 +34,7 @@ class Model extends PhalconModel
      */
     public function getId()
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     /**
@@ -107,7 +107,7 @@ class Model extends PhalconModel
      *
      * @return self
      */
-    public static function getByIdOrFail($id) : self
+    public static function getByIdOrFail($id) : ModelInterface
     {
         if (property_exists(new static, 'is_deleted')) {
             if ($record = static::findFirst([
@@ -137,7 +137,7 @@ class Model extends PhalconModel
      *
      * @return self
      */
-    public static function findFirstOrFail($parameters = null) : self
+    public static function findFirstOrFail($parameters = null) : ModelInterface
     {
         $result = static::findFirst($parameters);
         if (!$result) {
@@ -209,7 +209,7 @@ class Model extends PhalconModel
      *
      * @return Model
      */
-    public static function findFirstOrCreate($parameters = null, array $fields = []) : self
+    public static function findFirstOrCreate($parameters = null, array $fields = []) : ModelInterface
     {
         $model = static::findFirst($parameters);
 
@@ -228,7 +228,7 @@ class Model extends PhalconModel
      *
      * @return Model
      */
-    public static function updateOrCreate($parameters = null, array $fields = []) : self
+    public static function updateOrCreate($parameters = null, array $fields = []) : ModelInterface
     {
         $model = static::findFirst($parameters);
 

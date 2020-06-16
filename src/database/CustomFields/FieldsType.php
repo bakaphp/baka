@@ -2,8 +2,8 @@
 
 namespace Baka\Database\CustomFields;
 
-use Baka\Database\Model;
 use Baka\Database\Contracts\HashTableTrait;
+use Baka\Database\Model;
 
 class FieldsType extends Model
 {
@@ -25,12 +25,12 @@ class FieldsType extends Model
     public $icon;
 
     /**
-     * Returns the name of the table associated to the model.
+     * Initialize.
      *
-     * @return string
+     * @return void
      */
-    public function getSource(): string
+    public function initialize()
     {
-        return 'custom_fields_types';
+        $this->setSource('custom_fields_types');
     }
 }

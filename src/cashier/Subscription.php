@@ -45,11 +45,6 @@ class Subscription extends Model
         $this->belongsTo('user_id', '\App\Models\Users', 'id', ['alias' => 'user']);
     }
 
-    public function getSource() : string
-    {
-        return 'subscriptions';
-    }
-
     /**
      * Get the user that owns the subscription.
      */

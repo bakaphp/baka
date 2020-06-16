@@ -2,57 +2,43 @@
 
 namespace Baka\Database\CustomFields;
 
-use Baka\Database\Model;
-use Baka\Database\Exception\Exception;
 use Baka\Database\Apps;
+use Baka\Database\Exception\Exception;
+use Baka\Database\Model;
 
 class Modules extends Model
 {
-    /**
-     * @var integer
-     */
-    public $id;
+    public int $apps_id;
+    public string $model_name;
+    public string $name;
 
     /**
-     * @var integer
-     */
-    public $apps_id;
-
-    /**
-     * @var string
-     */
-    public $model_name;
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * Returns the name of the table associated to the model.
+     * Initialize.
      *
-     * @return string
+     * @return void
      */
-    public function getSource(): string
+    public function initialize()
     {
-        return 'custom_fields_modules';
+        $this->setSource('custom_fields_modules');
     }
 
     /**
-     * Given the custom field table get its module
+     * Given the custom field table get its module.
      *
      * @param string $customFieldClassName
      * @param Apps $app
+     *
      * @throws Exception
+     *
      * @return Modules
      */
-    public static function getByCustomFieldModuleByModuleAndApp(string $customFieldClassName, Apps $app): Modules
+    public static function getByCustomFieldModuleByModuleAndApp(string $customFieldClassName, Apps $app) : Modules
     {
         $model = self::findFirst([
             'conditions' => 'model_name = ?0 and apps_id = ?1',
             'bind' => [$customFieldClassName, $app->getId()]
         ]);
-        
+
         if (!is_object($model)) {
             throw new Exception('No Custom Field define for this class ' . $customFieldClassName);
         }

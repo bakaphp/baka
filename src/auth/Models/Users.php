@@ -40,8 +40,9 @@ class Users extends Model implements UserInterface
     public ?string $defaultCompanyName = null;
     public string $dob;
     public string $sex;
-    public ?string $phone_number;
-    public ?string $cell_phone_number;
+    public ?string $description = null;
+    public ?string $phone_number = null;
+    public ?string $cell_phone_number = null;
     public string $timezone;
     public ?int $city_id = 0;
     public ?int $state_id = 0;
@@ -50,6 +51,7 @@ class Users extends Model implements UserInterface
     public int $user_active;
     public string $user_activation_key;
     public ?string $user_activation_email = null;
+    public ?string $profile_header = '';
     public bool $loggedIn = false;
     public string $location = '';
     public string $interest = '';
@@ -59,8 +61,8 @@ class Users extends Model implements UserInterface
     public string $session_id = '';
     public string $session_key = '';
     public string $banned;
-    public int $user_last_login_try;
-    public int $user_level;
+    public int $user_last_login_try = 0;
+    public int $user_level = 0;
     public static string $locale = 'ja_jp';
 
     /**

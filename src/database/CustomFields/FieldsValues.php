@@ -22,12 +22,12 @@ class FieldsValues extends Model
     public $is_default;
 
     /**
-     * Returns the name of the table associated to the model.
+     * Initialize.
      *
-     * @return string
+     * @return void
      */
-    public function getSource(): string
+    public function initialize()
     {
-        return 'custom_fields_values';
+        $this->setSource('custom_fields_values');
     }
 }

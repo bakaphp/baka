@@ -2,8 +2,8 @@
 
 namespace Baka\Database\CustomFields;
 
-use Baka\Database\Model;
 use Baka\Database\Contracts\HashTableTrait;
+use Baka\Database\Model;
 
 class CustomFields extends Model
 {
@@ -50,22 +50,14 @@ class CustomFields extends Model
     public $fields_type_id;
 
     /**
-     * Returns the name of the table associated to the model.
-     *
-     * @return string
-     */
-    public function getSource(): string
-    {
-        return 'custom_fields';
-    }
-
-    /**
      * Initialize some stuff.
      *
      * @return void
      */
     public function initialize()
     {
+        $this->setSource('custom_fields');
+
         $this->belongsTo('fields_type_id', '\Baka\Database\CustomFields\FieldsType', 'id', ['alias' => 'type']);
         $this->belongsTo('custom_fields_modules_id', '\Baka\Database\CustomFields\Module', 'id', ['alias' => 'module']);
     }
@@ -74,9 +66,10 @@ class CustomFields extends Model
      * Get the felds of this custom field module.
      *
      * @param string $module
+     *
      * @return void
      */
-    public static function getFields(string $module): array
+    public static function getFields(string $module) : array
     {
         $fields = [];
 
