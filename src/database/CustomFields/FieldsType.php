@@ -2,7 +2,7 @@
 
 namespace Baka\Database\CustomFields;
 
-use Baka\Database\Contracts\HashTableTrait;
+use Baka\Contracts\Database\HashTableTrait;
 use Baka\Database\Model;
 
 class FieldsType extends Model

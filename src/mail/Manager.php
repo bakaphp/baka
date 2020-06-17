@@ -16,7 +16,7 @@ class Manager extends \Phalcon\Mailer\Manager
     protected $queue;
 
     /**
-     *  Overwrite this funciton to use ower mail message.
+     *  Overwrite this function 
      *
      *  Create a new Message instance.
      *
@@ -93,7 +93,7 @@ class Manager extends \Phalcon\Mailer\Manager
      */
     public function setRenderView($viewPath, $params)
     {
-        //Set volt tempalte enging and specify the cache path
+        //Set volt template engine and specify the cache path
         $this->setViewEngines([
             '.volt' => function ($view = null) {
                 $volt = new Volt($view);

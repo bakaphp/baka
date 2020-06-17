@@ -2,49 +2,15 @@
 
 namespace Baka\Blameable;
 
-class Audits extends \Phalcon\Mvc\Model
+use Baka\Database\Model;
+
+class Audits extends Model
 {
-    /**
-     *
-     * @var string
-     */
-    public $id;
-
-    /**
-     *
-     * @var int
-     */
-    public $users_id;
-
-    /**
-     *
-     * @var string
-     */
-    public $entity_id;
-
-    /**
-     *
-     * @var string
-     */
-    public $model_name;
-
-    /**
-     *
-     * @var string
-     */
-    public $ip;
-
-    /**
-     *
-     * @var string
-     */
-    public $type;
-
-    /**
-     *
-     * @var string
-     */
-    public $created_at;
+    public int $users_id;
+    public string $entity_id;
+    public string $model_name;
+    public string $ip;
+    public string $type;
 
     /**
      * add the relationships.
@@ -53,18 +19,9 @@ class Audits extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
+        $this->setSource('audits');
         $this->hasMany('id', '\Baka\Blameable\AuditsDetails', 'audits_id', ['alias' => 'details']);
         $this->belongsTo('users_id', '\Baka\Auth\Users', 'id', ['alias' => 'user']);
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource()
-    {
-        return 'audits';
     }
 
     /**

@@ -15,7 +15,7 @@ class Blameable extends Behavior implements BehaviorInterface
      *
      * @var array
      */
-    protected $excludeFields = [];
+    protected array $excludeFields = [];
 
     /**
      * @var array
@@ -126,7 +126,7 @@ class Blameable extends Behavior implements BehaviorInterface
         $audit->model_name = get_class($model);
 
         //The client IP address
-        $audit->ip = is_object($request) ? $request->getClientAddress() : '127.0.0.1';
+        $audit->ip = is_object($request) && !empty($request->getClientAddress()) ? $request->getClientAddress() : '127.0.0.1';
 
         //Action is an update
         $audit->type = $type;
@@ -216,8 +216,8 @@ class Blameable extends Behavior implements BehaviorInterface
                 $auditDetail->field_name = $field;
                 $auditDetail->old_value = null;
                 $auditDetail->old_value_text = null;
-                $auditDetail->new_value = $value;
-                $auditDetail->new_value_text = $value;
+                $auditDetail->new_value = !is_array($value) ? $value : json_encode($value);
+                $auditDetail->new_value_text = !is_array($value) ? $value : json_encode($value);
 
                 $details[] = $auditDetail;
             }
@@ -226,8 +226,7 @@ class Blameable extends Behavior implements BehaviorInterface
         $audit->details = $details;
 
         //Create a new audit
-        if (!$audit->save()) {
-            $this->log(current($audit->getMessages()));
+        if (!$audit->saveOrFail()) {
             return null;
         }
 
@@ -353,9 +352,7 @@ class Blameable extends Behavior implements BehaviorInterface
         if (!empty($details)) {
             $audit = $this->createAudit(self::UPDATE, $model);
             $audit->details = $details;
-            if (!$audit->save()) {
-                $this->log(current($audit->getMessages()));
-            }
+            $audit->saveOrFail();
 
             return true;
         }
@@ -483,28 +480,12 @@ class Blameable extends Behavior implements BehaviorInterface
         if (!empty($details)) {
             $audit = $this->createAudit(self::DELETE, $model);
             $audit->details = $details;
-            if (!$audit->save()) {
-                $this->log(current($audit->getMessages()));
-            }
+            $audit->saveOrFail();
 
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Log the info on blameable.
-     *
-     * @param string $message
-     *
-     * @return void
-     */
-    protected function log(string $message) : void
-    {
-        if (Di::getDefault()->has('log')) {
-            Di::getDefault()->get('log')->error('Saving Blamable ' . $message);
-        }
     }
 
     /**

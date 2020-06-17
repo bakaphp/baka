@@ -42,6 +42,7 @@ class Subscription extends Model
 
     public function initialize()
     {
+        $this->setSource('subscriptions');
         $this->belongsTo('user_id', '\App\Models\Users', 'id', ['alias' => 'user']);
     }
 

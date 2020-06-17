@@ -2,46 +2,16 @@
 
 namespace Baka\Blameable;
 
-class AuditsDetails extends \Phalcon\Mvc\Model
+use Baka\Database\Model;
+
+class AuditsDetails extends Model
 {
-    /**
-     *
-     * @var string
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $audits_id;
-
-    /**
-     *
-     * @var string
-     */
-    public $field_name;
-
-    /**
-     *
-     * @var string
-     */
-    public $old_value;
-
-    /**
-     * @var string
-     */
-    public $old_value_text;
-
-    /**
-     * @var string
-     */
-    public $new_value;
-
-    /**
-     * @var string
-     */
-    public $new_value_text;
+    public int $audits_id;
+    public string $field_name;
+    public ?string $old_value = null;
+    public ?String $old_value_text = null;
+    public ?string $new_value = null;
+    public ?string $new_value_text = null;
 
     /**
      * Init.
@@ -50,16 +20,7 @@ class AuditsDetails extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
+        $this->setSource('audits_details');
         $this->belongsTo('audits_id', '\Baka\Blameable\Audits', 'id');
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource()
-    {
-        return 'audits_details';
     }
 }

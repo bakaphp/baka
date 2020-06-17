@@ -2,7 +2,7 @@
 
 namespace Baka\Database\CustomFields;
 
-use Baka\Database\Contracts\HashTableTrait;
+use Baka\Contracts\Database\HashTableTrait;
 use Baka\Database\Model;
 
 class CustomFields extends Model
@@ -63,7 +63,7 @@ class CustomFields extends Model
     }
 
     /**
-     * Get the felds of this custom field module.
+     * Get the fields of this custom field module.
      *
      * @param string $module
      *
