@@ -31,4 +31,24 @@ class Phalcon extends Request
 
         return $data ?: [];
     }
+
+    /**
+     * Is this request paginated?
+     *
+     * @return boolean
+     */
+    public function withPagination() : bool
+    {
+        return $this->getQuery('format', 'string') == 'true';
+    }
+
+    /**
+     * Is this a request requesting relationships
+     *
+     * @return boolean
+     */
+    public function withRelationships() : bool
+    {
+        return $this->hasQuery('relationships');
+    }
 }

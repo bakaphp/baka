@@ -177,10 +177,10 @@ class Model extends PhalconModel
     public function saveOrFail($data = null, $whiteList = null) : bool
     {
         if (is_array($data)) {
-            static::assign($data, $whiteList);
+            $this->assign($data, $whiteList);
         }
 
-        if ($savedModel = static::save()) {
+        if ($savedModel = $this->save()) {
             return $savedModel;
         }
 
@@ -195,7 +195,11 @@ class Model extends PhalconModel
      */
     public function updateOrFail($data = null, $whiteList = null) : bool
     {
-        if ($updatedModel = static::update($data, $whiteList)) {
+        if (is_array($data)) {
+            $this->assign($data, $whiteList);
+        }
+
+        if ($updatedModel = $this->update()) {
             return $updatedModel;
         }
 

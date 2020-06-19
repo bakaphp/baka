@@ -113,8 +113,8 @@ trait CrudBehaviorTrait
                 sprintf(
                     'Request no processed. Missing following params : %s.',
                     implode(', ', $diff)
-                    )
-                );
+                )
+            );
         }
 
         $results = new SimpleRecords(
@@ -122,6 +122,7 @@ trait CrudBehaviorTrait
             $this->model,
             $this->model->getReadConnection()->query($processedRequest['sql'], $processedRequest['bind'])
         );
+//        $results->setHydrateMode(\Phalcon\Mvc\Model\Resultset::HYDRATE_ARRAYS);
 
         $count = $this->model->getReadConnection()->query(
             $processedRequest['countSql'],

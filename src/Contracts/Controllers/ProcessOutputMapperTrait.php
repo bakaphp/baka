@@ -24,18 +24,24 @@ trait ProcessOutputMapperTrait
     {
         $this->canUseMapper();
 
-        //if we have relationships we use StdClass to allow use to overwrite the array as we see fit in the Dto
-        if ($this->request->hasQuery('relationships')) {
+        $mapMultiple = false;
+        $mapperModel = get_class($this->model);
+
+        //if its simple, pagination or relationship we need to map array to sdtclass
+        if (
+            (is_array($results) || is_iterable($results)) &&
+            (($this->request->withPagination() && $this->request->withRelationships()) ||
+            (!$this->request->withPagination() && $this->request->withRelationships()))
+        ) {
             $mapperModel = DataType::ARRAY;
             $this->dto = StdClass::class;
-        } else {
-            $mapperModel = get_class($this->model);
+            $mapMultiple = true;
         }
 
         $this->dtoConfig->registerMapping($mapperModel, $this->dto)
             ->useCustomMapper($this->dtoMapper);
 
-        if (is_array($results) && isset($results['data'])) {
+        if ($this->request->withPagination()) {
             $results['data'] = $this->mapper->mapMultiple(
                 $results['data'],
                 $this->dto,
@@ -44,11 +50,7 @@ trait ProcessOutputMapperTrait
             return  $results;
         }
 
-        /**
-         * If position 0 is array or object it means is a result set from normal query
-         * or with relationships therefore we use multimap.
-         */
-        if (is_iterable($results) && (is_array(current($results)) || is_object(current($results)))) {
+        if ($mapMultiple || is_iterable($results)) {
             return $this->mapper->mapMultiple(
                 $results,
                 $this->dto,
@@ -78,7 +80,7 @@ trait ProcessOutputMapperTrait
     }
 
     /**
-     * If we have relationships send them as addicontal context to the mapper.
+     * If we have relationships send them as additional context to the mapper.
      *
      * @return array
      */

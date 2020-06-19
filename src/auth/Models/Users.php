@@ -29,10 +29,10 @@ class Users extends Model implements UserInterface
      */
     const ANONYMOUS = '-1';
 
-    public string $email;
+    public ?string $email = null;
     public string $password;
-    public string $firstname;
-    public string $lastname;
+    public ?string $firstname = null;
+    public ?string $lastname = null;
     public string $displayname;
     public string $registered;
     public string $lastvisit;

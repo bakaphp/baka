@@ -19,7 +19,7 @@ if (!function_exists('Baka\appPath')) {
         $currentDir = dirname(dirname(getcwd())) . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 
         /**
-         * since we are calling this file from the diferent path we have to verify if its cli.
+         * since we are calling this file from the different path we have to verify if its cli.
          *
          * @todo look for a better solution , hate this
          */
