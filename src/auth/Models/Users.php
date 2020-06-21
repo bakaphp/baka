@@ -30,37 +30,37 @@ class Users extends Model implements UserInterface
     const ANONYMOUS = '-1';
 
     public ?string $email = null;
-    public string $password;
+    public ?string $password = null;
     public ?string $firstname = null;
     public ?string $lastname = null;
     public string $displayname;
-    public string $registered;
-    public string $lastvisit;
+    public ?string $registered = null;
+    public ?string $lastvisit = null;
     public int $default_company;
     public ?string $defaultCompanyName = null;
-    public string $dob;
-    public string $sex;
+    public ?string $dob = null;
+    public ?string $sex = null;
     public ?string $description = null;
     public ?string $phone_number = null;
     public ?string $cell_phone_number = null;
-    public string $timezone;
+    public ?string $timezone = null;
     public ?int $city_id = 0;
     public ?int $state_id = 0;
     public ?int $country_id = 0;
     public int $welcome = 0;
     public int $user_active;
-    public string $user_activation_key;
+    public ?string $user_activation_key = null;
     public ?string $user_activation_email = null;
     public ?string $profile_header = '';
     public bool $loggedIn = false;
     public string $location = '';
     public string $interest = '';
     public int $profile_privacy = 0;
-    public string $user_activation_forgot = '';
-    public string $language;
+    public ?string $user_activation_forgot = null;
+    public ?string $language = null;
     public string $session_id = '';
     public string $session_key = '';
-    public string $banned;
+    public ?string $banned = null;
     public int $user_last_login_try = 0;
     public int $user_level = 0;
     public static string $locale = 'ja_jp';
@@ -221,6 +221,16 @@ class Users extends Model implements UserInterface
     public function isLoggedIn() : bool
     {
         return $this->loggedIn;
+    }
+
+    /**
+     * Is Anonymous user.
+     *
+     * @return boolean
+     */
+    public function isAnonymous() : bool
+    {
+        return (int) $this->getId() == self::ANONYMOUS;
     }
 
     /**

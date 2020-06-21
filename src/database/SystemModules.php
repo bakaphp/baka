@@ -9,8 +9,8 @@ class SystemModules extends Model
     public string $model_name;
     public int $apps_id;
     public int $parents_id;
-    public ?int $menu_order;
+    public ?int $menu_order = null;
     public int $use_elastic;
-    public string $browse_fields;
+    public ?string $browse_fields = null;
     public int $show;
 }

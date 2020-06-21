@@ -71,7 +71,7 @@ trait CrudBehaviorTrait
     }
 
     /**
-     * Given the results we will proess the output
+     * Given the results we will process the output
      * we will check if a DTO transformer exist and if so we will send it over to change it.
      *
      * @param object|array $results
@@ -84,7 +84,7 @@ trait CrudBehaviorTrait
     }
 
     /**
-     * Given a array request from a method DTO transformet to whats is needed to
+     * Given a array request from a method DTO transformed to whats is needed to
      * process it.
      *
      * @param array $request
@@ -122,7 +122,7 @@ trait CrudBehaviorTrait
             $this->model,
             $this->model->getReadConnection()->query($processedRequest['sql'], $processedRequest['bind'])
         );
-//        $results->setHydrateMode(\Phalcon\Mvc\Model\Resultset::HYDRATE_ARRAYS);
+        // $results->setHydrateMode(\Phalcon\Mvc\Model\Resultset::HYDRATE_ARRAYS);
 
         $count = $this->model->getReadConnection()->query(
             $processedRequest['countSql'],
@@ -143,6 +143,7 @@ trait CrudBehaviorTrait
     public function index() : Response
     {
         $results = $this->processIndex();
+
         //return the response + transform it if needed
         return $this->response($results);
     }
@@ -182,21 +183,26 @@ trait CrudBehaviorTrait
      *
      * @param mixed $id
      *
-     * @return void
+     * @return ModelInterface|array $results
      */
-    protected function getRecordById($id) : array
+    protected function getRecordById($id)
     {
         $this->additionalSearchFields[] = [
             $this->model->getPrimaryKey(), ':', $id
         ];
 
-        $results = $this->processIndex();
+        $processedRequest = $this->processRequest($this->request);
+        $records = $this->getRecords($processedRequest);
+
+        //get the results and append its relationships
+        $results = $records['results'];
 
         if (empty($results)) {
             throw new ModelNotFoundException(
                 getShortClassName($this->model) . ' Record not found'
             );
         }
+
 
         return $results[0];
     }
@@ -235,7 +241,7 @@ trait CrudBehaviorTrait
     }
 
     /**
-     * Process the create request and trecurd the boject.
+     * Process the create request and records the object.
      *
      * @return ModelInterface
      *

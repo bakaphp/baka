@@ -56,7 +56,7 @@ class BaseController extends Controller
     protected $additionalRelationSearchFields = [];
 
     /**
-     * Specify any customf columns.
+     * Specify any customs columns.
      *
      * @var string
      */

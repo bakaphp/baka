@@ -2,7 +2,6 @@
 
 namespace Baka\Http\Contracts\Api;
 
-use function Baka\isSwooleServer;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Micro;
 
@@ -20,18 +19,16 @@ trait ResponseTrait
      */
     protected function response($content, int $statusCode = 200, string $statusMessage = 'OK') : Response
     {
-        $response = [
-            'statusCode' => $statusCode,
-            'statusMessage' => $statusMessage,
-            'content' => $content,
-        ];
-
         if ($this->config->application->debug->logRequest) {
+            $response = [
+                'statusCode' => $statusCode,
+                'statusMessage' => $statusMessage,
+                'content' => $content,
+            ];
             $this->log->addInfo('RESPONSE', $response);
         }
 
         //in order to use the current response instead of having to create a new object , this is needed for swoole servers
-        //$response = $this->response ?? new Response();
         $this->response->setStatusCode($statusCode, $statusMessage);
         $this->response->setContentType('application/vnd.api+json', 'UTF-8');
         $this->response->setJsonContent($content);
@@ -50,9 +47,7 @@ trait ResponseTrait
      */
     protected function halt(Micro $api, int $status, string $message)
     {
-        $apiResponse = !isSwooleServer() ? new Response() : $this->response;
-
-        $apiResponse
+        $this->response
             ->setPayloadError($message)
             ->setStatusCode($status)
             ->send();
