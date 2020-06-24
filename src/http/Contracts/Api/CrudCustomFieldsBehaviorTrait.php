@@ -2,13 +2,13 @@
 
 namespace Baka\Http\Contracts\Api;
 
+use ArgumentCountError;
 use Baka\Http\Converter\RequestUriToElasticSearch;
 use Exception;
 use PDO;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
 use Phalcon\Mvc\ModelInterface;
-use ArgumentCountError;
 
 trait CrudCustomFieldsBehaviorTrait
 {

@@ -13,7 +13,7 @@ class Phalcon extends Request
      *
      * @return array
      */
-    public function getPostData(): array
+    public function getPostData() : array
     {
         $data = $this->getPost() ?: $this->getJsonRawBody(true);
 
@@ -43,7 +43,7 @@ class Phalcon extends Request
     }
 
     /**
-     * Is this a request requesting relationships
+     * Is this a request requesting relationships.
      *
      * @return boolean
      */

@@ -203,7 +203,6 @@ trait CrudBehaviorTrait
             );
         }
 
-
         return $results[0];
     }
 
