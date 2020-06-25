@@ -18,7 +18,6 @@ class File
      */
     public static function validate(FileInterface $file) : bool
     {
-        //Ok let validate user password
         $validator = new CanvasValidation();
 
         /**

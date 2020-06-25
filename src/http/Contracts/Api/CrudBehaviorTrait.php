@@ -6,8 +6,10 @@ use ArgumentCountError;
 use Baka\Database\Exception\ModelNotFoundException;
 use function Baka\getShortClassName;
 use Baka\Http\Converter\RequestUriToSql;
+use Baka\Http\Exception\InternalServerErrorException;
 use Exception;
 use PDO;
+use PDOException;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
@@ -117,18 +119,24 @@ trait CrudBehaviorTrait
             );
         }
 
-        $results = new SimpleRecords(
-            null,
-            $this->model,
-            $this->model->getReadConnection()->query($processedRequest['sql'], $processedRequest['bind'])
-        );
-        // $results->setHydrateMode(\Phalcon\Mvc\Model\Resultset::HYDRATE_ARRAYS);
+        try {
+            $results = new SimpleRecords(
+                null,
+                $this->model,
+                $this->model->getReadConnection()->query($processedRequest['sql'], $processedRequest['bind'])
+            );
+            //$results->setHydrateMode(\Phalcon\Mvc\Model\Resultset::HYDRATE_ARRAYS);
 
-        $count = $this->model->getReadConnection()->query(
-            $processedRequest['countSql'],
-            $processedRequest['bind']
-        )->fetch(PDO::FETCH_OBJ)->total;
-
+            $count = $this->model->getReadConnection()->query(
+                $processedRequest['countSql'],
+                $processedRequest['bind']
+            )->fetch(PDO::FETCH_OBJ)->total;
+        } catch (PDOException $e) {
+            throw InternalServerErrorException::create(
+                $e->getMessage(),
+                !$this->config->app->production ? $processedRequest : null
+            );
+        }
         return [
             'results' => $results,
             'total' => $count
@@ -197,7 +205,7 @@ trait CrudBehaviorTrait
         //get the results and append its relationships
         $results = $records['results'];
 
-        if (empty($results)) {
+        if (empty($results) || !isset($results[0])) {
             throw new ModelNotFoundException(
                 getShortClassName($this->model) . ' Record not found'
             );

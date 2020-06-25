@@ -41,4 +41,20 @@ class HttpException extends Exception
     {
         return is_array($this->data) ? $this->data : [$this->data];
     }
+
+    /**
+     * Creates a new instance of Exception.
+     *
+     * @param string $message
+     * @param string $field
+     *
+     * @return self
+     */
+    public static function create(string $message, ...$field) : self
+    {
+        $e = new self($message);
+        $e->data = $field;
+
+        return $e;
+    }
 }
