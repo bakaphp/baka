@@ -23,7 +23,7 @@ class Model extends PhalconModel
      * @var mixed
      */
     public $id;
-    public string $created_at;
+    public ?string $created_at = null;
     public ?string $updated_at = null;
     public int $is_deleted = 0;
 

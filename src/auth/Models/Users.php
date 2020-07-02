@@ -36,7 +36,7 @@ class Users extends Model implements UserInterface
     public string $displayname;
     public ?string $registered = null;
     public ?string $lastvisit = null;
-    public int $default_company;
+    public int $default_company = 0;
     public ?string $defaultCompanyName = null;
     public ?string $dob = null;
     public ?string $sex = null;
@@ -48,7 +48,7 @@ class Users extends Model implements UserInterface
     public ?int $state_id = 0;
     public ?int $country_id = 0;
     public int $welcome = 0;
-    public int $user_active;
+    public int $user_active = 0;
     public ?string $user_activation_key = null;
     public ?string $user_activation_email = null;
     public ?string $profile_header = '';
