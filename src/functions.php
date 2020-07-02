@@ -118,7 +118,7 @@ if (!function_exists('Baka\isSwooleServer')) {
     }
 }
 
-if (!function_exists('Baka\getClassName')) {
+if (!function_exists('Baka\getShortClassName')) {
     /**
      * Are we running a Swoole Server for this app?
      *
