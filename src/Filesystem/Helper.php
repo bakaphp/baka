@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Baka\Filesystem;
 
-use Baka\Contracts\FileSystem\FileSystemInterface;
-use Baka\Exception\FileSystemException;
 use Phalcon\Http\Request\File;
-use Phalcon\Image\Adapter\Gd;
+use Phalcon\Http\Request\FileInterface;
 
 class Helper
 {
@@ -19,11 +17,11 @@ class Helper
      *
      * @return string
      */
-    public static function generateUniqueName(File $file, string $dir, $withPath = false) : string
+    public static function generateUniqueName(FileInterface $file, string $dir, $withPath = false) : string
     {
         // the provided path has to be a dir
         if (!is_dir($dir)) {
-            throw new FileSystemException("The dir provided: '{$dir}' isn't a valid one.");
+            throw new Exception("The dir provided: '{$dir}' isn't a valid one.");
         }
 
         $path = tempnam($dir . '/', '');
@@ -45,7 +43,7 @@ class Helper
      *
      * @return File
      */
-    public static function pathToFile(string $path) : File
+    public static function pathToFile(string $path) : FileInterface
     {
         //Simulate the body of a Phalcon\Request\File class
         return new File([
@@ -64,29 +62,8 @@ class Helper
      *
      * @return boolean
      */
-    public static function isImage(File $file) : bool
+    public static function isImage(FileInterface $file) : bool
     {
         return strpos(mime_content_type($file->getTempName()), 'image/') === 0;
-    }
-
-    /**
-     * Given a image set its dimension.
-     *
-     * @param File $file
-     * @param FileSystem $fileSystem
-     *
-     * @return void
-     */
-    public static function setImageDimensions(File $file, FileSystemInterface $fileSystem) : void
-    {
-        if (Helper::isImage($file)) {
-            $image = new Gd($file->getTempName());
-            $fileSystem->set('width', $image->getWidth());
-            $fileSystem->set('height', $image->getHeight());
-            $fileSystem->set(
-                'orientation',
-                $image->getHeight() > $image->getWidth() ? 'portrait' : 'landscape'
-            );
-        }
     }
 }

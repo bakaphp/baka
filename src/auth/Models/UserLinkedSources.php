@@ -12,7 +12,7 @@ class UserLinkedSources extends Model
     public int $source_id;
     public $source_users_id;
     public string $source_users_id_text;
-    public string $source_username;
+    public ?string $source_username = null;
 
     /**
      * initialize.

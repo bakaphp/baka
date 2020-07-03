@@ -9,45 +9,14 @@ class CustomFields extends Model
 {
     use HashTableTrait;
 
-    /**
-     * @var integer
-     */
-    public $id;
-
-    /**
-     * @var int
-     */
-    public $companies_id;
-
-    /**
-     * @var int
-     */
-    public $user_id;
-
-    /**
-     * @var int
-     */
-    public $apps_id;
-
-    /**
-     * @var int
-     */
-    public $custom_fields_modules_id;
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $label;
-
-    /**
-     * @var int
-     */
-    public $fields_type_id;
+    public int $companies_id;
+    public int $user_id;
+    public int $apps_id;
+    public int $custom_fields_modules_id;
+    public string $name;
+    public ?string $label = null;
+    public int $fields_type_id;
+    public ?string $attributes = null;
 
     /**
      * Initialize some stuff.

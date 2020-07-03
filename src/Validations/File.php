@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Baka\Validations;
@@ -33,6 +34,7 @@ class File
                 'image/webp',
                 'audio/mpeg',
                 'audio/mp3',
+                'text/plain',
                 'audio/mpeg',
                 'application/pdf',
                 'audio/mpeg3',
@@ -50,16 +52,19 @@ class File
             new FileValidator($uploadConfig)
         );
 
-        //validate this form for password
-        $validator->validate([
-            'file' => [
-                'name' => $file->getName(),
-                'type' => $file->getType(),
-                'tmp_name' => $file->getTempName(),
-                'error' => $file->getError(),
-                'size' => $file->getSize(),
-            ]
-        ]);
+        //phalcon has a issue it requires to be a POST to validate file, so we ignore this for now
+        if (php_sapi_name() != 'cli') {
+            //validate this form for password
+            $validator->validate([
+                'file' => [
+                    'name' => $file->getName(),
+                    'type' => $file->getType(),
+                    'tmp_name' => $file->getTempName(),
+                    'error' => $file->getError(),
+                    'size' => $file->getSize(),
+                ]
+            ]);
+        }
 
         return true;
     }
