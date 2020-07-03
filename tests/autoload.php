@@ -28,4 +28,5 @@ $loader->register();
 
 require appPath('vendor/autoload.php');
 
-(new Dotenv(appPath()))->overload();
+$dotenv = Dotenv::createImmutable(appPath());
+$dotenv->load();

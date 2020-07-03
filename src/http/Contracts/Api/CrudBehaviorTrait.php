@@ -6,8 +6,10 @@ use ArgumentCountError;
 use Baka\Database\Exception\ModelNotFoundException;
 use function Baka\getShortClassName;
 use Baka\Http\Converter\RequestUriToSql;
+use Baka\Http\Exception\InternalServerErrorException;
 use Exception;
 use PDO;
+use PDOException;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
@@ -71,7 +73,7 @@ trait CrudBehaviorTrait
     }
 
     /**
-     * Given the results we will proess the output
+     * Given the results we will process the output
      * we will check if a DTO transformer exist and if so we will send it over to change it.
      *
      * @param object|array $results
@@ -84,7 +86,7 @@ trait CrudBehaviorTrait
     }
 
     /**
-     * Given a array request from a method DTO transformet to whats is needed to
+     * Given a array request from a method DTO transformed to whats is needed to
      * process it.
      *
      * @param array $request
@@ -113,21 +115,28 @@ trait CrudBehaviorTrait
                 sprintf(
                     'Request no processed. Missing following params : %s.',
                     implode(', ', $diff)
-                    )
-                );
+                )
+            );
         }
 
-        $results = new SimpleRecords(
-            null,
-            $this->model,
-            $this->model->getReadConnection()->query($processedRequest['sql'], $processedRequest['bind'])
-        );
+        try {
+            $results = new SimpleRecords(
+                null,
+                $this->model,
+                $this->model->getReadConnection()->query($processedRequest['sql'], $processedRequest['bind'])
+            );
+            //$results->setHydrateMode(\Phalcon\Mvc\Model\Resultset::HYDRATE_ARRAYS);
 
-        $count = $this->model->getReadConnection()->query(
-            $processedRequest['countSql'],
-            $processedRequest['bind']
-        )->fetch(PDO::FETCH_OBJ)->total;
-
+            $count = $this->model->getReadConnection()->query(
+                $processedRequest['countSql'],
+                $processedRequest['bind']
+            )->fetch(PDO::FETCH_OBJ)->total;
+        } catch (PDOException $e) {
+            throw InternalServerErrorException::create(
+                $e->getMessage(),
+                !$this->config->app->production ? $processedRequest : null
+            );
+        }
         return [
             'results' => $results,
             'total' => $count
@@ -142,6 +151,7 @@ trait CrudBehaviorTrait
     public function index() : Response
     {
         $results = $this->processIndex();
+
         //return the response + transform it if needed
         return $this->response($results);
     }
@@ -181,17 +191,21 @@ trait CrudBehaviorTrait
      *
      * @param mixed $id
      *
-     * @return void
+     * @return ModelInterface|array $results
      */
-    protected function getRecordById($id) : array
+    protected function getRecordById($id)
     {
         $this->additionalSearchFields[] = [
             $this->model->getPrimaryKey(), ':', $id
         ];
 
-        $results = $this->processIndex();
+        $processedRequest = $this->processRequest($this->request);
+        $records = $this->getRecords($processedRequest);
 
-        if (empty($results)) {
+        //get the results and append its relationships
+        $results = $records['results'];
+
+        if (empty($results) || !isset($results[0])) {
             throw new ModelNotFoundException(
                 getShortClassName($this->model) . ' Record not found'
             );
@@ -234,7 +248,7 @@ trait CrudBehaviorTrait
     }
 
     /**
-     * Process the create request and trecurd the boject.
+     * Process the create request and records the object.
      *
      * @return ModelInterface
      *

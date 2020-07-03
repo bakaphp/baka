@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Cashier;
+namespace Baka\Cashier;
 
 use Baka\Database\Model;
 use Carbon\Carbon;
@@ -42,12 +42,8 @@ class Subscription extends Model
 
     public function initialize()
     {
+        $this->setSource('subscriptions');
         $this->belongsTo('user_id', '\App\Models\Users', 'id', ['alias' => 'user']);
-    }
-
-    public function getSource() : string
-    {
-        return 'subscriptions';
     }
 
     /**

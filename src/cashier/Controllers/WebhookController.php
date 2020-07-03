@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Phalcon\Cashier\Controllers;
+namespace Baka\Cashier\Controllers;
 
 use Baka\Http\Api\BaseController;
-use Phalcon\Cashier\Traits\StripeWebhookHandlersTrait;
+use Baka\Contracts\Cashier\StripeWebhookHandlersTrait;
 
 /**
  * Class PaymentsController.
@@ -19,8 +19,5 @@ use Phalcon\Cashier\Traits\StripeWebhookHandlersTrait;
  */
 class WebhookController extends BaseController
 {
-    /**
-     * Stripe Webhook Handlers Trait.
-     */
     use StripeWebhookHandlersTrait;
 }

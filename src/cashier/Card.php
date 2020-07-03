@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Cashier;
+namespace Baka\Cashier;
 
 use Stripe\Card as StripeCard;
 

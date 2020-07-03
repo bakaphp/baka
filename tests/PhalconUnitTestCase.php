@@ -188,7 +188,7 @@ class PhalconUnitTestCase extends PhalconUnit
                     'lifetime' => 3600,
                     'prefix' => 'session',
                 ]
-                );
+            );
 
             $session->start();
 

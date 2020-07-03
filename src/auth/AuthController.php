@@ -6,6 +6,7 @@ use Baka\Auth\Models\Sessions;
 use Baka\Auth\Models\UserLinkedSources;
 use Baka\Auth\Models\Users;
 use Baka\Http\Api\BaseController;
+use Baka\Auth\Auth;
 use Exception;
 use Phalcon\Http\Response;
 use Phalcon\Validation;
@@ -153,7 +154,7 @@ abstract class AuthController extends BaseController
         try {
             $this->db->begin();
 
-            $user->signup();
+            Auth::signUp($request);
 
             $this->db->commit();
         } catch (Exception $e) {

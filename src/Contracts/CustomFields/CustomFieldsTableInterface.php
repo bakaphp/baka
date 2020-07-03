@@ -1,0 +1,17 @@
+<?php
+
+namespace Baka\Contracts\CustomFields;
+
+/**
+ * Trait to implemented everything needed from a simple CRUD in a API
+ *
+ */
+interface CustomFieldsTableInterface
+{
+    /**
+     * Set the custom primary field id
+     *
+     * @param int $id
+     */
+    public function setCustomId(int $id);
+}

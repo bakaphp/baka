@@ -2,7 +2,11 @@
 
 namespace Baka\Test\Integration\Auth;
 
+use Baka\Auth\Auth;
 use Baka\Auth\Models\Users;
+use Baka\Auth\UserProvider;
+use Baka\Contracts\Auth\UserInterface;
+use Baka\Hashing\Keys;
 use PhalconUnitTestCase;
 
 class AuthTest extends PhalconUnitTestCase
@@ -14,21 +18,19 @@ class AuthTest extends PhalconUnitTestCase
      */
     public function testSignUp()
     {
-        $user = new Users();
+        UserProvider::set(new Users());
 
-        $user->email = $this->faker->email;
-        $user->password = 'nonenone';
-        $user->name = $this->faker->name;
-        $user->defaultCompanyName = $this->faker->name;
-        $user->displayname = $this->faker->firstname;
+        $userData = [
+            'email' => $this->faker->email,
+            'password' => 'nonenone',
+            'name' => $this->faker->name,
+            'defaultCompanyName' => $this->faker->name,
+            'displayname' => $this->faker->firstname,
+        ];
 
-        if (!$user->signup()) {
-            foreach ($user->getMessages() as $message) {
-                throw new \Exception($message);
-            }
-        }
+        $user = Auth::signUp($userData);
 
-        $this->assertTrue($user instanceof Users);
+        $this->assertTrue($user instanceof UserInterface);
     }
 
     /**
@@ -41,13 +43,12 @@ class AuthTest extends PhalconUnitTestCase
         $session = new \Baka\Auth\Models\Sessions();
 
         $userData = $session->start(
-            Users::findFirst(),
+            UserProvider::get()::findFirst(),
             $this->faker->uuid,
             $this->faker->sha256,
             $this->faker->ipv4,
             1
         );
-
 
         $this->assertTrue($userData instanceof Users);
     }
@@ -59,7 +60,7 @@ class AuthTest extends PhalconUnitTestCase
      */
     public function testLogin()
     {
-        $user = Users::findFirst();
+        $user = UserProvider::get()::findFirst();
 
         $email = $user->email;
         $password = 'nonenone';
@@ -67,7 +68,7 @@ class AuthTest extends PhalconUnitTestCase
         $admin = 0;
         $userIp = $this->faker->ipv4;
 
-        $userData = Users::login($email, $password, $remember, $admin, $userIp);
+        $userData = Auth::login($email, $password, $remember, $admin, $userIp);
 
         $this->assertTrue($userData instanceof Users);
     }
@@ -79,7 +80,7 @@ class AuthTest extends PhalconUnitTestCase
      */
     public function testLogout()
     {
-        $user = Users::findFirst();
+        $user = UserProvider::get()::findFirst();
 
         $email = $user->email;
         $password = 'nonenone';
@@ -87,18 +88,18 @@ class AuthTest extends PhalconUnitTestCase
         $admin = 0;
         $userIp = $this->faker->ipv4;
 
-        $userData = Users::login($email, $password, $remember, $admin, $userIp);
+        $userData = Auth::login($email, $password, $remember, $admin, $userIp);
         $this->assertTrue($userData->logout());
     }
 
     /**
-     * Teste usser forgout password.
+     * Test user forgot password.
      *
      * @return boolean
      */
     public function testForgotPassword()
     {
-        $user = Users::findFirst();
+        $user = UserProvider::get()::findFirst();
 
         $email = $user->email;
         /**
@@ -108,13 +109,13 @@ class AuthTest extends PhalconUnitTestCase
          *
          * if it doesn't exist then send the error msg
          */
-        if ($recoverUser = Users::getByEmail($email)) {
-            $recoverUser->user_activation_forgot = $recoverUser->generateActivationKey();
+        if ($recoverUser = UserProvider::get()::getByEmail($email)) {
+            $recoverUser->user_activation_forgot = Keys::make();
             $recoverUser->update();
 
             return $this->assertTrue(strlen($recoverUser->user_activation_forgot) > 0);
         }
 
-        return $this->assertTrue($recoverUser instanceof Users);
+        return $this->assertTrue($recoverUser instanceof UserInterface);
     }
 }

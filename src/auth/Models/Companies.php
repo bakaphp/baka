@@ -11,75 +11,23 @@ class Companies extends Model
 {
     const DEFAULT_COMPANY = 'DefaulCompany';
 
-    /**
-     *
-     * @var integer
-     * @Primary
-     * @Identity
-     * @Column(type="integer", length=11, nullable=false)
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", length=45, nullable=true)
-     */
-    public $name;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", length=45, nullable=true)
-     */
-    public $profile_image;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", length=45, nullable=true)
-     */
-    public $website;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=false)
-     */
-    public $users_id;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", nullable=true)
-     */
-    public $created_at;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", nullable=true)
-     */
-    public $updated_at;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=true)
-     */
-    public $is_deleted;
+    public string $name;
+    public ?string $profile_image = null;
+    public ?string $website = null;
+    public int $users_id;
 
     /**
      * Initialize method for model.
      */
     public function initialize()
     {
+        $this->setSource('companies');
         $this->belongsTo('users_id', 'Baka\Auth\Models\Users', 'id', ['alias' => 'user']);
         $this->hasMany('id', 'Baka\Auth\Models\CompanySettings', 'id', ['alias' => 'settings']);
     }
 
     /**
-     * Model validation
+     * Model validation.
      *
      * @return void
      */
@@ -99,13 +47,14 @@ class Companies extends Model
     }
 
     /**
-     * Register a company given a user and name
+     * Register a company given a user and name.
      *
      * @param  Users  $user
      * @param  string $name
+     *
      * @return Companies
      */
-    public static function register(Users $user, string $name): Companies
+    public static function register(Users $user, string $name) : Companies
     {
         $company = new self();
         $company->name = $name;
@@ -119,7 +68,7 @@ class Companies extends Model
     }
 
     /**
-     * After creating the company
+     * After creating the company.
      *
      * @return void
      */
@@ -159,12 +108,13 @@ class Companies extends Model
     }
 
     /**
-     * Get the default company the users has selected
+     * Get the default company the users has selected.
      *
      * @param  Users  $user
+     *
      * @return Companies
      */
-    public static function getDefaultByUser(Users $user): Companies
+    public static function getDefaultByUser(Users $user) : Companies
     {
         //verify the user has a default company
         $defaultCompany = UserConfig::findFirst([
@@ -188,15 +138,5 @@ class Companies extends Model
         }
 
         throw new Exception(_("User doesn't have an active company"));
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource(): string
-    {
-        return 'companies';
     }
 }

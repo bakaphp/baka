@@ -4,7 +4,7 @@ namespace Baka\Test\Integration\Cashier;
 
 use Baka\Http\Contracts\Api\ResponseTrait;
 use Baka\Test\Support\Models\Users;
-use Phalcon\Cashier\Traits\StripeWebhookHandlersTrait;
+use Baka\Contracts\Cashier\StripeWebhookHandlersTrait;
 use Phalcon\Http\Response;
 use PhalconUnitTestCase;
 

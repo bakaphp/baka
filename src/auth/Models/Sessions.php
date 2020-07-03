@@ -6,66 +6,21 @@
 
 namespace Baka\Auth\Models;
 
+use Baka\Contracts\Auth\AuthTokenTrait;
 use Baka\Database\Model;
 use Exception;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Hmac\Sha512;
 
 class Sessions extends Model
 {
-    /**
-     * @var string
-     */
-    public $id;
+    use AuthTokenTrait;
 
-    /**
-     * @var int
-     */
-    public $users_id;
-
-    /**
-     * @var string
-     */
-    public $token;
-
-    /**
-     * @var string
-     */
-    public $start;
-
-    /**
-     * @var int
-     */
-    public $time;
-
-    /**
-     * @var string
-     */
-    public $ip;
-
-    /**
-     * @var string
-     */
-    public $page;
-
-    /**
-     * @var string
-     */
-    public $logged_in;
-
-    /**
-     * @var string
-     */
-    public $is_admin;
-
-    /**     *
-     * @deprecated v1
-     *
-     * @var user
-     */
-    public static $userData = null;
-
-    public $config;
+    public int $users_id;
+    public string $token;
+    public string $start;
+    public string  $time;
+    public string $ip;
+    public string $page;
+    public int $logged_in;
 
     /**
      * Initialize.
@@ -133,7 +88,6 @@ class Sessions extends Model
         $session->time = $currentTime;
         $session->page = $pageId;
         $session->logged_in = 1;
-        $session->is_admin = (int) $user->isAdmin();
         $session->id = $sessionId;
         $session->token = $token;
         $session->ip = $userIp;
@@ -304,37 +258,8 @@ class Sessions extends Model
     {
         $session = new self();
         $session->check($user, $sessionId, $clientAddress, 1);
-        $token = self::refresh($sessionId, $user->email);
+        $token = self::createJwtToken($sessionId, $user->email);
         $session->start($user, $token['sessionId'], $token['token'], $clientAddress, 1);
         return $token;
-    }
-
-    /**
-     * Create a new session based off the refresh token session id.
-     *
-     * @param string $sessionId
-     * @param string $email
-     *
-     * @return array
-     */
-    public function refresh(string $sessionId, string $email) : array
-    {
-        $signer = new Sha512();
-        $builder = new Builder();
-        $token = $builder
-            ->setIssuer(getenv('TOKEN_AUDIENCE'))
-            ->setAudience(getenv('TOKEN_AUDIENCE'))
-            ->setId($sessionId, true)
-            ->setIssuedAt(time())
-            ->setNotBefore(time() + 500)
-            ->setExpiration(time() + getenv('APP_JWT_SESSION_EXPIRATION'))
-            ->set('sessionId', $sessionId)
-            ->set('email', $email)
-            ->sign($signer, getenv('TOKEN_PASSWORD'))
-            ->getToken();
-        return [
-            'sessionId' => $sessionId,
-            'token' => $token->__toString()
-        ];
     }
 }

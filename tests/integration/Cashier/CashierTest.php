@@ -6,7 +6,7 @@ use Baka\Database\Apps;
 use Baka\Test\Support\Models\Companies;
 use Baka\Test\Support\Models\Users;
 use Carbon\Carbon;
-use Phalcon\Cashier\Subscription;
+use Baka\Cashier\Subscription;
 use PhalconUnitTestCase;
 
 class CashierTest extends PhalconUnitTestCase

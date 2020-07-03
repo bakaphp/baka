@@ -8,21 +8,19 @@
         "email": "max@mctekk.com"
     }],
     "require": {
-        "php": ">=7.2",
-        "ext-phalcon": ">=3.4",
-        "vlucas/phpdotenv": "^2.4",
-        "phalcon/incubator": "^3.4",
-        "lcobucci/jwt": "^3.2",
-        "dompdf/dompdf": "^0.6.1",
-        "nesbot/carbon": "~1.0",
-        "stripe/stripe-php": "~6.0",
+        "php": ">=7.4",
+        "ext-phalcon": ">=4",
+        "vlucas/phpdotenv": "^4.1",
+        "phalcon/incubator": "^4.0.0-alpha.1",
+        "phalcon/incubator-acl": "^1.0.0-alpha.1",
+        "lcobucci/jwt": "^3.3",
+        "nesbot/carbon": "^2.3",
+        "stripe/stripe-php": "^7.36",
         "robmorgan/phinx": "^0.12",
-        "monolog/monolog": "^1.16",
-        "elasticsearch/elasticsearch": "^6.1",
-        "guzzlehttp/guzzle": "^6.3",
-        "duncan3dc/fork-helper": "^2.2.0",
+        "monolog/monolog": "^2.1",
+        "elasticsearch/elasticsearch": "^7.5",
+        "guzzlehttp/guzzle": "^6.5",
         "swiftmailer/swiftmailer": "^6",
-        "symfony/var-dumper": "^4.2",
         "php-amqplib/php-amqplib": "^2.9"
     },
     "require-dev": {
@@ -30,25 +28,13 @@
         "codeception/module-asserts": "^1.2",
         "codeception/module-filesystem": "^1.0",
         "codeception/module-phalcon": "^1.0",
+        "codeception/module-phalcon4": "^1.0",
         "codeception/verify": "*",
-        "duncan3dc/fork-helper": "^2.2.0",
         "fzaninotto/faker": "^1.9",
         "odan/phinx-migrations-generator": "^5",
-        "phpunit/phpunit": "^8.5", 
+        "phpunit/phpunit": "^9.1", 
         "squizlabs/php_codesniffer": "1.*",
         "symfony/var-dumper": "^4.3@dev"
-    },
-    "replace": {
-        "baka/auth": "self.version",
-        "baka/blameable": "self.version",
-        "baka/cashier": "self.version",
-        "baka/database": "self.version",
-        "baka/elasticsearch": "self.version",
-        "baka/http": "self.version",
-        "baka/mail": "self.version",
-        "baka/phalcon-throttler": "self.version",
-        "baka/router": "self.version",
-        "baka/support": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -62,24 +48,16 @@
     "autoload-dev": {
         "psr-4": {
             "Baka\\": "src/",
-            "Phalcon\\Cashier\\": "src/cashier/",
             "Baka\\Test\\": "tests/",
-            "Baka\\Test\\Support\\": "tests/_support/",
-            "Baka\\Http\\": "src/http/",
-            "Baka\\Auth\\": "src/auth/",
-            "Baka\\Blameable\\": "src/blameable/",
-            "Baka\\Database\\": "src/database",
-            "Baka\\Elasticsearch\\": "src/elasticsearch",
-            "Baka\\Mail\\": "src/mail",
-            "Baka\\Router\\": "src/router",
-            "Baka\\Support\\": "src/support"
+            "Baka\\Test\\Support\\": "tests/_support/"
         }
     },
     "scripts": {
         "test": "./vendor/bin/codecept run"
     },
     "suggest": {
-        "ext-redis": "Required to use the Redis cache and queue drivers (^4.0|^5.0)."
+        "ext-redis": "Required to use the Redis cache and queue drivers (^4.0|^5.0).",
+        "ext-swoole": "Required to use the Swoole coroutines (^4.5)."
     },
     "config": {
         "sort-packages": true

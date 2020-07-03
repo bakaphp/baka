@@ -2,12 +2,13 @@
 
 namespace Baka\Http\Contracts\Api;
 
-use Phalcon\Http\RequestInterface;
-use Phalcon\Mvc\ModelInterface;
-use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
-use PDO;
-use Exception;
+use ArgumentCountError;
 use Baka\Http\Converter\RequestUriToElasticSearch;
+use Exception;
+use PDO;
+use Phalcon\Http\RequestInterface;
+use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
+use Phalcon\Mvc\ModelInterface;
 
 trait CrudCustomFieldsBehaviorTrait
 {
@@ -21,6 +22,7 @@ trait CrudCustomFieldsBehaviorTrait
      *
      * @param RequestInterface $request
      * @param array|object $results
+     *
      * @return array
      */
     protected function appendRelationshipsToResult(RequestInterface $request, $results)
@@ -28,7 +30,7 @@ trait CrudCustomFieldsBehaviorTrait
         // Relationships, but we have to change it to sparo full implementation
         if ($request->hasQuery('relationships')) {
             $relationships = $request->getQuery('relationships', 'string');
-    
+
             $results = is_object($results) ? RequestUriToElasticSearch::parseRelationShips($relationships, $results) : $results;
         }
 
@@ -36,9 +38,10 @@ trait CrudCustomFieldsBehaviorTrait
     }
 
     /**
-     * Process output
+     * Process output.
      *
      * @param mixed $results
+     *
      * @return mixed
      */
     protected function processOutput($results)
@@ -47,12 +50,13 @@ trait CrudCustomFieldsBehaviorTrait
     }
 
     /**
-     * Process the create request and trecurd the boject.
+     * Process the create request and records the object.
      *
      * @return ModelInterface
+     *
      * @throws Exception
      */
-    protected function processCreate(RequestInterface $request): ModelInterface
+    protected function processCreate(RequestInterface $request) : ModelInterface
     {
         //set the custom fields to create
         $this->model->setCustomFields($request->getPostData());
@@ -67,10 +71,12 @@ trait CrudCustomFieldsBehaviorTrait
      *
      * @param RequestInterface $request
      * @param ModelInterface $record
+     *
      * @throws Exception
+     *
      * @return ModelInterface
      */
-    protected function processEdit(RequestInterface $request, ModelInterface $record): ModelInterface
+    protected function processEdit(RequestInterface $request, ModelInterface $record) : ModelInterface
     {
         //set the custom fields to update
         $record->setCustomFields($request->getPutData());
@@ -85,7 +91,7 @@ trait CrudCustomFieldsBehaviorTrait
      *
      * @return void
      */
-    protected function getRecords(array $processedRequest): array
+    protected function getRecords(array $processedRequest) : array
     {
         $required = ['sql', 'countSql', 'bind'];
 

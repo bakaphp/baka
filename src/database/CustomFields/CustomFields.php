@@ -2,62 +2,21 @@
 
 namespace Baka\Database\CustomFields;
 
+use Baka\Contracts\Database\HashTableTrait;
 use Baka\Database\Model;
-use Baka\Database\Contracts\HashTableTrait;
 
 class CustomFields extends Model
 {
     use HashTableTrait;
 
-    /**
-     * @var integer
-     */
-    public $id;
-
-    /**
-     * @var int
-     */
-    public $companies_id;
-
-    /**
-     * @var int
-     */
-    public $user_id;
-
-    /**
-     * @var int
-     */
-    public $apps_id;
-
-    /**
-     * @var int
-     */
-    public $custom_fields_modules_id;
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $label;
-
-    /**
-     * @var int
-     */
-    public $fields_type_id;
-
-    /**
-     * Returns the name of the table associated to the model.
-     *
-     * @return string
-     */
-    public function getSource(): string
-    {
-        return 'custom_fields';
-    }
+    public int $companies_id;
+    public int $user_id;
+    public int $apps_id;
+    public int $custom_fields_modules_id;
+    public string $name;
+    public ?string $label = null;
+    public int $fields_type_id;
+    public ?string $attributes = null;
 
     /**
      * Initialize some stuff.
@@ -66,17 +25,20 @@ class CustomFields extends Model
      */
     public function initialize()
     {
+        $this->setSource('custom_fields');
+
         $this->belongsTo('fields_type_id', '\Baka\Database\CustomFields\FieldsType', 'id', ['alias' => 'type']);
         $this->belongsTo('custom_fields_modules_id', '\Baka\Database\CustomFields\Module', 'id', ['alias' => 'module']);
     }
 
     /**
-     * Get the felds of this custom field module.
+     * Get the fields of this custom field module.
      *
      * @param string $module
+     *
      * @return void
      */
-    public static function getFields(string $module): array
+    public static function getFields(string $module) : array
     {
         $fields = [];
 

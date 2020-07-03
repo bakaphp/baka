@@ -1,7 +1,6 @@
 language: php
 php:
-- 7.2
-- 7.3
+- 7.4
 services:
 - mysql
 - memcached
@@ -37,7 +36,8 @@ cache:
   - "~/cphalcon"
 install:
 - composer self-update
-- cd ~/ && rm -rf cphalcon && git clone -b 3.4.x -q --depth=1 https://github.com/phalcon/cphalcon.git
+- pecl install --force psr 1> /dev/null
+- cd ~/ && rm -rf cphalcon && git clone -b 4.0.x -q --depth=1 https://github.com/phalcon/cphalcon.git
   && cd cphalcon/build && ./install
 - echo 'extension = "phalcon.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini

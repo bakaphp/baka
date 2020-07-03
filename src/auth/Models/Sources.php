@@ -3,46 +3,17 @@
 namespace Baka\Auth\Models;
 
 use Baka\Database\Model;
+use Baka\Http\Exception\NotFoundException;
 
 class Sources extends Model
 {
-    /**
-     * @var integer
-     */
-    public $id;
+    public string $title;
+    public string $url;
+    public int $pv_order;
+    public int $ep_order;
 
     /**
-     * @var string
-     */
-    public $title;
-
-    /**
-     * @var string
-     */
-    public $url;
-
-    /**
-     * @var int
-     */
-    public $pv_order;
-
-    /**
-     * @var int
-     */
-    public $ep_order;
-
-    /**
-     * @var string
-     */
-    public $added_date;
-
-    /**
-     * @var string
-     */
-    public $updated_date;
-
-    /**
-     * Initialize
+     * Initialize.
      */
     public function initialize()
     {
@@ -50,14 +21,14 @@ class Sources extends Model
     }
 
     /**
-     * Get a source by its title
+     * Get a source by its title.
      */
-    public static function getByTitle($title): Sources
+    public static function getByTitle(string $title) : Sources
     {
         $sourceData = self::findFirstByTitle($title);
 
         if (!$sourceData) {
-            throw new \Exception(_('Importing site is not currently supported.'));
+            throw new NotFoundException(_('Importing site is not currently supported.'));
         }
 
         return $sourceData;

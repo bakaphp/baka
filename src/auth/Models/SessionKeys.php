@@ -6,25 +6,10 @@ use Baka\Database\Model;
 
 class SessionKeys extends Model
 {
-    /**
-     * @var string
-     */
-    public $sessions_id;
-
-    /**
-     * @var int
-     */
-    public $users_id;
-
-    /**
-     * @var string
-     */
-    public $last_ip;
-
-    /**
-     * @var string
-     */
-    public $last_login;
+    public string $sessions_id;
+    public int $users_id;
+    public string $last_ip;
+    public string $last_login;
 
     /**
      * Initialize.

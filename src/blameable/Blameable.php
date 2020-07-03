@@ -2,7 +2,7 @@
 
 namespace Baka\Blameable;
 
-use Phalcon\DI;
+use Phalcon\Di;
 use Phalcon\Mvc\Model\Behavior;
 use Phalcon\Mvc\Model\BehaviorInterface;
 use Phalcon\Mvc\ModelInterface;
@@ -15,7 +15,7 @@ class Blameable extends Behavior implements BehaviorInterface
      *
      * @var array
      */
-    protected $excludeFields = [];
+    protected array $excludeFields = [];
 
     /**
      * @var array
@@ -93,7 +93,7 @@ class Blameable extends Behavior implements BehaviorInterface
     }
 
     /**
-     * Creates an Audit isntance based on the current enviroment.
+     * Creates an Audit instance based on the current environment.
      *
      * @param  string                      $type
      * @param  \Phalcon\Mvc\ModelInterface $model
@@ -126,7 +126,7 @@ class Blameable extends Behavior implements BehaviorInterface
         $audit->model_name = get_class($model);
 
         //The client IP address
-        $audit->ip = is_object($request) ? $request->getClientAddress() : '127.0.0.1';
+        $audit->ip = is_object($request) && !empty($request->getClientAddress()) ? $request->getClientAddress() : '127.0.0.1';
 
         //Action is an update
         $audit->type = $type;
@@ -154,7 +154,7 @@ class Blameable extends Behavior implements BehaviorInterface
         $details = [];
 
         foreach ($fields as $field) {
-            $undefiendPropertyBreakLoop = false;
+            $undefinedPropertyBreakLoop = false;
             if (in_array($field, $this->excludeFields)) {
                 continue;
             }
@@ -173,7 +173,7 @@ class Blameable extends Behavior implements BehaviorInterface
 
                     while (is_array(current($auditData))) {
                         if (empty($auditModel->{key($auditData)})) {
-                            $undefiendPropertyBreakLoop = true;
+                            $undefinedPropertyBreakLoop = true;
                             break;
                         }
 
@@ -181,7 +181,7 @@ class Blameable extends Behavior implements BehaviorInterface
                         $auditData = $auditData[key($auditData)];
                     }
 
-                    if ($undefiendPropertyBreakLoop) {
+                    if ($undefinedPropertyBreakLoop) {
                         break;
                     }
 
@@ -216,8 +216,8 @@ class Blameable extends Behavior implements BehaviorInterface
                 $auditDetail->field_name = $field;
                 $auditDetail->old_value = null;
                 $auditDetail->old_value_text = null;
-                $auditDetail->new_value = $value;
-                $auditDetail->new_value_text = $value;
+                $auditDetail->new_value = !is_array($value) ? $value : json_encode($value);
+                $auditDetail->new_value_text = !is_array($value) ? $value : json_encode($value);
 
                 $details[] = $auditDetail;
             }
@@ -226,8 +226,7 @@ class Blameable extends Behavior implements BehaviorInterface
         $audit->details = $details;
 
         //Create a new audit
-        if (!$audit->save()) {
-            $this->log(current($audit->getMessages()));
+        if (!$audit->saveOrFail()) {
             return null;
         }
 
@@ -287,11 +286,11 @@ class Blameable extends Behavior implements BehaviorInterface
                 if (is_array($relatedData['title'])) {
                     $auditModel = $model;
                     $auditData = $relatedData['title'];
-                    $undefiendPropertyBreakLoop = false;
+                    $undefinedPropertyBreakLoop = false;
 
                     while (is_array(current($auditData))) {
                         if (empty($auditModel->{key($auditData)})) {
-                            $undefiendPropertyBreakLoop = true;
+                            $undefinedPropertyBreakLoop = true;
                             break;
                         }
                         $auditModel = $auditModel->{key($auditData)};
@@ -300,7 +299,7 @@ class Blameable extends Behavior implements BehaviorInterface
 
                     $auditModel = $auditModel->findFirst($originalData[$field]);
 
-                    if ($undefiendPropertyBreakLoop) {
+                    if ($undefinedPropertyBreakLoop) {
                         break;
                     }
 
@@ -353,9 +352,7 @@ class Blameable extends Behavior implements BehaviorInterface
         if (!empty($details)) {
             $audit = $this->createAudit(self::UPDATE, $model);
             $audit->details = $details;
-            if (!$audit->save()) {
-                $this->log(current($audit->getMessages()));
-            }
+            $audit->saveOrFail();
 
             return true;
         }
@@ -364,7 +361,7 @@ class Blameable extends Behavior implements BehaviorInterface
     }
 
     /**
-     * Creates an Audit isntance based on the current enviroment.
+     * Creates an Audit instance based on the current environment.
      *
      * @param  string                      $type
      * @param  \Phalcon\Mvc\ModelInterface $model
@@ -421,11 +418,11 @@ class Blameable extends Behavior implements BehaviorInterface
                     $auditModel = $model;
                     $auditData = $relatedData['title'];
 
-                    $undefiendPropertyBreakLoop = false;
+                    $undefinedPropertyBreakLoop = false;
 
                     while (is_array(current($auditData))) {
                         if (empty($auditModel->{key($auditData)})) {
-                            $undefiendPropertyBreakLoop = true;
+                            $undefinedPropertyBreakLoop = true;
                             break;
                         }
                         $auditModel = $auditModel->{key($auditData)};
@@ -434,7 +431,7 @@ class Blameable extends Behavior implements BehaviorInterface
 
                     $auditModel = $auditModel->findFirst($originalData[$field]);
 
-                    if ($undefiendPropertyBreakLoop) {
+                    if ($undefinedPropertyBreakLoop) {
                         break;
                     }
 
@@ -483,26 +480,12 @@ class Blameable extends Behavior implements BehaviorInterface
         if (!empty($details)) {
             $audit = $this->createAudit(self::DELETE, $model);
             $audit->details = $details;
-            if (!$audit->save()) {
-                $this->log(current($audit->getMessages()));
-            }
+            $audit->saveOrFail();
 
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Log the info on blameable.
-     *
-     * @param string $message
-     *
-     * @return void
-     */
-    protected function log(string $message) : void
-    {
-        DI::getDefault()->getLog()->error('Saving Blamable ' . $message);
     }
 
     /**
@@ -514,7 +497,7 @@ class Blameable extends Behavior implements BehaviorInterface
      *
      * @return array
      */
-    protected function getRelationData($model, $relations, $field) : array
+    protected function getRelationData(ModelInterface $model, array $relations, $field) : array
     {
         $auditColumns = $model->getAuditColumns();
 

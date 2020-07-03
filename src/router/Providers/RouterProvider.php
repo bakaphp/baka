@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Baka\Router\Providers;
 
 use Phalcon\Di\ServiceProviderInterface;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\Micro;
 
 class RouterProvider implements ServiceProviderInterface
@@ -15,7 +15,7 @@ class RouterProvider implements ServiceProviderInterface
      *
      * @param DiInterface $container
      */
-    public function register(DiInterface $container)
+    public function register(DiInterface $container) : void
     {
         /** @var Micro $application */
         $application = $container->getShared('application');
