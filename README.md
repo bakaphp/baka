@@ -4,6 +4,11 @@
 
 Set of Packages to help any team develop faster SaaS Web Application
 
+
+### Requirements
+- PhalconPHP >= 4
+- PHP +7.4
+
 ### COMPONENTS
 
 - [baka-api](https://github.com/bakaphp/phalcon-api)
@@ -15,6 +20,3 @@ Set of Packages to help any team develop faster SaaS Web Application
 - [baka-cashier](https://github.com/bakaphp/cashier)
 
 
-### TODO 
-
-Update "phpunit/phpunit": "^9" , but this will make it 7.3 only 
