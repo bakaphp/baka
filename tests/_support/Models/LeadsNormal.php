@@ -2,20 +2,21 @@
 
 namespace Baka\Test\Support\Models;
 
-use Baka\Database\Contracts\HashTableTrait;
+use Baka\Contracts\Database\HashTableTrait;
 use Baka\Database\Model;
 
 class LeadsNormal extends Model
 {
     use HashTableTrait;
 
-    /**
-     * Specify the table.
+     /**
+     * Initialize some stuff.
      *
      * @return void
      */
-    public function getSource()
+    public function initialize(): void
     {
-        return 'leads';
+        $this->setSource('leads');
     }
+  
 }

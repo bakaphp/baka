@@ -6,13 +6,8 @@ use Baka\Database\Model;
 
 class LeadsNormalSettings extends Model
 {
-    /**
-     * Specify the table.
-     *
-     * @return void
-     */
-    public function getSource()
+    public function initialize()
     {
-        return 'leads_settings';
+        $this->setSource('leads_settings');
     }
 }

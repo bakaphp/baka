@@ -6,13 +6,8 @@ use Baka\Database\Model;
 
 class Audits extends Model
 {
-    /**
-     * Specify the table.
-     *
-     * @return void
-     */
-    public function getSource()
+    public function initialize()
     {
-        return 'audits';
+        $this->setSource('audits');
     }
 }

@@ -9,7 +9,7 @@ use PhalconUnitTestCase;
 class BlameableTest extends PhalconUnitTestCase
 {
     /**
-     * Create the index if it doesnt exist to run some test.
+     * Create the index if it doesn't exist to run some test.
      *
      * @return void
      */
@@ -21,7 +21,7 @@ class BlameableTest extends PhalconUnitTestCase
     }
 
     /**
-     * Create a new record and confirm we have the audit recor.
+     * Create a new record and confirm we have the audit record.
      *
      * @return void
      */

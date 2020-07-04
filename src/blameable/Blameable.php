@@ -450,7 +450,7 @@ class Blameable extends Behavior implements BehaviorInterface
                 }
             }
 
-            if (!is_null($newValue) && $newValueText != $originalData[$field]) {
+            if (!is_null($newValue) && !is_null($field) && is_array($originalData) && $newValueText != $originalData[$field]) {
                 $auditDetail = new AuditsDetails();
                 $auditDetail->field_name = $field;
                 $auditDetail->old_value = $originalData[$field];
