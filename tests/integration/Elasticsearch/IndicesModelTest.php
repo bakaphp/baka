@@ -36,7 +36,7 @@ class IndicesModelTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test inserting data to elastic search froma module.
+     * Test inserting data to elastic search from module.
      *
      * @return void
      */

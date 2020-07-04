@@ -9,7 +9,7 @@ use Baka\Test\Support\Models\LeadsCustomFields;
 class ModelCustomFieldsTest extends PhalconUnitTestCase
 {
     /**
-     * Create the index if it doesnt exist to run some test.
+     * Create the index if it doesn't exist to run some test.
      *
      * @return void
      */
@@ -60,7 +60,7 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
     }
 
     /**
-     * Check taht a custom field has it atrribute.
+     * Check that a custom field has it attribute.
      *
      * @return void
      */
