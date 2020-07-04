@@ -7,14 +7,9 @@ use Baka\Database\Model;
 
 class LeadsCustomFields extends Model implements CustomFieldsTableInterface
 {
-    /**
-     * Specify the table.
-     *
-     * @return void
-     */
-    public function getSource()
+    public function initialize()
     {
-        return 'leads_custom_fields';
+        $this->setSource('leads_custom_fields');
     }
 
     /**
