@@ -33,7 +33,7 @@ class Users extends Model implements UserInterface
     public ?string $password = null;
     public ?string $firstname = null;
     public ?string $lastname = null;
-    public string $displayname;
+    public ?string $displayname = null;
     public ?string $registered = null;
     public ?string $lastvisit = null;
     public int $default_company = 0;

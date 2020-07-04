@@ -2,7 +2,7 @@
 
 namespace Baka\Test\Support\Models;
 
-use Baka\Database\Contracts\CustomFields\CustomFieldsTableInterface;
+use Baka\Contracts\CustomFields\CustomFieldsTableInterface;
 use Baka\Database\Model;
 
 class LeadsCustomFields extends Model implements CustomFieldsTableInterface

@@ -1,6 +1,6 @@
 <?php
 
-namespace Baka\Elasticsearch\Contracts;
+namespace Baka\Contracts\Elasticsearch;
 
 use Phalcon\Queue\Beanstalk\Extended as BeanstalkExtended;
 use Phalcon\Queue\Beanstalk\Job;
