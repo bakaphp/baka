@@ -1,6 +1,6 @@
 <?php
 
-namespace Baka\Http\Contracts\Api;
+namespace Baka\Contracts\Http\Api;
 
 use ArgumentCountError;
 use Baka\Http\Converter\RequestUriToElasticSearch;

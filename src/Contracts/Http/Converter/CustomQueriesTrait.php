@@ -1,10 +1,6 @@
 <?php
 
-namespace Baka\Http\Contracts\Converter;
-
-use Exception;
-use Phalcon\Mvc\Model\MetaData\Memory as MetaDataMemory;
-use Phalcon\Di;
+namespace Baka\Contracts\Http\Converter;
 
 trait CustomQueriesTrait
 {
@@ -13,42 +9,43 @@ trait CustomQueriesTrait
      *
      * @var string
      */
-    protected $customColumns = null;
+    protected ?string $customColumns = null;
 
     /**
      * Add additional table Join.
      *
      * @var string
      */
-    protected $customTableJoins = null;
+    protected ?string $customTableJoins = null;
 
     /**
      * Add additional conditionals.
      *
      * @var string
      */
-    protected $customConditions = null;
+    protected ?string $customConditions = null;
 
     /**
      * Custom Limit.
      *
      * @var int
      */
-    protected $limit = 25;
+    protected int $limit = 25;
 
     /**
      * Custom Sort.
      *
      * @var string
      */
-    protected $sort = null;
+    protected ?string $sort = null;
 
     /**
-    * Set the custom columns provide by the user.
-    *
-    * @param string $query
-    * @return void
-    */
+     * Set the custom columns provide by the user.
+     *
+     * @param string $query
+     *
+     * @return void
+     */
     public function setCustomColumns(?string $query) : void
     {
         if (!is_null($query)) {
@@ -61,6 +58,7 @@ trait CustomQueriesTrait
      * you can do inner joins or , table . If you are just adding a table you will need to specify the ,.
      *
      * @param string $query
+     *
      * @return void
      */
     public function setCustomTableJoins(?string $query) : void
@@ -74,6 +72,7 @@ trait CustomQueriesTrait
      * set custom conditions for the query , need to start with and AND or OR.
      *
      * @param string $query
+     *
      * @return void
      */
     public function setCustomConditions(?string $query) : void
@@ -86,10 +85,11 @@ trait CustomQueriesTrait
     /**
      * Overwrite the limit of the current Request.
      *
-     * @param integer $limit
+     * @param int $limit
+     *
      * @return void
      */
-    public function setCustomLimit(?int $limit): void
+    public function setCustomLimit(?int $limit) : void
     {
         if (!is_null($limit)) {
             $this->limit = $limit;

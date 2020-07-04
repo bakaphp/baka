@@ -6,7 +6,7 @@ namespace Baka\Http\Response;
 
 use Baka\Constants\Flags;
 use Baka\Http\Exception\InternalServerErrorException;
-use Baka\Http\Request\Baka as Request;
+use Baka\Http\Request\Phalcon as Request;
 use Error;
 use Phalcon\Di;
 use Phalcon\Http\Response;

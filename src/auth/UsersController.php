@@ -4,8 +4,8 @@ namespace Baka\Auth;
 
 use Baka\Auth\Models\Companies;
 use Baka\Auth\Models\Users;
+use Baka\Contracts\Http\Api\CrudBehaviorTrait;
 use Baka\Http\Api\BaseController;
-use Baka\Http\Contracts\Api\CrudBehaviorTrait;
 use Exception;
 use Phalcon\Http\Response;
 
@@ -16,19 +16,45 @@ use Phalcon\Http\Response;
 abstract class UsersController extends BaseController
 {
     use CrudBehaviorTrait;
+    
     /*
      * fields we accept to create
      *
      * @var array
      */
-    protected $createFields = ['name', 'firstname', 'lastname',  'displayname', 'email', 'password', 'created_at', 'updated_at', 'default_company', 'family', 'sex', 'timezone'];
+    protected $createFields = [
+        'name',
+        'firstname',
+        'lastname',
+        'displayname',
+        'email',
+        'password',
+        'created_at',
+        'updated_at',
+        'default_company',
+        'family',
+        'sex',
+        'timezone'
+    ];
 
     /*
      * fields we accept to create
      *
      * @var array
      */
-    protected $updateFields = ['name', 'firstname', 'lastname',  'displayname', 'email', 'password', 'created_at', 'updated_at', 'default_company', 'sex', 'timezone'];
+    protected $updateFields = [
+        'name',
+        'firstname',
+        'lastname',
+        'displayname',
+        'email',
+        'password',
+        'created_at',
+        'updated_at',
+        'default_company',
+        'sex',
+        'timezone'
+    ];
 
     /**
      * set objects.

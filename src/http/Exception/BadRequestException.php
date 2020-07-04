@@ -16,5 +16,4 @@ class BadRequestException extends HttpException
 {
     protected $httpCode = Response::BAD_REQUEST;
     protected $httpMessage = 'Bad Request';
-    protected $data;
 }
