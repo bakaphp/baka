@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Baka\Jobs;
 
+use Baka\Auth\UserProvider;
 use Baka\Contracts\Queue\QueueableJobInterface;
 use Baka\Queue\Queue;
 use Phalcon\Di;
@@ -48,11 +49,14 @@ class PendingDispatch
     public function __destruct()
     {
         $jobData = [
-            'userData' => Di::getDefault()->getUserData(),
+            'userData' => UserProvider::get(),
             'class' => get_class($this->job),
             'job' => $this->job
         ];
 
-        return Queue::send($this->job->queue, serialize($jobData));
+        return Queue::send(
+            $this->job->queue,
+            serialize($jobData)
+        );
     }
 }

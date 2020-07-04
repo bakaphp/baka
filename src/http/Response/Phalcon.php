@@ -192,7 +192,7 @@ class Phalcon extends Response
                 'type' => $httpMessage,
                 'identifier' => $identifier,
                 'message' => $e->getMessage(),
-                'trace' => strtolower($config->app->env) != Flags::PRODUCTION ? $e->getTraceAsString() : null,
+                'trace' => $config->app->production ? $e->getTraceAsString() : null,
                 'data' => $data,
             ],
         ]);
@@ -200,7 +200,7 @@ class Phalcon extends Response
         //Log Errors or Internal Servers Errors in Production
         if ($e instanceof InternalServerErrorException ||
             $e instanceof Error ||
-            strtolower($config->app->env) != Flags::PRODUCTION) {
+            $config->app->production) {
             Di::getDefault()->getLog()->error($e->getMessage(), [$e->getTraceAsString()]);
         }
 
