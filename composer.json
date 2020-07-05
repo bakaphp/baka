@@ -63,5 +63,5 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "discard-changes": true
-    },
+    }
 }
