@@ -1,20 +1,18 @@
 <?php
-// +----------------------------------------------------------------------
-// | SwooleResponse.php [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2016-2017 limingxinleo All rights reserved.
-// +----------------------------------------------------------------------
-// | Author: limx <715557344@qq.com> <https://github.com/limingxinleo>
-// +----------------------------------------------------------------------
+
+/**
+ * thanks to https://github.com/limingxinleo.
+ */
 
 namespace Baka\Http\Response;
 
+use Exception;
 use Phalcon\Http\Cookie;
 use Phalcon\Http\Response as PhResponse;
 use swoole_http_response;
-use Exception;
+use Throwable;
 
-class Swoole extends Response
+class Swoole extends PhResponse
 {
     protected $response;
 
@@ -22,9 +20,10 @@ class Swoole extends Response
      * Set the swoole response object.
      *
      * @param swoole_http_response $response
+     *
      * @return void
      */
-    public function init(swoole_http_response $response): void
+    public function init(swoole_http_response $response) : void
     {
         $this->response = $response;
         $this->_sent = false;
@@ -37,7 +36,7 @@ class Swoole extends Response
      *
      * @return PhResponse
      */
-    public function send(): PhResponse
+    public function send() : PhResponse
     {
         if ($this->_sent) {
             throw new Exception('Response was already sent');
@@ -76,11 +75,38 @@ class Swoole extends Response
         $this->response->status($this->getStatusCode());
         $this->response->end($this->_content);
 
-        //reest di
+        //reset di
+        $this->resetDi();
+
+        return $this;
+    }
+
+    /**
+     * Handle the exception we throw from our api.
+     *
+     * @param Throwable $e
+     *
+     * @return Response
+     */
+    public function handleException(Throwable $e) : Response
+    {
+        //reset di
+        $response = parent::handleException($e);
+        $this->resetDi();
+
+        return $response;
+    }
+
+    /**
+     * Given Swoole behavior we need to reset the DI and Close the DB connection
+     * What happens if you don't do this? You will cache the DI request and always get the same info ;).
+     *
+     * @return void
+     */
+    protected function resetDi() : void
+    {
         $this->_sent = false;
         $this->getDi()->get('db')->close();
         $this->getDi()->reset();
-
-        return $this;
     }
 }

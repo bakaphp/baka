@@ -6,6 +6,26 @@ use function function_exists;
 use function getenv;
 use ReflectionClass;
 
+if (!function_exists('Baka\basePath')) {
+    /**
+     * Get the application base path.
+     *
+     * @return string
+     */
+    function basePath() : string
+    {
+        if ($basePath = getenv('APP_BASE_PATH')) {
+            return $basePath;
+        }
+
+        if (php_sapi_name() == 'cli') {
+            return getcwd();
+        }
+
+        return  dirname(dirname(getcwd()));
+    }
+}
+
 if (!function_exists('Baka\appPath')) {
     /**
      * Get the application path.
@@ -16,10 +36,10 @@ if (!function_exists('Baka\appPath')) {
      */
     function appPath(string $path = '') : string
     {
-        $currentDir = dirname(dirname(getcwd())) . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+        $currentDir = basePath() . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 
         /**
-         * since we are calling this file from the different path we have to verify if its cli.
+         * since we are calling this file from the diferent path we have to verify if its cli.
          *
          * @todo look for a better solution , hate this
          */

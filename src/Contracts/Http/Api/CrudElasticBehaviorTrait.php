@@ -1,10 +1,11 @@
 <?php
 
-namespace Baka\Http\Contracts\Api;
+namespace Baka\Contracts\Http\Api;
 
 use Phalcon\Http\RequestInterface;
 use Baka\Http\Converter\RequestUriToElasticSearch;
 use Baka\Elasticsearch\Client;
+use ArgumentCountError;
 
 trait CrudElasticBehaviorTrait
 {
@@ -30,7 +31,7 @@ trait CrudElasticBehaviorTrait
     */
     protected function processRequest(RequestInterface $request): array
     {
-        //parse the rquest
+        //parse the request
         $parse = new RequestUriToElasticSearch($request->getQuery(), $this->model);
         $parse->setCustomColumns($this->customColumns);
         $parse->setCustomTableJoins($this->customTableJoins);
@@ -39,7 +40,7 @@ trait CrudElasticBehaviorTrait
         $parse->appendCustomParams($this->additionalCustomSearchFields);
         $parse->appendRelationParams($this->additionalRelationSearchFields);
 
-        //conver to SQL
+        //convert to SQL
         return $parse->convert();
     }
 

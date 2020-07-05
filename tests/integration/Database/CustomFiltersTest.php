@@ -3,7 +3,7 @@
 namespace Baka\Test\Integration\Database;
 
 use PhalconUnitTestCase;
-use Baka\Database\Contracts\CustomFilters\CustomFilterTrait;
+use Baka\Contracts\CustomFilters\CustomFilterTrait;
 use Baka\Database\CustomFilters\CustomFilters;
 
 class CustomFiltersTest extends PhalconUnitTestCase

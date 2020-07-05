@@ -52,7 +52,7 @@ class Str
      */
     public static function firstStringBetween(string $haystack, string $start, string $end) : string
     {
-        return trim(mb_strstr(mb_strstr($haystack, $start), $end, true), $start . $end);
+        return trim((string) mb_strstr((string) mb_strstr($haystack, $start), $end, true), $start . $end);
     }
 
     /**

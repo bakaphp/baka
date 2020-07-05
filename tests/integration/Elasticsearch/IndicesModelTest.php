@@ -2,8 +2,8 @@
 
 namespace Baka\Test\Integration\Elasticsearch;
 
-use Baka\Elasticsearch\Contracts\CustomFiltersSchemaTrait;
-use Baka\Elasticsearch\Contracts\IndexBuilderTaskTrait;
+use Baka\Contracts\Elasticsearch\CustomFiltersSchemaTrait;
+use Baka\Contracts\Elasticsearch\IndexBuilderTaskTrait;
 use Baka\Elasticsearch\IndexBuilder;
 use PhalconUnitTestCase;
 use Baka\Test\Support\Models\Leads;
@@ -36,7 +36,7 @@ class IndicesModelTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test inserting data to elastic search froma module.
+     * Test inserting data to elastic search from module.
      *
      * @return void
      */

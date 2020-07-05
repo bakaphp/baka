@@ -1,6 +1,6 @@
 <?php
 
-namespace Baka\Http\Contracts\Api;
+namespace Baka\Contracts\Http\Api;
 
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Micro;

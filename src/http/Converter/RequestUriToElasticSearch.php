@@ -6,9 +6,9 @@ use Baka\Database\Model;
 use Exception;
 
 /**
- * Base QueryParser. Parse GET request for a API to a array Phalcon Model find and FindFirst can intepret.
+ * Base QueryParser. Parse GET request for a API to a array Phalcon Model find and FindFirst can interpret.
  *
- * Supports queries with the following paramters:
+ * Supports queries with the following parameters:
  *   Searching:
  *     q=(searchField1:value1,searchField2:value2)
  *   Partial Responses:
@@ -41,7 +41,7 @@ class RequestUriToElasticSearch extends RequestUriToSql
 
     /**
     * Main method for parsing a query string.
-    * Finds search paramters, partial response fields, limits, and offsets.
+    * Finds search parameters, partial response fields, limits, and offsets.
     * Sets Controller fields for these variables.
     *
     * @param  array $allowedFields Allowed fields array for search and partials
@@ -56,7 +56,7 @@ class RequestUriToElasticSearch extends RequestUriToSql
         $hasSubquery = false;
 
         //if we find that we are using custom field this is a different beast so we have to send it
-        //to another functino to deal with this shit
+        //to another function to deal with this shit
         if (array_key_exists('cq', $this->request)) {
             $params['cparams'] = $this->request['cq'];
         }

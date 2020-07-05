@@ -11,5 +11,4 @@ class ForbiddenException extends HttpException
 {
     protected $httpCode = Response::FORBIDDEN;
     protected $httpMessage = 'Forbidden';
-    protected $data;
 }

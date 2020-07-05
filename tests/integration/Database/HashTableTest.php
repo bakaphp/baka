@@ -3,7 +3,7 @@
 namespace Baka\Test\Integration\Database;
 
 use PhalconUnitTestCase;
-use Baka\Database\Contracts\HashTableTasksTrait;
+use Baka\Contracts\Database\HashTableTasksTrait;
 use Baka\Test\Support\Models\LeadsNormal as Leads;
 
 class HashTableTest extends PhalconUnitTestCase

@@ -13,7 +13,7 @@ trait QueueableTrait
      *
      * @var string
      */
-    public $queue = Queue::JOBS;
+    public string $queue = Queue::JOBS;
 
     /**
      * Set the desired queue for the job.

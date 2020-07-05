@@ -12,17 +12,8 @@ class LeadsAudit extends Model
 
     public function initialize()
     {
+        $this->setSource('leads');
         $this->keepSnapshots(true);
         $this->addBehavior(new Blameable());
-    }
-
-    /**
-     * Specify the table.
-     *
-     * @return void
-     */
-    public function getSource()
-    {
-        return 'leads';
     }
 }

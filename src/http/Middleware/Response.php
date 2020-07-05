@@ -9,9 +9,7 @@ use Phalcon\Mvc\Micro\MiddlewareInterface;
 
 /**
  * Class ResponseMiddleware
- *
- * @package Niden\Middleware
- *
+ * *
  * @property Response $response
  */
 class Response implements MiddlewareInterface

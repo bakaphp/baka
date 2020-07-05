@@ -37,7 +37,7 @@ class Notify
     public static function one(UserInterface $user, NotificationInterface $notification) : bool
     {
         if (Di::getDefault()->has('userData')) {
-            $from = Di::getDefault()->getUserData();
+            $from = Di::getDefault()->get('userData');
         } else {
             $from = $user;
         }

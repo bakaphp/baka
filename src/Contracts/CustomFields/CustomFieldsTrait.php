@@ -8,8 +8,8 @@ use Baka\Database\Model;
 use Baka\Database\Model as BakaModel;
 use Exception;
 use PDO;
-use ReflectionClass;
 use Phalcon\Mvc\Model\ResultsetInterface ;
+use ReflectionClass;
 
 /**
  * Custom field class.
@@ -43,7 +43,7 @@ trait CustomFieldsTrait
             $result[$customField->label ?? $customField->name] = [
                 'type' => $customField->type->name,
                 'label' => $customField->name,
-                'attributse' => $customField->attributes ? json_decode($customField->attributes) : null
+                'attributes' => $customField->attributes ? json_decode($customField->attributes) : null
             ];
         }
 
@@ -176,11 +176,11 @@ trait CustomFieldsTrait
 
         //if all is good now lets get the custom fields and save them
         foreach ($this->customFields as $key => $value) {
-            //create a new obj per itration to se can save new info
+            //create a new obj per iteration to se can save new info
             $customModel = $this->getCustomFieldModel();
-            //validate the custome field by it model
+            //validate the custom field by it model
             if ($customField = CustomFields::findFirst(['conditions' => 'name = ?0 and custom_fields_modules_id = ?1', 'bind' => [$key, $module->getId()]])) {
-                //throw new Exception("this custom field doesnt exist");
+                //throw new Exception("this custom field doesn't exist");
 
                 $customModel->setCustomId($this->getId());
                 $customModel->custom_fields_id = $customField->getId();
@@ -188,7 +188,7 @@ trait CustomFieldsTrait
                 $customModel->created_at = date('Y-m-d H:i:s');
 
                 if (!$customModel->saveOrFail()) {
-                    throw new Exception('Custome ' . $key . ' - ' . $this->customModel->getMessages()[0]);
+                    throw new Exception('Custom ' . $key . ' - ' . $this->customModel->getMessages()[0]);
                 }
 
                 //overwrite the values to return the object
@@ -210,13 +210,13 @@ trait CustomFieldsTrait
     {
         $customModel = $this->getCustomFieldModel();
 
-        //we need to run the query since we dont have primary key
+        //we need to run the query since we don't have primary key
         $result = $this->getReadConnection()->prepare("DELETE FROM {$customModel->getSource()} WHERE " . $this->getSource() . '_id = ?');
         return $result->execute([$id]);
     }
 
     /**
-     * Given this object get its custome field table.
+     * Given this object get its custom field table.
      *
      * @return string
      */
@@ -229,7 +229,7 @@ trait CustomFieldsTrait
     }
 
     /**
-     * Given this object get its custome field Module.
+     * Given this object get its custom field Module.
      *
      * @return BakaModel
      */
@@ -238,20 +238,6 @@ trait CustomFieldsTrait
         $customFieldModuleName = $this->getModelCustomFieldClassName();
 
         return new $customFieldModuleName();
-    }
-
-    /**
-     * Before create.
-     *
-     * @return void
-     */
-    public function beforeCreate()
-    {
-        if (empty($this->customFields)) {
-            throw new Exception('This is a custom field module, which means it needs its custom field values in order to work, please call setCustomFields');
-        }
-
-        parent::beforeCreate();
     }
 
     /**

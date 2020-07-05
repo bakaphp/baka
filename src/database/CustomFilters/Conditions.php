@@ -28,22 +28,13 @@ class Conditions extends Model
     public $value;
 
     /**
-     * Returns the name of the table associated to the model.
-     *
-     * @return string
-     */
-    public function getSource(): string
-    {
-        return 'custom_filters_conditions';
-    }
-
-    /**
      * Initialize some stuff.
      *
      * @return void
      */
     public function initialize(): void
     {
+        $this->setSource('custom_filters_conditions');
         $this->belongsTo('custom_filter_id', '\Baka\Database\CustomFilters\CustomFilters', 'id', ['alias' => 'filter']);
     }
 }

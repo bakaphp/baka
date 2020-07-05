@@ -2,20 +2,15 @@
 
 namespace Baka\Test\Support\Models;
 
-use Baka\Database\Contracts\CustomFields\CustomFieldsTrait;
+use Baka\Contracts\CustomFields\CustomFieldsTrait;
 use Baka\Database\Model;
 
 class Leads extends Model
 {
     use CustomFieldsTrait;
 
-    /**
-     * Specify the table.
-     *
-     * @return void
-     */
-    public function getSource()
+    public function initialize()
     {
-        return 'leads';
+        $this->setSource('leads');
     }
 }

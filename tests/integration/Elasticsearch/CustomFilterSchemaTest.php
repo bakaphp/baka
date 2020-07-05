@@ -3,7 +3,7 @@
 namespace Baka\Test\Integration\Elasticsearch;
 
 use PhalconUnitTestCase;
-use Baka\Elasticsearch\Contracts\CustomFiltersSchemaTrait;
+use Baka\Contracts\Elasticsearch\CustomFiltersSchemaTrait;
 use Baka\Elasticsearch\IndexBuilderStructure;
 
 class CustomFilterSchemaTest extends PhalconUnitTestCase

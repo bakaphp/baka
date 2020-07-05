@@ -2,7 +2,7 @@
 
 namespace Baka\Http\Api;
 
-use Baka\Http\Contracts\Api\ResponseTrait;
+use Baka\Contracts\Http\Api\ResponseTrait;
 use Phalcon\Mvc\Controller;
 
 /**

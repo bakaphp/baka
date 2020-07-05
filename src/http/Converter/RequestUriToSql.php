@@ -5,8 +5,8 @@ namespace Baka\Http\Converter;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
-use Baka\Http\Contracts\Converter\ConverterInterface;
-use Baka\Http\Contracts\Converter\CustomQueriesTrait;
+use Baka\Contracts\Http\Converter\ConverterInterface;
+use Baka\Contracts\Http\Converter\CustomQueriesTrait;
 use Exception;
 use Phalcon\Di;
 use Phalcon\Di\Injectable;
@@ -15,9 +15,9 @@ use Phalcon\Mvc\Model\ResultsetInterface;
 use ReflectionClass;
 
 /**
- * Base QueryParser. Parse GET request for a API to a array Phalcon Model find and FindFirst can intepret.
+ * Base QueryParser. Parse GET request for a API to a array Phalcon Model find and FindFirst can interpret.
  *
- * Supports queries with the following paramters:
+ * Supports queries with the following parameters:
  *   Searching:
  *     q=(searchField1:value1,searchField2:value2)
  *   Partial Responses:
@@ -50,16 +50,6 @@ class RequestUriToSql extends Injectable implements ConverterInterface
      * @var int
      */
     protected $page = 1;
-
-    /**
-     * @var int
-     */
-    protected $limit = 25;
-
-    /**
-     * @var string
-     */
-    protected $sort = null;
 
     /**
      * @var int
@@ -136,7 +126,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
         }
 
         //if we find that we are using custom field this is a different beast so we have to send it
-        //to another functino to deal with this shit
+        //to another function to deal with this shit
         if (array_key_exists('cq', $this->request)) {
             $params['cparams'] = $this->request['cq'];
         }
@@ -955,7 +945,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
             if (strpos($modelColumn, '.') !== false) {
                 // We are using a related sort.
                 // Get the namespace for the models from the configuration.
-                $modelNamespace = Di::getDefault()->getConfig()->namespace->models;
+                $modelNamespace = Di::getDefault()->get('config')->namespace->models;
                 // Get the model name and the sort column from the sent parameter
                 list($model, $column) = explode('.', $modelColumn);
                 // Convert the model name into camel case.

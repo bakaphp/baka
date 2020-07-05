@@ -63,22 +63,13 @@ class CustomFilters extends Model
     public $fields_type_id;
 
     /**
-     * Returns the name of the table associated to the model.
-     *
-     * @return string
-     */
-    public function getSource() : string
-    {
-        return 'custom_filters';
-    }
-
-    /**
      * Initialize some stuff.
      *
      * @return void
      */
     public function initialize() : void
     {
+        $this->setSource('custom_filters');
         $this->hasMany('id', '\Baka\Database\CustomFilters\Conditions', 'custom_filter_id', ['alias' => 'conditions']);
         $this->belongsTo('system_modules_id', '\Baka\Database\SystemModules', 'id', ['alias' => 'systemModule']);
     }
