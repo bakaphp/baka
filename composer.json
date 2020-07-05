@@ -59,6 +59,9 @@
         "ext-swoole": "Required to use the Swoole coroutines (^4.5)."
     },
     "config": {
-        "sort-packages": true
-    }
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "discard-changes": true
+    },
 }
