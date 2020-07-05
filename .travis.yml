@@ -47,6 +47,7 @@ before_script:
 - cp .env.example .env
 - mysql -e "CREATE DATABASE bakatest"
 - sudo redis-server /etc/redis/redis.conf --port 6379
+- composer clear-cache
 - composer install --no-interaction
 - composer update --no-interaction
 - "./vendor/bin/phinx migrate"

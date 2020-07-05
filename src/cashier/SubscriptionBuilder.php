@@ -188,7 +188,7 @@ class SubscriptionBuilder
      * @param  string|null  $token
      * @param  array  $options
      *
-     * @return \Phalcon\Cashier\Subscription
+     * @return Subscription
      */
     public function create($token = null, array $options = [])
     {

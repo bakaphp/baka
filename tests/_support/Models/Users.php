@@ -12,6 +12,6 @@ class Users extends \Baka\Database\Model
 
     public function initialize()
     {
-        $this->hasMany('id', '\Phalcon\Cashier\Subscription', 'user_id', ['alias' => 'user']);
+        $this->hasMany('id', 'Baka\Cashier\Subscription', 'user_id', ['alias' => 'user']);
     }
 }
