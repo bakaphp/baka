@@ -1,5 +1,4 @@
 <?php
-// This is global bootstrap for autoloading
 
 /**
  * Setup autoloading.
@@ -9,6 +8,7 @@ use function Baka\appPath;
 use Dotenv\Dotenv;
 use Phalcon\Loader;
 
+require __DIR__.'/../src/functions.php';
 require __DIR__ . '/PhalconUnitTestCase.php';
 
 if (!defined('ROOT_DIR')) {
