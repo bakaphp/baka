@@ -25,9 +25,16 @@ class Phalcon extends Request
      *
      * @return void
      */
-    public function getPutData()
+    public function getPutData() : array
     {
         $data = $this->getPut() ?: $this->getJsonRawBody(true);
+
+        /**
+         * @todo get help from phalcon
+         * using browserkit with Phalcon4 + Put we have to relay on
+         * $_REQUEST
+         */
+        $data = $data ?: $this->get();
 
         return $data ?: [];
     }

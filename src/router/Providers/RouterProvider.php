@@ -37,7 +37,7 @@ class RouterProvider implements ServiceProviderInterface
     }
 
     /**
-     * Attache routes' middlewares.
+     * Attache routes' middleware.
      *
      * @param DiInterface $container
      */
