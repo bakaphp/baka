@@ -1383,7 +1383,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
      *
      * @return void
      */
-    public function getPutData()
+    public function getPutData() : array
     {
         $data = $this->getPut() ?: $this->getJsonRawBody(true);
 
