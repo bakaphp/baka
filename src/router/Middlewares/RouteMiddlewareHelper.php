@@ -33,9 +33,9 @@ class RouteMiddlewareHelper
      */
     public function getRouteMiddlewares(string $event = null) : array
     {
-        $routeIfentifier = $this->getRouteIdentifier($this->api);
+        $routeIdentifier = $this->getRouteIdentifier($this->api);
 
-        $middlewares = $this->api->getSharedService('routeMiddlewares')[$routeIfentifier] ?? [];
+        $middlewares = $this->api->getSharedService('routeMiddlewares')[$routeIdentifier] ?? [];
 
         return array_filter($middlewares, function (Middleware $middleware) use ($event) {
             $foundRouteMiddleware = $this->isInRouteMiddlewares(
@@ -57,14 +57,14 @@ class RouteMiddlewareHelper
      */
     public function getRouteIdentifier(): string
     {
-        $activeHanlder = $this->api->getActiveHandler();
+        $activeHandler = $this->api->getActiveHandler();
 
-        //post, get, put, patch? what methos is this route
+        //post, get, put, patch? what method is this route
         $routeMethod = $this->api->di->get('router')->getMatchedRoute()->getHttpMethods();
         $routePattern = $this->api->di->get('router')->getMatchedRoute()->getPattern();
 
         return  strtolower(Slug::generate(
-            $routeMethod . '-' . $routePattern . '-' . ($activeHanlder[0])->getDefinition() . '-' . $activeHanlder[1]
+            $routeMethod . '-' . $routePattern . '-' . ($activeHandler[0])->getDefinition() . '-' . $activeHandler[1]
         ));
     }
 
