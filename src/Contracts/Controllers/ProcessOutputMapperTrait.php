@@ -27,7 +27,7 @@ trait ProcessOutputMapperTrait
 
         $mapperModel = get_class($this->model);
 
-        //Phalcon 4 now returns simple response for empty response
+        //Phalcon 4 now returns resultset for empty results
         $isSimpleResponse = function ($results) {
             return is_object($results) && get_class($results) == Simple::class;
         };
@@ -51,7 +51,7 @@ trait ProcessOutputMapperTrait
                 $this->dto,
                 $this->getMapperOptions()
             );
-            return  $results;
+            return $results;
         }
 
         if (is_iterable($results) &&
