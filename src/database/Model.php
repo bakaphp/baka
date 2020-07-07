@@ -25,7 +25,7 @@ class Model extends PhalconModel
     public $id;
     public ?string $created_at = null;
     public ?string $updated_at = null;
-    public int $is_deleted = 0;
+    public ?int $is_deleted = 0;
 
     /**
      * Get the primary id of this model.

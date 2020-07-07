@@ -28,10 +28,10 @@ class RouteMiddleware implements MiddlewareInterface
      *
      * @param mixed $event
      * @param mixed $api
-     * @param mixed $contex
+     * @param mixed $context
      * @return bool
      */
-    public function beforeExecuteRoute($event, $api, $contex)
+    public function beforeExecuteRoute($event, $api, $context)
     {
         foreach ($this->helper->getRouteMiddlewares(Middleware::BEFORE) as $middleware) {
             if (!$this->executeMiddleware($middleware, $api)) {
@@ -47,10 +47,10 @@ class RouteMiddleware implements MiddlewareInterface
      *
      * @param mixed $event
      * @param mixed $api
-     * @param mixed $contex
+     * @param mixed $context
      * @return void
      */
-    public function afterExecuteRoute($event, $api, $contex)
+    public function afterExecuteRoute($event, $api, $context)
     {
         foreach ($this->helper->getRouteMiddlewares(Middleware::AFTER) as $middleware) {
             if (!$this->executeMiddleware($middleware, $api)) {

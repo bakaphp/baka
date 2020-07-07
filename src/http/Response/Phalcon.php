@@ -192,7 +192,7 @@ class Phalcon extends Response
                 'type' => $httpMessage,
                 'identifier' => $identifier,
                 'message' => $e->getMessage(),
-                'trace' => $config->app->production ? $e->getTraceAsString() : null,
+                'trace' => !$config->app->production ? $e->getTraceAsString() : null,
                 'data' => $data,
             ],
         ]);

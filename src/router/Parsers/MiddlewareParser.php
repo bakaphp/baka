@@ -8,9 +8,9 @@ use Baka\Router\Middleware;
 
 class MiddlewareParser
 {
-    const MIDDLEWARE_KEY_DELIMETER = '@';
-    const EVENT_DELIMETER = ':';
-    const PARAMETER_DELIMETER = ',';
+    const MIDDLEWARE_KEY_DELIMITER = '@';
+    const EVENT_DELIMITER = ':';
+    const PARAMETER_DELIMITER = ',';
 
     protected $middlewareNotation;
 
@@ -58,7 +58,7 @@ class MiddlewareParser
     {
         return current(
             explode(
-                static::MIDDLEWARE_KEY_DELIMETER,
+                static::MIDDLEWARE_KEY_DELIMITER,
                 $this->middlewareNotation,
                 -1
             )
@@ -72,16 +72,16 @@ class MiddlewareParser
      */
     protected function extractEvent(): string
     {
-        if (Str::includes(static::EVENT_DELIMETER, $this->middlewareNotation)) {
+        if (Str::includes(static::EVENT_DELIMITER, $this->middlewareNotation)) {
             return Str::firstStringBetween(
                 $this->middlewareNotation,
-                static::MIDDLEWARE_KEY_DELIMETER,
-                static::EVENT_DELIMETER
+                static::MIDDLEWARE_KEY_DELIMITER,
+                static::EVENT_DELIMITER
             );
         }
 
         return Arr::last(
-            explode(static::MIDDLEWARE_KEY_DELIMETER, $this->middlewareNotation)
+            explode(static::MIDDLEWARE_KEY_DELIMITER, $this->middlewareNotation)
         );
     }
 
@@ -92,15 +92,15 @@ class MiddlewareParser
      */
     protected function extractParameters(): array
     {
-        if (Str::includes(static::EVENT_DELIMETER, $this->middlewareNotation)) {
-            $paramters = Arr::last(
+        if (Str::includes(static::EVENT_DELIMITER, $this->middlewareNotation)) {
+            $parameters = Arr::last(
                 explode(
-                    static::EVENT_DELIMETER,
+                    static::EVENT_DELIMITER,
                     $this->middlewareNotation
                 )
             );
 
-            return explode(static::PARAMETER_DELIMETER, $paramters);
+            return explode(static::PARAMETER_DELIMITER, $parameters);
         }
 
         return [];
