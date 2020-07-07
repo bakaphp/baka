@@ -6,6 +6,7 @@ namespace Baka\Contracts\Controllers;
 
 use AutoMapperPlus\DataType;
 use Baka\Http\Exception\InternalServerErrorException;
+use Phalcon\Mvc\Model\Resultset\Simple;
 use StdClass;
 
 trait ProcessOutputMapperTrait
@@ -24,10 +25,14 @@ trait ProcessOutputMapperTrait
     {
         $this->canUseMapper();
 
-        $mapMultiple = false;
         $mapperModel = get_class($this->model);
 
-        //if its simple, pagination or relationship we need to map array to sdtclass
+        //Phalcon 4 now returns simple response for empty response
+        $isSimpleResponse = function ($results) {
+            return is_object($results) && get_class($results) == Simple::class;
+        };
+
+        //if its simple, pagination or relationship we need to map array to StdClass
         if (
             (is_array($results) || is_iterable($results)) &&
             (($this->request->withPagination() && $this->request->withRelationships()) ||
@@ -35,7 +40,6 @@ trait ProcessOutputMapperTrait
         ) {
             $mapperModel = DataType::ARRAY;
             $this->dto = StdClass::class;
-            $mapMultiple = true;
         }
 
         $this->dtoConfig->registerMapping($mapperModel, $this->dto)
@@ -50,7 +54,12 @@ trait ProcessOutputMapperTrait
             return  $results;
         }
 
-        if ($mapMultiple || is_iterable($results)) {
+        if (is_iterable($results) &&
+            (
+                is_array(current($results))
+                || is_object(current($results))
+                || $isSimpleResponse($results)
+            )) {
             return $this->mapper->mapMultiple(
                 $results,
                 $this->dto,
