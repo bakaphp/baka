@@ -116,7 +116,7 @@ class Users extends Model implements UserInterface
             new Regex([
                 'field' => 'displayname',
                 'message' => _('Please use alphanumerics only.'),
-                'pattern' => '/^[A-Za-z0-9_.-]{1,16}$/',
+                'pattern' => '/^[A-Za-z0-9_.-]{1,45}$/',
             ])
         );
 
