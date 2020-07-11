@@ -2,9 +2,9 @@
 
 namespace Baka\Test\Integration\Database;
 
-use PhalconUnitTestCase;
+use Baka\Database\CustomFields\AppsCustomFields;
 use Baka\Test\Support\Models\Leads;
-use Baka\Test\Support\Models\LeadsCustomFields;
+use PhalconUnitTestCase;
 
 class ModelCustomFieldsTest extends PhalconUnitTestCase
 {
@@ -66,9 +66,20 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
      */
     public function testGetCustomFieldRow()
     {
-        $leadCustomField = LeadsCustomFields::findFirst();
-        $lead = Leads::findFirst($leadCustomField->leads_id);
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        print_r($lead->customFields);
+        die();
 
         $this->assertTrue(isset($lead->reference));
+    }
+
+    public function testSet()
+    {
+        $name = $this->faker->name;
+        $lead = Leads::findFirst();
+        $lead->set('test_set', $name);
+
+        $this->assertEquals($lead->get('test_set'), $name);
     }
 }

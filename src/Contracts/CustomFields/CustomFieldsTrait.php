@@ -7,14 +7,14 @@ use Baka\Database\CustomFields\AppsCustomFields;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
-use Phalcon\Mvc\Model\ResultsetInterface;
+use Phalcon\Mvc\ModelInterface;
 
 /**
  * Custom field class.
  */
 trait CustomFieldsTrait
 {
-    public $customFields = [];
+    public array $customFields = [];
 
     /**
      * Get the custom fields of the current object.
@@ -58,16 +58,32 @@ trait CustomFieldsTrait
      *
      * @return void
      */
-    public function getAll() : ResultsetInterface
+    public function getAll() : array
     {
-        return AppsCustomFields::find([
-            'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id:',
-            'bind' => [
-                'companies_id' => $this->companies_id,
-                'model_name' => get_class($this),
-                'entity_id' => $this->getId()
-            ]
+        $companyId = $this->companies_id ?? 0;
+
+        $result = $this->getReadConnection()->prepare('
+            SELECT name, value 
+                FROM apps_custom_fields
+                WHERE
+                    companies_id = ?
+                    AND model_name = ?
+                    AND entity_id = ?
+        ');
+
+        $result->execute([
+            $companyId,
+            get_class($this),
+            $this->getId()
         ]);
+
+        $listOfCustomFields = [];
+
+        while ($row = $result->fetch()) {
+            $listOfCustomFields[$row['name']] = $row['value'];
+        }
+
+        return $listOfCustomFields;
     }
 
     /**
@@ -75,11 +91,11 @@ trait CustomFieldsTrait
      *
      * @param string $name
      *
-     * @return void
+     * @return mixed
      */
     public function get(string $name)
     {
-        return AppsCustomFields::findFirst([
+        $field = AppsCustomFields::findFirst([
             'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
             'bind' => [
                 'companies_id' => $this->companies_id,
@@ -88,6 +104,18 @@ trait CustomFieldsTrait
                 'name' => $name,
             ]
         ]);
+
+        return $field ? $field->value : null;
+    }
+
+    /**
+     * Attach info after fetch.
+     *
+     * @return void
+     */
+    public function afterFetch()
+    {
+        $this->customFields = $this->getAll();
     }
 
     /**
@@ -98,11 +126,11 @@ trait CustomFieldsTrait
      *
      * @return void
      */
-    public function set(string $name, $value)
+    public function set(string $name, $value) : ModelInterface
     {
         $companyId = $this->companies_id ?? 0;
 
-        AppsCustomFields::updateOrCreate([
+        return AppsCustomFields::updateOrCreate([
             'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
             'bind' => [
                 'companies_id' => $companyId,
@@ -115,6 +143,7 @@ trait CustomFieldsTrait
             'users_id' => UserProvider::get()->getId(),
             'model_name' => get_class($this),
             'entity_id' => $this->getId(),
+            'label' => $name,
             'name' => $name,
             'value' => $value
         ]);
@@ -129,7 +158,7 @@ trait CustomFieldsTrait
      */
     protected function saveCustomFields() : bool
     {
-        if (isset($this->customFields) && !empty($this->customFields)) {
+        if (!empty($this->customFields)) {
             foreach ($this->customFields as $key => $value) {
                 if (!property_exists($this, $key)) {
                     $this->set($key, $value);
