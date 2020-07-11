@@ -2,14 +2,12 @@
 
 namespace Baka\Contracts\CustomFields;
 
+use Baka\Auth\UserProvider;
+use Baka\Database\CustomFields\AppsCustomFields;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
-use Baka\Database\Model as BakaModel;
-use Exception;
-use PDO;
-use Phalcon\Mvc\Model\ResultsetInterface ;
-use ReflectionClass;
+use Phalcon\Mvc\Model\ResultsetInterface;
 
 /**
  * Custom field class.
@@ -26,16 +24,9 @@ trait CustomFieldsTrait
      */
     public function getCustomFields() : array
     {
-        $classReflection = new ReflectionClass($this);
-        $className = $classReflection->getShortName();
-        $classNamespace = $classReflection->getNamespaceName();
-
         if (!$module = Modules::findFirstByModelName(get_class($this))) {
-            throw new Exception('Trying to get custom fields of a Model ' . $className . ' that doesnt use it');
+            return [];
         }
-
-        $model = $classNamespace . '\\' . ucfirst($module->name) . 'CustomFields';
-        $modelId = strtolower($module->name) . '_id';
 
         $customFields = CustomFields::findByCustomFieldsModulesId($module->getId());
 
@@ -57,145 +48,96 @@ trait CustomFieldsTrait
      *
      * @return Phalcon\Mvc\Model
      */
-    public function getAllCustomFields(array $fields = [])
+    public function getAllCustomFields()
     {
-        try {
-            $module = Modules::getByCustomFieldModuleByModuleAndApp(get_class($this), $this->di->getApp());
-        } catch (Exception $e) {
-            return [];
-        }
-
-        $conditions = [];
-        $fieldsIn = null;
-
-        if (!empty($fields)) {
-            $fieldsIn = " and name in ('" . implode("','", $fields) . ')';
-        }
-
-        //$conditions = 'modules_id = ? ' . $fieldsIn;
-
-        $bind = [$this->getId(), $module->getId()];
-
-        $customFieldsValueTable = $this->getSource() . '_custom_fields';
-
-        $result = $this->getReadConnection()->prepare("SELECT l.{$this->getSource()}_id,
-                                                        c.id as field_id,
-                                                        c.name,
-                                                        l.value ,
-                                                        c.users_id,
-                                                        l.created_at,
-                                                        l.updated_at
-                                                        FROM {$customFieldsValueTable} l,
-                                                        custom_fields c
-                                                        WHERE c.id = l.custom_fields_id
-                                                            AND l.{$this->getSource()}_id = ?
-                                                            AND c.custom_fields_modules_id = ? ");
-
-        $result->execute($bind);
-
-        // $listOfCustomFields = $result->fetchAll();
-        $listOfCustomFields = [];
-
-        while ($row = $result->fetch(PDO::FETCH_OBJ)) {
-            $listOfCustomFields[$row->name] = $row->value;
-        }
-
-        return $listOfCustomFields;
+        return $this->getAll();
     }
 
     /**
-     * Allows to query a set of records that match the specified conditions.
+     * Get all the custom fields.
      *
-     * @param mixed $parameters
-     *
-     * @return Content[]
+     * @return void
      */
-    public static function find($parameters = null) : ResultsetInterface
+    public function getAll() : ResultsetInterface
     {
-        $results = parent::find($parameters);
-        $newResult = [];
-
-        if ($results) {
-            foreach ($results as $result) {
-                $customFields = $result->getAllCustomFields([]);
-                if (is_array($customFields)) {
-                    //field the object
-                    foreach ($customFields as $key => $value) {
-                        $result->{$key} = $value;
-                    }
-
-                    $newResult[] = $result;
-                }
-            }
-
-            unset($results);
-        }
-        return $newResult;
+        return AppsCustomFields::find([
+            'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id:',
+            'bind' => [
+                'companies_id' => $this->companies_id,
+                'model_name' => get_class($this),
+                'entity_id' => $this->getId()
+            ]
+        ]);
     }
 
     /**
-     * Allows to query the first record that match the specified conditions.
+     * Get the Custom Field.
      *
-     * @param mixed $parameters
+     * @param string $name
      *
-     * @return Content
+     * @return void
      */
-    public static function findFirst($parameters = null)
+    public function get(string $name)
     {
-        $result = parent::findFirst($parameters);
+        return AppsCustomFields::findFirst([
+            'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
+            'bind' => [
+                'companies_id' => $this->companies_id,
+                'model_name' => get_class($this),
+                'entity_id' => $this->getId(),
+                'name' => $name,
+            ]
+        ]);
+    }
 
-        if ($result) {
-            $customFields = $result->getAllCustomFields([]);
+    /**
+     * Set value.
+     *
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function set(string $name, $value)
+    {
+        $companyId = $this->companies_id ?? 0;
 
-            if (is_array($customFields)) {
-                //field the object
-                foreach ($customFields as $key => $value) {
-                    $result->{$key} = $value;
-                }
-            }
-        }
-
-        return $result;
+        AppsCustomFields::updateOrCreate([
+            'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
+            'bind' => [
+                'companies_id' => $companyId,
+                'model_name' => get_class($this),
+                'entity_id' => $this->getId(),
+                'name' => $name,
+            ]
+        ], [
+            'companies_id' => $companyId,
+            'users_id' => UserProvider::get()->getId(),
+            'model_name' => get_class($this),
+            'entity_id' => $this->getId(),
+            'name' => $name,
+            'value' => $value
+        ]);
     }
 
     /**
      * Create new custom fields.
      *
-     * We never update any custom fields, we delete them and create them again, thats why we call cleanCustomFields before updates
+     * We never update any custom fields, we delete them and create them again, thats why we call deleteAllCustomFields before updates
      *
      * @return void
      */
     protected function saveCustomFields() : bool
     {
-        //find the custom field module
-        try {
-            $module = Modules::getByCustomFieldModuleByModuleAndApp(get_class($this), $this->di->getApp());
-        } catch (Exception $e) {
-            return false;
-        }
-
-        //if all is good now lets get the custom fields and save them
-        foreach ($this->customFields as $key => $value) {
-            //create a new obj per iteration to se can save new info
-            $customModel = $this->getCustomFieldModel();
-            //validate the custom field by it model
-            if ($customField = CustomFields::findFirst(['conditions' => 'name = ?0 and custom_fields_modules_id = ?1', 'bind' => [$key, $module->getId()]])) {
-                //throw new Exception("this custom field doesn't exist");
-
-                $customModel->setCustomId($this->getId());
-                $customModel->custom_fields_id = $customField->getId();
-                $customModel->value = $value;
-                $customModel->created_at = date('Y-m-d H:i:s');
-
-                if (!$customModel->saveOrFail()) {
-                    throw new Exception('Custom ' . $key . ' - ' . $this->customModel->getMessages()[0]);
+        if (isset($this->customFields) && !empty($this->customFields)) {
+            foreach ($this->customFields as $key => $value) {
+                if (!property_exists($this, $key)) {
+                    $this->set($key, $value);
                 }
-
-                //overwrite the values to return the object
-                $this->{$key} = $value;
             }
         }
 
+        unset($this->customFields);
         return true;
     }
 
@@ -206,54 +148,22 @@ trait CustomFieldsTrait
      *
      * @return \Phalcon\MVC\Models
      */
-    public function cleanCustomFields(int $id) : bool
+    public function deleteAllCustomFields() : bool
     {
-        $customModel = $this->getCustomFieldModel();
+        $companyId = $this->companies_id ?? 0;
 
-        //we need to run the query since we don't have primary key
-        $result = $this->getReadConnection()->prepare("DELETE FROM {$customModel->getSource()} WHERE " . $this->getSource() . '_id = ?');
-        return $result->execute([$id]);
-    }
-
-    /**
-     * Given this object get its custom field table.
-     *
-     * @return string
-     */
-    public function getModelCustomFieldClassName() : string
-    {
-        $reflector = new ReflectionClass($this);
-        $classNameWithNameSpace = $reflector->getNamespaceName() . '\\' . $reflector->getShortName() . 'CustomFields';
-
-        return $classNameWithNameSpace;
-    }
-
-    /**
-     * Given this object get its custom field Module.
-     *
-     * @return BakaModel
-     */
-    public function getCustomFieldModel() : BakaModel
-    {
-        $customFieldModuleName = $this->getModelCustomFieldClassName();
-
-        return new $customFieldModuleName();
-    }
-
-    /**
-     * Before update.
-     *
-     * @return void
-     */
-    public function beforeUpdate()
-    {
-        parent::beforeUpdate();
+        $result = $this->getReadConnection()->prepare('DELETE FROM apps_custom_fields WHERE companies_id = ? AND model_name = ? and entity_id = ?');
+        return $result->execute([
+            $companyId,
+            get_class($this),
+            $this->getId(),
+        ]);
     }
 
     /**
      * Set the custom field to update a custom field module.
      *
-     * @param array $fields [description]
+     * @param array $fields
      */
     public function setCustomFields(array $fields)
     {
@@ -268,7 +178,6 @@ trait CustomFieldsTrait
     public function afterCreate()
     {
         $this->saveCustomFields();
-        unset($this->customFields);
     }
 
     /**
@@ -280,23 +189,8 @@ trait CustomFieldsTrait
     {
         //only clean and change custom fields if they have been set
         if (!empty($this->customFields)) {
-            //replace old custom with new
-            $allCustomFields = $this->getAllCustomFields([]);
-            if (is_array($allCustomFields)) {
-                foreach ($this->customFields as $key => $value) {
-                    $allCustomFields[$key] = $value;
-                }
-            }
-
-            if (!empty($allCustomFields)) {
-                //set
-                $this->setCustomFields($allCustomFields);
-                //clean old
-                $this->cleanCustomFields($this->getId());
-                //save new
-                $this->saveCustomFields();
-                //unset($this->customFields);
-            }
+            $this->deleteAllCustomFields();
+            $this->saveCustomFields();
         }
     }
 
@@ -307,6 +201,6 @@ trait CustomFieldsTrait
      */
     public function afterDelete()
     {
-        $this->cleanCustomFields($this->getId());
+        $this->deleteAllCustomFields();
     }
 }
