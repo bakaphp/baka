@@ -64,14 +64,18 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
      *
      * @return void
      */
-    public function testGetCustomFieldRow()
+    public function getGetAllCustomField()
     {
         $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
 
-        print_r($lead->customFields);
-        die();
+        $this->assertNotEmpty($lead->customFields);
+    }
 
-        $this->assertTrue(isset($lead->reference));
+    public function testGetOnCustomField()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $this->assertNotEmpty($lead->customFields['reference']);
     }
 
     public function testSet()
@@ -79,7 +83,28 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $name = $this->faker->name;
         $lead = Leads::findFirst();
         $lead->set('test_set', $name);
+        $lead->set('reference', $name);
 
+        $this->assertEquals($lead->get('test_set'), $name);
+    }
+
+    public function testGet()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $this->assertNotEmpty($lead->get('reference'));
+    }
+
+    public function testSetUpdate()
+    {
+        $name = $this->faker->name;
+        $lead = Leads::findFirst();
+        $lead->set('test_set', $name);
+
+        $this->assertEquals($lead->get('test_set'), $name);
+
+        $name = $this->faker->name;
+        $lead->set('test_set', $name);
         $this->assertEquals($lead->get('test_set'), $name);
     }
 }

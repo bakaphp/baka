@@ -4,6 +4,7 @@ namespace Baka;
 
 use function function_exists;
 use function getenv;
+use JsonException;
 use ReflectionClass;
 
 if (!function_exists('Baka\basePath')) {
@@ -121,8 +122,26 @@ if (!function_exists('Baka\isJson')) {
      */
     function isJson(string $string) : bool
     {
-        json_decode($string);
-        return (bool ) (json_last_error() == JSON_ERROR_NONE);
+        try {
+            json_decode($string);
+            return true;
+        } catch (JsonException $e) {
+            return false;
+        }
+    }
+}
+
+if (!function_exists('Baka\json_decode')) {
+    /**
+     * Decode a JSON string into an array.
+     *
+     * @return array
+     *
+     * @throws JsonException
+     */
+    function json_decode(string $json)
+    {
+        return \json_decode($json, $assoc = true, $depth = 512, JSON_THROW_ON_ERROR);
     }
 }
 

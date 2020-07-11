@@ -319,14 +319,4 @@ class Model extends PhalconModel
             getShortClassName(new static) . ' ' . current($this->getMessages())->getMessage()
         );
     }
-
-    /**
-     * Does this model have custom fields?
-     *
-     * @return bool
-     */
-    public function hasCustomFields() : bool
-    {
-        return isset($this->customFields);
-    }
 }

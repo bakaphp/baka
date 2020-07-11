@@ -194,6 +194,12 @@ class PhalconUnitTestCase extends PhalconUnit
 
             return $session;
         });
+
+        $this->di->setShared('redis', function () {
+            $redis = new \Redis();
+            $redis->connect(envValue('REDIS_HOST', 'redis'));
+            return $redis;
+        });
     }
 
     /**

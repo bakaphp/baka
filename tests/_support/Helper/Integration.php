@@ -29,7 +29,7 @@ class Integration extends Module
         FactoryDefault::reset();
         $this->setDi();
 
-        $this->grabDi()->setShare('userProvider', new Users());
+        $this->grabDi()->setShared('userProvider', new Users());
     }
 
     public function _after(TestInterface $test)

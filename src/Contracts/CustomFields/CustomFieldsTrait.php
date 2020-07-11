@@ -7,7 +7,9 @@ use Baka\Database\CustomFields\AppsCustomFields;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
+use Phalcon\Di;
 use Phalcon\Mvc\ModelInterface;
+use Phalcon\Utils\Slug;
 
 /**
  * Custom field class.
@@ -15,6 +17,17 @@ use Phalcon\Mvc\ModelInterface;
 trait CustomFieldsTrait
 {
     public array $customFields = [];
+
+    /**
+     * Get the custom field primary key
+     * for faster access via redis.
+     *
+     * @return string
+     */
+    protected function getCustomFieldPrimaryKey() : string
+    {
+        return Slug::generate(get_class($this) . ' ' . $this->getId());
+    }
 
     /**
      * Get the custom fields of the current object.
@@ -60,6 +73,10 @@ trait CustomFieldsTrait
      */
     public function getAll() : array
     {
+        if (!empty($listOfCustomFields = $this->getAllFromRedis())) {
+            return $listOfCustomFields;
+        }
+
         $companyId = $this->companies_id ?? 0;
 
         $result = $this->getReadConnection()->prepare('
@@ -87,6 +104,25 @@ trait CustomFieldsTrait
     }
 
     /**
+     * Get all the custom fields from redis.
+     *
+     * @return array
+     */
+    public function getAllFromRedis() : array
+    {
+        //use redis to speed things up
+        if (Di::getDefault()->has('redis')) {
+            $redis = Di::getDefault()->get('redis');
+
+            return $redis->hGetAll(
+                $this->getCustomFieldPrimaryKey(),
+            );
+        }
+
+        return [];
+    }
+
+    /**
      * Get the Custom Field.
      *
      * @param string $name
@@ -95,6 +131,10 @@ trait CustomFieldsTrait
      */
     public function get(string $name)
     {
+        if ($value = $this->getFromRedis($name)) {
+            return $value;
+        }
+
         $field = AppsCustomFields::findFirst([
             'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
             'bind' => [
@@ -106,6 +146,28 @@ trait CustomFieldsTrait
         ]);
 
         return $field ? $field->value : null;
+    }
+
+    /**
+     * Get custom field from redis.
+     *
+     * @param string $name
+     *
+     * @return void
+     */
+    protected function getFromRedis(string $name)
+    {
+        //use redis to speed things up
+        if (Di::getDefault()->has('redis')) {
+            $redis = Di::getDefault()->get('redis');
+
+            return $redis->hGet(
+                $this->getCustomFieldPrimaryKey(),
+                $name
+            );
+        }
+
+        return false;
     }
 
     /**
@@ -130,6 +192,8 @@ trait CustomFieldsTrait
     {
         $companyId = $this->companies_id ?? 0;
 
+        $this->setInRedis($name, $value);
+
         return AppsCustomFields::updateOrCreate([
             'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
             'bind' => [
@@ -150,6 +214,29 @@ trait CustomFieldsTrait
     }
 
     /**
+     * Set custom field in redis.
+     *
+     * @param string $name
+     * @param [type] $value
+     *
+     * @return boolean
+     */
+    protected function setInRedis(string $name, $value) : bool
+    {
+        if (Di::getDefault()->has('redis')) {
+            $redis = Di::getDefault()->get('redis');
+
+            return $redis->hSet(
+                $this->getCustomFieldPrimaryKey(),
+                $name,
+                $value
+            );
+        }
+
+        return false;
+    }
+
+    /**
      * Create new custom fields.
      *
      * We never update any custom fields, we delete them and create them again, thats why we call deleteAllCustomFields before updates
@@ -158,7 +245,7 @@ trait CustomFieldsTrait
      */
     protected function saveCustomFields() : bool
     {
-        if (!empty($this->customFields)) {
+        if ($this->hasCustomFields()) {
             foreach ($this->customFields as $key => $value) {
                 if (!property_exists($this, $key)) {
                     $this->set($key, $value);
@@ -175,7 +262,7 @@ trait CustomFieldsTrait
      *
      * @param  int $id
      *
-     * @return \Phalcon\MVC\Models
+     * @return bool
      */
     public function deleteAllCustomFields() : bool
     {
@@ -231,5 +318,15 @@ trait CustomFieldsTrait
     public function afterDelete()
     {
         $this->deleteAllCustomFields();
+    }
+
+    /**
+     * Does this model have custom fields?
+     *
+     * @return bool
+     */
+    public function hasCustomFields() : bool
+    {
+        return !empty($this->customFields);
     }
 }
