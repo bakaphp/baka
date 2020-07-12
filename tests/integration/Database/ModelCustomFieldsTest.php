@@ -121,4 +121,20 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
 
         $this->assertArrayHasKey('reference', $lead->toArray());
     }
+
+    public function testCleanFields()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+        $lead->deleteAllCustomFields();
+        $this->assertEmpty($lead->getAll());
+
+    }
+
+    public function testDeleteCustomField()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+        $this->assertNotEmpty($lead->get('reference'));
+        $lead->del('reference');
+        $this->assertEmpty($lead->get('reference'));
+    }
 }

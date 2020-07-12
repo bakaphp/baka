@@ -135,7 +135,46 @@ trait CustomFieldsTrait
             return $value;
         }
 
-        $field = AppsCustomFields::findFirst([
+        $field = $this->getCustomField($name);
+
+        return $field ? $field->value : null;
+    }
+
+    /**
+     * Delete key from custom Fields.
+     *
+     * @param string $name
+     *
+     * @return boolean
+     */
+    public function del(string $name) : bool
+    {
+        if ($field = $this->getCustomField($name)) {
+            $field->delete();
+
+            if (Di::getDefault()->has('redis')) {
+                $redis = Di::getDefault()->get('redis');
+
+                $redis->hDel(
+                    $this->getCustomFieldPrimaryKey(),
+                    $name
+                );
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get a Custom Field.
+     *
+     * @param string $name
+     *
+     * @return ModelInterface|null
+     */
+    public function getCustomField(string $name) : ?ModelInterface
+    {
+        return AppsCustomFields::findFirst([
             'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
             'bind' => [
                 'companies_id' => $this->companies_id,
@@ -144,8 +183,6 @@ trait CustomFieldsTrait
                 'name' => $name,
             ]
         ]);
-
-        return $field ? $field->value : null;
     }
 
     /**
@@ -321,9 +358,10 @@ trait CustomFieldsTrait
     }
 
     /**
-     * Overwrite toArray , to add custom fields value
+     * Overwrite toArray , to add custom fields value.
      *
      * @param mixed $columns
+     *
      * @return array
      */
     public function toArray($columns = null) : array
