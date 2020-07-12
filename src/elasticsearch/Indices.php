@@ -16,10 +16,11 @@ abstract class Indices extends \Baka\Database\Model
     /**
      * Set the Id.
      *
-     * @param integer $id
+     * @param int $id
+     *
      * @return void
      */
-    public function setId(int $id): void
+    public function setId(int $id) : void
     {
         $this->id = $id;
     }

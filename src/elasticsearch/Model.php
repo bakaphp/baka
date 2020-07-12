@@ -7,11 +7,11 @@ use Baka\Database\Contracts\CustomFields\CustomFieldsTrait;
 class Model extends \Baka\Database\Model
 {
     use CustomFieldsTrait;
-    
+
     protected $elasticMaxDepth = 3;
 
     /**
-     * Fields we want to have excluded from the audits
+     * Fields we want to have excluded from the audits.
      *
      * @var array
      */
@@ -26,11 +26,11 @@ class Model extends \Baka\Database\Model
     public $elasticSearchNotAnalyzed = true;
 
     /**
-     * Send the corrent objet to elastic to update or insert
+     * Send the corrent objet to elastic to update or insert.
      *
      * @return void
      */
-    protected function sendToElastic(): bool
+    protected function sendToElastic() : bool
     {
         $reflection = new \ReflectionClass($this);
         $model = $reflection->getShortName();
@@ -46,7 +46,7 @@ class Model extends \Baka\Database\Model
     }
 
     /**
-     * Call this after save and send to elastic
+     * Call this after save and send to elastic.
      *
      * @return void
      */

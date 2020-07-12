@@ -2,8 +2,8 @@
 
 namespace Baka\Elasticsearch;
 
-use Baka\Elasticsearch\Model as ModelCustomFields;
 use Baka\Database\CustomFields\CustomFields;
+use Baka\Elasticsearch\Model as ModelCustomFields;
 use Elasticsearch\ClientBuilder as Client;
 use Exception;
 use Phalcon\Db\Column;
@@ -22,7 +22,7 @@ class IndexBuilder
     protected static $client;
 
     /**
-     * Initialize some classes for internal use
+     * Initialize some classes for internal use.
      *
      * @return void
      */
@@ -57,7 +57,7 @@ class IndexBuilder
      *
      * @return string
      */
-    protected static function checks(string $model): string
+    protected static function checks(string $model) : string
     {
         // Call the initializer.
         self::initialize();
@@ -87,12 +87,13 @@ class IndexBuilder
     }
 
     /**
-     * Get the general settings for our predefind indices
+     * Get the general settings for our predefind indices.
      *
-     * @param integer $nestedLimit
+     * @param int $nestedLimit
+     *
      * @return array
      */
-    protected static function getIndicesSettings(int $nestedLimit): array
+    protected static function getIndicesSettings(int $nestedLimit) : array
     {
         return [
             'index.mapping.nested_fields.limit' => $nestedLimit,
@@ -110,12 +111,13 @@ class IndexBuilder
     }
 
     /**
-     * Check if the index exist
+     * Check if the index exist.
      *
      * @param string $model
+     *
      * @return void
      */
-    public static function existIndices(string $model): bool
+    public static function existIndices(string $model) : bool
     {
         // Run checks to make sure everything is in order.
         $modelPath = self::checks($model);
@@ -125,14 +127,14 @@ class IndexBuilder
     }
 
     /**
-     * Create an index for a model
+     * Create an index for a model.
      *
      * @param string $model
      * @param int $maxDepth
      *
      * @return array
      */
-    public static function createIndices(string $model, int $maxDepth = 3, int $nestedLimit = 75): array
+    public static function createIndices(string $model, int $maxDepth = 3, int $nestedLimit = 75) : array
     {
         // Run checks to make sure everything is in order.
         $modelPath = self::checks($model);
@@ -183,7 +185,8 @@ class IndexBuilder
         self::getRelatedParams($params['body']['mappings'][$model]['properties'], $modelPath, $modelPath, 1, $maxDepth);
 
         /**
-         * Delete the index before creating it again
+         * Delete the index before creating it again.
+         *
          * @todo move this to its own function
          */
         if (self::$client->indices()->exists(['index' => $model])) {
@@ -201,7 +204,7 @@ class IndexBuilder
      *
      * @return array
      */
-    public static function indexDocument(Model $object, int $maxDepth = 3): array
+    public static function indexDocument(Model $object, int $maxDepth = 3) : array
     {
         // Call the initializer.
         self::initialize();
@@ -225,12 +228,13 @@ class IndexBuilder
     }
 
     /**
-     * Delete a document from Elastic
+     * Delete a document from Elastic.
      *
      * @param Model $object
+     *
      * @return array
      */
-    public static function deleteDocument(Model $object): array
+    public static function deleteDocument(Model $object) : array
     {
         // Call the initializer.
         self::initialize();
@@ -254,7 +258,7 @@ class IndexBuilder
      *
      * @return array
      */
-    protected static function getFieldsTypes(string $modelPath): array
+    protected static function getFieldsTypes(string $modelPath) : array
     {
         // Get the columns description.
         $columns = self::$di->getDb()->describeColumns(strtolower($modelPath));
@@ -303,7 +307,7 @@ class IndexBuilder
      *
      * @return void
      */
-    protected static function getRelatedParams(array &$params, string $parentModel, string $model, int $depth, int $maxDepth): void
+    protected static function getRelatedParams(array &$params, string $parentModel, string $model, int $depth, int $maxDepth) : void
     {
         $depth++;
         $relationsData = self::$di->getModelsManager()->getRelations($model);
@@ -405,7 +409,7 @@ class IndexBuilder
      *
      * @return void
      */
-    protected static function getRelatedData(array &$document, Model $data, string $parentModel, int $depth, int $maxDepth): void
+    protected static function getRelatedData(array &$document, Model $data, string $parentModel, int $depth, int $maxDepth) : void
     {
         $depth++;
         $modelPath = (new \ReflectionClass($data))->name;
