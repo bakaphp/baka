@@ -59,8 +59,6 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $this->assertTrue($lead->updateOrFail());
     }
 
-
-
     public function testSet()
     {
         $name = $this->faker->name;
@@ -91,7 +89,7 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $this->assertEquals($lead->get('test_set'), $name);
     }
 
-        /**
+    /**
      * Check that a custom field has it attribute.
      *
      * @return void
@@ -106,7 +104,7 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         . ')');
 
         foreach ($leads as $lead) {
-            $this->assertNotEmpty($lead->customFields);
+            $this->assertNotEmpty($lead->getAll());
         }
     }
 
@@ -114,6 +112,13 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
     {
         $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
 
-        $this->assertNotEmpty($lead->customFields['reference']);
+        $this->assertNotEmpty($lead->get('reference'));
+    }
+
+    public function testToArray()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $this->assertArrayHasKey('reference', $lead->toArray());
     }
 }

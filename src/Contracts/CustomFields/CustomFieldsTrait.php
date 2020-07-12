@@ -171,16 +171,6 @@ trait CustomFieldsTrait
     }
 
     /**
-     * Attach info after fetch.
-     *
-     * @return void
-     */
-    public function afterFetch()
-    {
-        $this->customFields = $this->getAll();
-    }
-
-    /**
      * Set value.
      *
      * @param string $name
@@ -328,5 +318,19 @@ trait CustomFieldsTrait
     public function hasCustomFields() : bool
     {
         return !empty($this->customFields);
+    }
+
+    /**
+     * Overwrite toArray , to add custom fields value
+     *
+     * @param mixed $columns
+     * @return array
+     */
+    public function toArray($columns = null) : array
+    {
+        return array_merge(
+            parent::toArray($columns),
+            $this->getAll()
+        );
     }
 }
