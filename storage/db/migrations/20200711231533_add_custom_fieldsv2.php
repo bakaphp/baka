@@ -2,7 +2,7 @@
 
 use Phinx\Db\Adapter\MysqlAdapter;
 
-class AddCustomFields2 extends Phinx\Migration\AbstractMigration
+class AddCustomFieldsv2 extends Phinx\Migration\AbstractMigration
 {
     public function change()
     {
