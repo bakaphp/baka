@@ -59,24 +59,7 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $this->assertTrue($lead->updateOrFail());
     }
 
-    /**
-     * Check that a custom field has it attribute.
-     *
-     * @return void
-     */
-    public function getGetAllCustomField()
-    {
-        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
 
-        $this->assertNotEmpty($lead->customFields);
-    }
-
-    public function testGetOnCustomField()
-    {
-        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
-
-        $this->assertNotEmpty($lead->customFields['reference']);
-    }
 
     public function testSet()
     {
@@ -106,5 +89,31 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $name = $this->faker->name;
         $lead->set('test_set', $name);
         $this->assertEquals($lead->get('test_set'), $name);
+    }
+
+        /**
+     * Check that a custom field has it attribute.
+     *
+     * @return void
+     */
+    public function testGetAllCustomField()
+    {
+        $leads = Leads::find('id in (' .
+            implode(',', array_map(
+                fn ($lead) => $lead['entity_id'],
+                AppsCustomFields::find(['limit' => 10, 'columns' => 'entity_id'])->toArray()
+            ))
+        . ')');
+
+        foreach ($leads as $lead) {
+            $this->assertNotEmpty($lead->customFields);
+        }
+    }
+
+    public function testGetOneCustomField()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $this->assertNotEmpty($lead->customFields['reference']);
     }
 }
