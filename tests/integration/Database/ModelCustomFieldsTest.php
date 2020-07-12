@@ -137,4 +137,13 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $lead->del('reference');
         $this->assertEmpty($lead->get('reference'));
     }
+
+    public function testReCacheCustomField()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $this->di->get('redis')->del($lead->getCustomFieldPrimaryKey());
+        $lead->reCacheCustomFields();
+        $this->assertNotEmpty($lead->get('reference'));
+    }
 }

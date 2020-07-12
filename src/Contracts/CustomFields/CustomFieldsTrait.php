@@ -24,7 +24,7 @@ trait CustomFieldsTrait
      *
      * @return string
      */
-    protected function getCustomFieldPrimaryKey() : string
+    public function getCustomFieldPrimaryKey() : string
     {
         return Slug::generate(get_class($this) . ' ' . $this->getId());
     }
@@ -370,5 +370,19 @@ trait CustomFieldsTrait
             parent::toArray($columns),
             $this->getAll()
         );
+    }
+
+    /**
+     * If something happened to redis
+     * And we need to re insert all the custom fields
+     * for this entity , we run this method.
+     *
+     * @return void
+     */
+    public function reCacheCustomFields()
+    {
+        foreach ($this->getAll() as $key => $value) {
+            $this->setInRedis($key, $value);
+        }
     }
 }
