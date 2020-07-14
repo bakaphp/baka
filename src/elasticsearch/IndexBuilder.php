@@ -2,24 +2,20 @@
 
 namespace Baka\Elasticsearch;
 
+use Baka\Contracts\CustomFields\CustomFieldModelInterface;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Elasticsearch\Model as ModelCustomFields;
 use Elasticsearch\ClientBuilder as Client;
 use Exception;
 use Phalcon\Db\Column;
+use Phalcon\Di;
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\ModelInterface;
 
 class IndexBuilder
 {
-    /**
-     * @var \Phalcon\Di
-     */
-    protected static $di;
-
-    /**
-     * @var \Elasticsearch\ClientBuilder
-     */
-    protected static $client;
+    protected static ?Di $di = null;
+    protected static ?Client $client = null;
 
     /**
      * Initialize some classes for internal use.
@@ -29,7 +25,7 @@ class IndexBuilder
     protected static function initialize()
     {
         // Get the DI and set it to a property.
-        self::$di = (new \Phalcon\Di())->getDefault();
+        self::$di = Di::getDefault();
 
         // Load the config through the DI.
         if (!self::$di->has('config')) {
@@ -37,7 +33,7 @@ class IndexBuilder
         }
 
         // Load the config through the DI.
-        if (!$config = self::$di->getConfig()->get('elasticSearch')) {
+        if (!$config = self::$di->get('config')->get('elasticSearch')) {
             throw new Exception('Please add the elasticSearch configuration.');
         }
 
@@ -87,7 +83,7 @@ class IndexBuilder
     }
 
     /**
-     * Get the general settings for our predefind indices.
+     * Get the general settings for our predefine indices.
      *
      * @param int $nestedLimit
      *
@@ -204,15 +200,15 @@ class IndexBuilder
      *
      * @return array
      */
-    public static function indexDocument(Model $object, int $maxDepth = 3) : array
+    public static function indexDocument(CustomFieldModelInterface $object, int $maxDepth = 3) : array
     {
         // Call the initializer.
         self::initialize();
 
-        // Start the document we are going to insert by convertin the object to an array.
-        $document = ModelCustomFields::getCustomFields($object, true);
+        // Start the document we are going to insert by converting the object to an array.
+        $document = $object->getAll();
 
-        // Use reflection to extract neccessary information from the object.
+        // Use reflection to extract necessary information from the object.
         $modelReflection = (new \ReflectionClass($object));
 
         self::getRelatedData($document, $object, $modelReflection->name, 1, $maxDepth);
@@ -239,7 +235,7 @@ class IndexBuilder
         // Call the initializer.
         self::initialize();
 
-        // Use reflection to extract neccessary information from the object.
+        // Use reflection to extract necessary information from the object.
         $modelReflection = (new \ReflectionClass($object));
 
         $params = [
@@ -252,7 +248,7 @@ class IndexBuilder
     }
 
     /**
-     * Retrieve a model's table structure so that we can define the appropiate Elasticsearch data type.
+     * Retrieve a model's table structure so that we can define the appropriate Elasticsearch data type.
      *
      * @param string $modelPath
      *
@@ -318,7 +314,7 @@ class IndexBuilder
             if ($referencedModel != $parentModel) {
                 $referencedModel = new $referencedModel();
 
-                //ignore properies we dont need right now
+                //ignore properties we don't need right now
                 if (array_key_exists('elasticSearch', $relation->getOptions())) {
                     if (!$relation->getOptions()['elasticSearch']) {
                         continue;

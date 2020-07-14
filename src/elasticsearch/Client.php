@@ -6,7 +6,7 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class Client
 {
-    private $host;
+    private string $host;
 
     /**
      * Set the host.
@@ -55,7 +55,7 @@ class Client
     /**
      * Given the elastic results, return only the data.
      *
-     * @param array $resonse
+     * @param array $response
      *
      * @return array
      */

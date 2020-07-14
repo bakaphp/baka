@@ -57,11 +57,9 @@ trait CustomFieldsTrait
     /**
      * Get all custom fields of the given object.
      *
-     * @param  array  $fields
-     *
-     * @return Phalcon\Mvc\Model
+     * @return  array
      */
-    public function getAllCustomFields()
+    public function getAllCustomFields() : array
     {
         return $this->getAll();
     }
@@ -69,7 +67,7 @@ trait CustomFieldsTrait
     /**
      * Get all the custom fields.
      *
-     * @return void
+     * @return array
      */
     public function getAll() : array
     {
@@ -379,7 +377,7 @@ trait CustomFieldsTrait
      *
      * @return void
      */
-    public function reCacheCustomFields()
+    public function reCacheCustomFields() : void
     {
         foreach ($this->getAll() as $key => $value) {
             $this->setInRedis($key, $value);
