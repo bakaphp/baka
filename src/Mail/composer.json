@@ -1,0 +1,37 @@
+{
+    "name": "baka/mail",
+    "description": "Baka Component for handling email via a simple queue interfase",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kaioken",
+            "email": "max@mctekk.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "ext-phalcon": ">=3.0.0",
+        "phalcon/incubator": ">=3.0",
+        "duncan3dc/fork-helper": "^2.2.0",
+        "swiftmailer/swiftmailer": "^6",
+        "symfony/var-dumper": "^4.2"
+    },
+    "require-dev": {
+        "codeception/codeception": "2.5.*",
+        "codeception/verify": "0.4.0",
+        "vlucas/phpdotenv": "^2.0"
+    },
+    "scripts": {
+        "test": "./vendor/bin/codecept run"
+    },
+    "autoload": {
+        "psr-4": {
+            "Baka\\Mail\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Baka\\Mail\\": ""
+        }
+    }
+}
