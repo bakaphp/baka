@@ -47,7 +47,7 @@ trait HashTableTrait
      *
      * @return bool
      */
-    public function set(string $key, $value) : bool
+    public function set(string $key, $value)
     {
         $this->createSettingsModel();
 

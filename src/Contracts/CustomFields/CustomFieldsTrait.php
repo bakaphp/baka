@@ -211,9 +211,9 @@ trait CustomFieldsTrait
      * @param string $name
      * @param mixed $value
      *
-     * @return void
+     * @return ModelInterface
      */
-    public function set(string $name, $value) : ModelInterface
+    public function set(string $name, $value)
     {
         $companyId = $this->companies_id ?? 0;
 
