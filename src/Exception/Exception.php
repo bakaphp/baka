@@ -29,7 +29,7 @@ class Exception extends PhException
     /**
      * Get the message DATA from the exception.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getData() : ?array
     {
