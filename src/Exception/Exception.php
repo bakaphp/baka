@@ -25,4 +25,14 @@ class Exception extends PhException
 
         return $e;
     }
+    
+    /**
+     * Get the message DATA from the exception.
+     *
+     * @return array|null
+     */
+    public function getData() : ?array
+    {
+        return is_array($this->data) ? $this->data : [$this->data];
+    }   
 }
