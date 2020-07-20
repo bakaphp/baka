@@ -4,11 +4,14 @@ use Baka\Database\Apps;
 use function Baka\envValue;
 use Baka\TestCase\PhalconUnit;
 use Elasticsearch\ClientBuilder;
+use Phalcon\Cache;
+use Phalcon\Cache\AdapterFactory;
 use Phalcon\Di;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\View\Simple;
 use Phalcon\Session\Adapter\Redis;
+use Phalcon\Storage\SerializerFactory;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 class PhalconUnitTestCase extends PhalconUnit
@@ -121,6 +124,21 @@ class PhalconUnitTestCase extends PhalconUnit
 
         $this->di->setShared('modelsMetadata', function () {
             return new Phalcon\Mvc\Model\Metadata\Memory();
+        });
+
+        $this->di->setShared('modelsCache', function () {
+            // Cache data for one day (default setting)
+            $serializerFactory = new SerializerFactory();
+            $adapterFactory = new AdapterFactory($serializerFactory);
+
+            $options = [
+                'defaultSerializer' => 'php',
+                'lifetime' => 7200
+            ];
+
+            $adapter = $adapterFactory->newInstance('memory', $options);
+
+            return new Cache($adapter);
         });
 
         $this->di->setShared('app', function () {

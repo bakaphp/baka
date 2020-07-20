@@ -127,7 +127,6 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
         $lead->deleteAllCustomFields();
         $this->assertEmpty($lead->getAll());
-
     }
 
     public function testDeleteCustomField()
@@ -145,5 +144,13 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $this->di->get('redis')->del($lead->getCustomFieldPrimaryKey());
         $lead->reCacheCustomFields();
         $this->assertNotEmpty($lead->get('reference'));
+    }
+
+    public function testCreateAppCustomField()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $field = 'new_field';
+        $this->assertTrue($lead->createCustomField($field)->name == $field);
     }
 }

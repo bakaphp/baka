@@ -25,4 +25,12 @@ class Exception extends PhException
 
         return $e;
     }
+
+    /**
+     * Get Data Information
+     */
+    public function getData() : ?array
+    {
+        return $this->data;
+    }
 }

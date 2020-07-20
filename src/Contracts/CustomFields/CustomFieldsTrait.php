@@ -5,6 +5,7 @@ namespace Baka\Contracts\CustomFields;
 use Baka\Auth\UserProvider;
 use Baka\Database\CustomFields\AppsCustomFields;
 use Baka\Database\CustomFields\CustomFields;
+use Baka\Database\CustomFields\CustomFieldsModules;
 use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
 use Phalcon\Di;
@@ -219,6 +220,8 @@ trait CustomFieldsTrait
 
         $this->setInRedis($name, $value);
 
+        $this->createCustomField($name);
+
         return AppsCustomFields::updateOrCreate([
             'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
             'bind' => [
@@ -236,6 +239,59 @@ trait CustomFieldsTrait
             'name' => $name,
             'value' => $value
         ]);
+    }
+
+    /**
+     * Create a new Custom Fields.
+     *
+     * @param string $name
+     *
+     * @return CustomFields
+     */
+    public function createCustomField(string $name) : CustomFields
+    {
+        $di = Di::getDefault();
+        $appsId = $di->has('app') ? $di->get('app')->getId() : 0;
+        $textField = 1;
+        $cacheKey = Slug::generate(get_class($this) . '-' . $appsId . '-' . $name);
+        $lifetime = 604800;
+
+        $customFieldModules = CustomFieldsModules::findFirstOrCreate([
+            'conditions' => 'model_name = :model_name: AND apps_id = :apps_id:',
+            'bind' => [
+                'model_name' => get_class($this),
+                'apps_id' => $appsId
+            ],
+            'cache' => [
+                'lifetime' => $lifetime,
+                'key' => $cacheKey
+            ]], [
+                'model_name' => get_class($this),
+                'name' => get_class($this),
+                'apps_id' => $appsId
+            ]);
+
+        $customField = CustomFields::findFirstOrCreate([
+            'conditions' => 'apps_id = :apps_id: AND name = :name: AND custom_fields_modules_id = :custom_fields_modules_id:',
+            'bind' => [
+                'apps_id' => $appsId,
+                'name' => $name,
+                'custom_fields_modules_id' => $customFieldModules->getId(),
+            ],
+            'cache' => [
+                'lifetime' => $lifetime,
+                'key' => $cacheKey . $customFieldModules->getId()
+            ]], [
+                'users_id' => $di->has('userData') ? UserProvider::get()->getId() : 0,
+                'companies_id' => $di->has('userData') ? UserProvider::get()->currentCompanyId() : 0,
+                'apps_id' => $appsId,
+                'name' => $name,
+                'label' => $name,
+                'custom_fields_modules_id' => $customFieldModules->getId(),
+                'fields_type_id' => $textField,
+            ]);
+
+        return $customField;
     }
 
     /**

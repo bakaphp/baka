@@ -2,20 +2,20 @@
 
 namespace Baka\Database\CustomFields;
 
-use Baka\Contracts\Database\HashTableTrait;
+use Baka\Contracts\CustomFields\CustomFieldsTrait;
 use Baka\Database\Model;
 
 class CustomFields extends Model
 {
-    use HashTableTrait;
+    use CustomFieldsTrait;
 
-    public int $companies_id;
-    public int $user_id;
-    public int $apps_id;
-    public int $custom_fields_modules_id;
-    public string $name;
+    public int $companies_id = 0;
+    public int $users_id = 0;
+    public int $apps_id = 0;
+    public int $custom_fields_modules_id = 1;
+    public ?string $name = null;
     public ?string $label = null;
-    public int $fields_type_id;
+    public int $fields_type_id = 1;
     public ?string $attributes = null;
 
     /**
