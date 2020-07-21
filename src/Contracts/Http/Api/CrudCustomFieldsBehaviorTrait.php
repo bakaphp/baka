@@ -2,12 +2,9 @@
 
 namespace Baka\Contracts\Http\Api;
 
-use ArgumentCountError;
 use Baka\Http\Converter\RequestUriToElasticSearch;
 use Exception;
-use PDO;
 use Phalcon\Http\RequestInterface;
-use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
 use Phalcon\Mvc\ModelInterface;
 
 trait CrudCustomFieldsBehaviorTrait
@@ -84,53 +81,5 @@ trait CrudCustomFieldsBehaviorTrait
         $record = $this->processEditParent($request, $record);
 
         return $record;
-    }
-
-    /**
-     * Given a process request return the records.
-     *
-     * @return void
-     */
-    protected function getRecords(array $processedRequest) : array
-    {
-        $required = ['sql', 'countSql', 'bind'];
-
-        if (count(array_intersect_key(array_flip($required), $processedRequest)) != count($required)) {
-            throw new ArgumentCountError('Not a processed request missing any of the following params : SQL, CountSQL, Bind');
-        }
-
-        $results = new SimpleRecords(
-            null,
-            $this->model,
-            $this->model->getReadConnection()->query($processedRequest['sql'], $processedRequest['bind'])
-        );
-
-        $count = $this->model->getReadConnection()->query(
-            $processedRequest['countSql'],
-            $processedRequest['bind']
-        )->fetch(PDO::FETCH_OBJ)->total;
-
-        //navigate los records
-        $newResult = [];
-        $relationships = $this->request->getQuery('relationships', 'string');
-
-        foreach ($results as $key => $record) {
-            //field the object
-            foreach ($record->getAllCustomFields() as $key => $value) {
-                $record->{$key} = $value;
-            }
-
-            /**
-             * @todo clean this up later on regarding custom fields SQL
-             */
-            $newResult[] = !$relationships ? $record->toFullArray() : RequestUriToElasticSearch::parseRelationShips($relationships, $record);
-        }
-
-        unset($results);
-
-        return [
-            'results' => $newResult,
-            'total' => $count
-        ];
     }
 }
