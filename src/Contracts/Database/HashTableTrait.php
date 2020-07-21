@@ -109,9 +109,9 @@ trait HashTableTrait
      *
      * @param string $key
      *
-     * @return void
+     * @return mixed
      */
-    public function get(string $key) : ?string
+    public function get(string $key)
     {
         $this->createSettingsModel();
         $value = $this->getSettingsByKey($key);

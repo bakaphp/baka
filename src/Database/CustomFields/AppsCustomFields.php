@@ -6,8 +6,8 @@ use Baka\Database\Model;
 
 class AppsCustomFields extends Model
 {
-    public int $companies_id;
-    public int $users_id;
+    public int $companies_id = 0;
+    public int $users_id = 0;
     public string $model_name;
     public int $entity_id;
     public string $name;
