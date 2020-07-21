@@ -2,7 +2,6 @@
 
 namespace Baka\Contracts\Http\Api;
 
-use Baka\Http\Converter\RequestUriToElasticSearch;
 use Exception;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Mvc\ModelInterface;
