@@ -252,6 +252,7 @@ trait CustomFieldsTrait
     {
         $di = Di::getDefault();
         $appsId = $di->has('app') ? $di->get('app')->getId() : 0;
+        $companiesId =  $di->has('userData') ? UserProvider::get()->currentCompanyId() : 0;
         $textField = 1;
         $cacheKey = Slug::generate(get_class($this) . '-' . $appsId . '-' . $name);
         $lifetime = 604800;
@@ -267,6 +268,7 @@ trait CustomFieldsTrait
                 'key' => $cacheKey
             ]], [
                 'model_name' => get_class($this),
+                'companies_id' => $companiesId,
                 'name' => get_class($this),
                 'apps_id' => $appsId
             ]);
@@ -283,7 +285,7 @@ trait CustomFieldsTrait
                 'key' => $cacheKey . $customFieldModules->getId()
             ]], [
                 'users_id' => $di->has('userData') ? UserProvider::get()->getId() : 0,
-                'companies_id' => $di->has('userData') ? UserProvider::get()->currentCompanyId() : 0,
+                'companies_id' => $companiesId,
                 'apps_id' => $appsId,
                 'name' => $name,
                 'label' => $name,
