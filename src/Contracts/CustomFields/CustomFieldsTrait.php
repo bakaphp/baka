@@ -2,21 +2,33 @@
 
 namespace Baka\Contracts\CustomFields;
 
+use Baka\Auth\UserProvider;
+use Baka\Database\CustomFields\AppsCustomFields;
 use Baka\Database\CustomFields\CustomFields;
+use Baka\Database\CustomFields\CustomFieldsModules;
 use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
-use Baka\Database\Model as BakaModel;
-use Exception;
-use PDO;
-use Phalcon\Mvc\Model\ResultsetInterface ;
-use ReflectionClass;
+use Phalcon\Di;
+use Phalcon\Mvc\ModelInterface;
+use Phalcon\Utils\Slug;
 
 /**
  * Custom field class.
  */
 trait CustomFieldsTrait
 {
-    public $customFields = [];
+    public array $customFields = [];
+
+    /**
+     * Get the custom field primary key
+     * for faster access via redis.
+     *
+     * @return string
+     */
+    public function getCustomFieldPrimaryKey() : string
+    {
+        return Slug::generate(get_class($this) . ' ' . $this->getId());
+    }
 
     /**
      * Get the custom fields of the current object.
@@ -26,16 +38,9 @@ trait CustomFieldsTrait
      */
     public function getCustomFields() : array
     {
-        $classReflection = new ReflectionClass($this);
-        $className = $classReflection->getShortName();
-        $classNamespace = $classReflection->getNamespaceName();
-
         if (!$module = Modules::findFirstByModelName(get_class($this))) {
-            throw new Exception('Trying to get custom fields of a Model ' . $className . ' that doesnt use it');
+            return [];
         }
-
-        $model = $classNamespace . '\\' . ucfirst($module->name) . 'CustomFields';
-        $modelId = strtolower($module->name) . '_id';
 
         $customFields = CustomFields::findByCustomFieldsModulesId($module->getId());
 
@@ -53,149 +58,285 @@ trait CustomFieldsTrait
     /**
      * Get all custom fields of the given object.
      *
-     * @param  array  $fields
-     *
-     * @return Phalcon\Mvc\Model
+     * @return  array
      */
-    public function getAllCustomFields(array $fields = [])
+    public function getAllCustomFields() : array
     {
-        try {
-            $module = Modules::getByCustomFieldModuleByModuleAndApp(get_class($this), $this->di->getApp());
-        } catch (Exception $e) {
-            return [];
+        return $this->getAll();
+    }
+
+    /**
+     * Get all the custom fields.
+     *
+     * @return array
+     */
+    public function getAll() : array
+    {
+        if (!empty($listOfCustomFields = $this->getAllFromRedis())) {
+            return $listOfCustomFields;
         }
 
-        $conditions = [];
-        $fieldsIn = null;
+        $companyId = $this->companies_id ?? 0;
 
-        if (!empty($fields)) {
-            $fieldsIn = " and name in ('" . implode("','", $fields) . ')';
-        }
+        $result = $this->getReadConnection()->prepare('
+            SELECT name, value 
+                FROM apps_custom_fields
+                WHERE
+                    companies_id = ?
+                    AND model_name = ?
+                    AND entity_id = ?
+        ');
 
-        //$conditions = 'modules_id = ? ' . $fieldsIn;
+        $result->execute([
+            $companyId,
+            get_class($this),
+            $this->getId()
+        ]);
 
-        $bind = [$this->getId(), $module->getId()];
-
-        $customFieldsValueTable = $this->getSource() . '_custom_fields';
-
-        $result = $this->getReadConnection()->prepare("SELECT l.{$this->getSource()}_id,
-                                                        c.id as field_id,
-                                                        c.name,
-                                                        l.value ,
-                                                        c.users_id,
-                                                        l.created_at,
-                                                        l.updated_at
-                                                        FROM {$customFieldsValueTable} l,
-                                                        custom_fields c
-                                                        WHERE c.id = l.custom_fields_id
-                                                            AND l.{$this->getSource()}_id = ?
-                                                            AND c.custom_fields_modules_id = ? ");
-
-        $result->execute($bind);
-
-        // $listOfCustomFields = $result->fetchAll();
         $listOfCustomFields = [];
 
-        while ($row = $result->fetch(PDO::FETCH_OBJ)) {
-            $listOfCustomFields[$row->name] = $row->value;
+        while ($row = $result->fetch()) {
+            $listOfCustomFields[$row['name']] = $row['value'];
         }
 
         return $listOfCustomFields;
     }
 
     /**
-     * Allows to query a set of records that match the specified conditions.
+     * Get all the custom fields from redis.
      *
-     * @param mixed $parameters
-     *
-     * @return Content[]
+     * @return array
      */
-    public static function find($parameters = null) : ResultsetInterface
+    public function getAllFromRedis() : array
     {
-        $results = parent::find($parameters);
-        $newResult = [];
+        //use redis to speed things up
+        if (Di::getDefault()->has('redis')) {
+            $redis = Di::getDefault()->get('redis');
 
-        if ($results) {
-            foreach ($results as $result) {
-                $customFields = $result->getAllCustomFields([]);
-                if (is_array($customFields)) {
-                    //field the object
-                    foreach ($customFields as $key => $value) {
-                        $result->{$key} = $value;
-                    }
-
-                    $newResult[] = $result;
-                }
-            }
-
-            unset($results);
+            return $redis->hGetAll(
+                $this->getCustomFieldPrimaryKey(),
+            );
         }
-        return $newResult;
+
+        return [];
     }
 
     /**
-     * Allows to query the first record that match the specified conditions.
+     * Get the Custom Field.
      *
-     * @param mixed $parameters
+     * @param string $name
      *
-     * @return Content
+     * @return mixed
      */
-    public static function findFirst($parameters = null)
+    public function get(string $name)
     {
-        $result = parent::findFirst($parameters);
+        if ($value = $this->getFromRedis($name)) {
+            return $value;
+        }
 
-        if ($result) {
-            $customFields = $result->getAllCustomFields([]);
+        $field = $this->getCustomField($name);
 
-            if (is_array($customFields)) {
-                //field the object
-                foreach ($customFields as $key => $value) {
-                    $result->{$key} = $value;
-                }
+        return $field ? $field->value : null;
+    }
+
+    /**
+     * Delete key from custom Fields.
+     *
+     * @param string $name
+     *
+     * @return boolean
+     */
+    public function del(string $name) : bool
+    {
+        if ($field = $this->getCustomField($name)) {
+            $field->delete();
+
+            if (Di::getDefault()->has('redis')) {
+                $redis = Di::getDefault()->get('redis');
+
+                $redis->hDel(
+                    $this->getCustomFieldPrimaryKey(),
+                    $name
+                );
             }
         }
 
-        return $result;
+        return true;
+    }
+
+    /**
+     * Get a Custom Field.
+     *
+     * @param string $name
+     *
+     * @return ModelInterface|null
+     */
+    public function getCustomField(string $name) : ?ModelInterface
+    {
+        return AppsCustomFields::findFirst([
+            'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
+            'bind' => [
+                'companies_id' => $this->companies_id,
+                'model_name' => get_class($this),
+                'entity_id' => $this->getId(),
+                'name' => $name,
+            ]
+        ]);
+    }
+
+    /**
+     * Get custom field from redis.
+     *
+     * @param string $name
+     *
+     * @return void
+     */
+    protected function getFromRedis(string $name)
+    {
+        //use redis to speed things up
+        if (Di::getDefault()->has('redis')) {
+            $redis = Di::getDefault()->get('redis');
+
+            return $redis->hGet(
+                $this->getCustomFieldPrimaryKey(),
+                $name
+            );
+        }
+
+        return false;
+    }
+
+    /**
+     * Set value.
+     *
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return ModelInterface
+     */
+    public function set(string $name, $value)
+    {
+        $companyId = $this->companies_id ?? 0;
+
+        $this->setInRedis($name, $value);
+
+        $this->createCustomField($name);
+
+        return AppsCustomFields::updateOrCreate([
+            'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
+            'bind' => [
+                'companies_id' => $companyId,
+                'model_name' => get_class($this),
+                'entity_id' => $this->getId(),
+                'name' => $name,
+            ]
+        ], [
+            'companies_id' => $companyId,
+            'users_id' => UserProvider::get()->getId(),
+            'model_name' => get_class($this),
+            'entity_id' => $this->getId(),
+            'label' => $name,
+            'name' => $name,
+            'value' => $value
+        ]);
+    }
+
+    /**
+     * Create a new Custom Fields.
+     *
+     * @param string $name
+     *
+     * @return CustomFields
+     */
+    public function createCustomField(string $name) : CustomFields
+    {
+        $di = Di::getDefault();
+        $appsId = $di->has('app') ? $di->get('app')->getId() : 0;
+        $companiesId =  $di->has('userData') ? UserProvider::get()->currentCompanyId() : 0;
+        $textField = 1;
+        $cacheKey = Slug::generate(get_class($this) . '-' . $appsId . '-' . $name);
+        $lifetime = 604800;
+
+        $customFieldModules = CustomFieldsModules::findFirstOrCreate([
+            'conditions' => 'model_name = :model_name: AND apps_id = :apps_id:',
+            'bind' => [
+                'model_name' => get_class($this),
+                'apps_id' => $appsId
+            ],
+            'cache' => [
+                'lifetime' => $lifetime,
+                'key' => $cacheKey
+            ]], [
+                'model_name' => get_class($this),
+                'companies_id' => $companiesId,
+                'name' => get_class($this),
+                'apps_id' => $appsId
+            ]);
+
+        $customField = CustomFields::findFirstOrCreate([
+            'conditions' => 'apps_id = :apps_id: AND name = :name: AND custom_fields_modules_id = :custom_fields_modules_id:',
+            'bind' => [
+                'apps_id' => $appsId,
+                'name' => $name,
+                'custom_fields_modules_id' => $customFieldModules->getId(),
+            ],
+            'cache' => [
+                'lifetime' => $lifetime,
+                'key' => $cacheKey . $customFieldModules->getId()
+            ]], [
+                'users_id' => $di->has('userData') ? UserProvider::get()->getId() : 0,
+                'companies_id' => $companiesId,
+                'apps_id' => $appsId,
+                'name' => $name,
+                'label' => $name,
+                'custom_fields_modules_id' => $customFieldModules->getId(),
+                'fields_type_id' => $textField,
+            ]);
+
+        return $customField;
+    }
+
+    /**
+     * Set custom field in redis.
+     *
+     * @param string $name
+     * @param [type] $value
+     *
+     * @return boolean
+     */
+    protected function setInRedis(string $name, $value) : bool
+    {
+        if (Di::getDefault()->has('redis')) {
+            $redis = Di::getDefault()->get('redis');
+
+            return $redis->hSet(
+                $this->getCustomFieldPrimaryKey(),
+                $name,
+                $value
+            );
+        }
+
+        return false;
     }
 
     /**
      * Create new custom fields.
      *
-     * We never update any custom fields, we delete them and create them again, thats why we call cleanCustomFields before updates
+     * We never update any custom fields, we delete them and create them again, thats why we call deleteAllCustomFields before updates
      *
      * @return void
      */
     protected function saveCustomFields() : bool
     {
-        //find the custom field module
-        try {
-            $module = Modules::getByCustomFieldModuleByModuleAndApp(get_class($this), $this->di->getApp());
-        } catch (Exception $e) {
-            return false;
-        }
-
-        //if all is good now lets get the custom fields and save them
-        foreach ($this->customFields as $key => $value) {
-            //create a new obj per iteration to se can save new info
-            $customModel = $this->getCustomFieldModel();
-            //validate the custom field by it model
-            if ($customField = CustomFields::findFirst(['conditions' => 'name = ?0 and custom_fields_modules_id = ?1', 'bind' => [$key, $module->getId()]])) {
-                //throw new Exception("this custom field doesn't exist");
-
-                $customModel->setCustomId($this->getId());
-                $customModel->custom_fields_id = $customField->getId();
-                $customModel->value = $value;
-                $customModel->created_at = date('Y-m-d H:i:s');
-
-                if (!$customModel->saveOrFail()) {
-                    throw new Exception('Custom ' . $key . ' - ' . $this->customModel->getMessages()[0]);
+        if ($this->hasCustomFields()) {
+            foreach ($this->customFields as $key => $value) {
+                if (!property_exists($this, $key)) {
+                    $this->set($key, $value);
                 }
-
-                //overwrite the values to return the object
-                $this->{$key} = $value;
             }
         }
 
+        unset($this->customFields);
         return true;
     }
 
@@ -204,56 +345,24 @@ trait CustomFieldsTrait
      *
      * @param  int $id
      *
-     * @return \Phalcon\MVC\Models
+     * @return bool
      */
-    public function cleanCustomFields(int $id) : bool
+    public function deleteAllCustomFields() : bool
     {
-        $customModel = $this->getCustomFieldModel();
+        $companyId = $this->companies_id ?? 0;
 
-        //we need to run the query since we don't have primary key
-        $result = $this->getReadConnection()->prepare("DELETE FROM {$customModel->getSource()} WHERE " . $this->getSource() . '_id = ?');
-        return $result->execute([$id]);
-    }
-
-    /**
-     * Given this object get its custom field table.
-     *
-     * @return string
-     */
-    public function getModelCustomFieldClassName() : string
-    {
-        $reflector = new ReflectionClass($this);
-        $classNameWithNameSpace = $reflector->getNamespaceName() . '\\' . $reflector->getShortName() . 'CustomFields';
-
-        return $classNameWithNameSpace;
-    }
-
-    /**
-     * Given this object get its custom field Module.
-     *
-     * @return BakaModel
-     */
-    public function getCustomFieldModel() : BakaModel
-    {
-        $customFieldModuleName = $this->getModelCustomFieldClassName();
-
-        return new $customFieldModuleName();
-    }
-
-    /**
-     * Before update.
-     *
-     * @return void
-     */
-    public function beforeUpdate()
-    {
-        parent::beforeUpdate();
+        $result = $this->getReadConnection()->prepare('DELETE FROM apps_custom_fields WHERE companies_id = ? AND model_name = ? and entity_id = ?');
+        return $result->execute([
+            $companyId,
+            get_class($this),
+            $this->getId(),
+        ]);
     }
 
     /**
      * Set the custom field to update a custom field module.
      *
-     * @param array $fields [description]
+     * @param array $fields
      */
     public function setCustomFields(array $fields)
     {
@@ -268,7 +377,6 @@ trait CustomFieldsTrait
     public function afterCreate()
     {
         $this->saveCustomFields();
-        unset($this->customFields);
     }
 
     /**
@@ -280,23 +388,8 @@ trait CustomFieldsTrait
     {
         //only clean and change custom fields if they have been set
         if (!empty($this->customFields)) {
-            //replace old custom with new
-            $allCustomFields = $this->getAllCustomFields([]);
-            if (is_array($allCustomFields)) {
-                foreach ($this->customFields as $key => $value) {
-                    $allCustomFields[$key] = $value;
-                }
-            }
-
-            if (!empty($allCustomFields)) {
-                //set
-                $this->setCustomFields($allCustomFields);
-                //clean old
-                $this->cleanCustomFields($this->getId());
-                //save new
-                $this->saveCustomFields();
-                //unset($this->customFields);
-            }
+            $this->deleteAllCustomFields();
+            $this->saveCustomFields();
         }
     }
 
@@ -307,6 +400,45 @@ trait CustomFieldsTrait
      */
     public function afterDelete()
     {
-        $this->cleanCustomFields($this->getId());
+        $this->deleteAllCustomFields();
+    }
+
+    /**
+     * Does this model have custom fields?
+     *
+     * @return bool
+     */
+    public function hasCustomFields() : bool
+    {
+        return !empty($this->customFields);
+    }
+
+    /**
+     * Overwrite toArray , to add custom fields value.
+     *
+     * @param mixed $columns
+     *
+     * @return array
+     */
+    public function toArray($columns = null) : array
+    {
+        return array_merge(
+            parent::toArray($columns),
+            $this->getAll()
+        );
+    }
+
+    /**
+     * If something happened to redis
+     * And we need to re insert all the custom fields
+     * for this entity , we run this method.
+     *
+     * @return void
+     */
+    public function reCacheCustomFields() : void
+    {
+        foreach ($this->getAll() as $key => $value) {
+            $this->setInRedis($key, $value);
+        }
     }
 }

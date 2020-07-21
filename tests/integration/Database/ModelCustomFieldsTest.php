@@ -2,9 +2,9 @@
 
 namespace Baka\Test\Integration\Database;
 
-use PhalconUnitTestCase;
+use Baka\Database\CustomFields\AppsCustomFields;
 use Baka\Test\Support\Models\Leads;
-use Baka\Test\Support\Models\LeadsCustomFields;
+use PhalconUnitTestCase;
 
 class ModelCustomFieldsTest extends PhalconUnitTestCase
 {
@@ -59,16 +59,98 @@ class ModelCustomFieldsTest extends PhalconUnitTestCase
         $this->assertTrue($lead->updateOrFail());
     }
 
+    public function testSet()
+    {
+        $name = $this->faker->name;
+        $lead = Leads::findFirst();
+        $lead->set('test_set', $name);
+        $lead->set('reference', $name);
+
+        $this->assertEquals($lead->get('test_set'), $name);
+    }
+
+    public function testGet()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $this->assertNotEmpty($lead->get('reference'));
+    }
+
+    public function testSetUpdate()
+    {
+        $name = $this->faker->name;
+        $lead = Leads::findFirst();
+        $lead->set('test_set', $name);
+
+        $this->assertEquals($lead->get('test_set'), $name);
+
+        $name = $this->faker->name;
+        $lead->set('test_set', $name);
+        $this->assertEquals($lead->get('test_set'), $name);
+    }
+
     /**
      * Check that a custom field has it attribute.
      *
      * @return void
      */
-    public function testGetCustomFieldRow()
+    public function testGetAllCustomField()
     {
-        $leadCustomField = LeadsCustomFields::findFirst();
-        $lead = Leads::findFirst($leadCustomField->leads_id);
+        $leads = Leads::find('id in (' .
+            implode(',', array_map(
+                fn ($lead) => $lead['entity_id'],
+                AppsCustomFields::find(['limit' => 10, 'columns' => 'entity_id'])->toArray()
+            ))
+        . ')');
 
-        $this->assertTrue(isset($lead->reference));
+        foreach ($leads as $lead) {
+            $this->assertNotEmpty($lead->getAll());
+        }
+    }
+
+    public function testGetOneCustomField()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $this->assertNotEmpty($lead->get('reference'));
+    }
+
+    public function testToArray()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $this->assertArrayHasKey('reference', $lead->toArray());
+    }
+
+    public function testCleanFields()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+        $lead->deleteAllCustomFields();
+        $this->assertEmpty($lead->getAll());
+    }
+
+    public function testDeleteCustomField()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+        $this->assertNotEmpty($lead->get('reference'));
+        $lead->del('reference');
+        $this->assertEmpty($lead->get('reference'));
+    }
+
+    public function testReCacheCustomField()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $this->di->get('redis')->del($lead->getCustomFieldPrimaryKey());
+        $lead->reCacheCustomFields();
+        $this->assertNotEmpty($lead->get('reference'));
+    }
+
+    public function testCreateAppCustomField()
+    {
+        $lead = Leads::findFirst(AppsCustomFields::findFirst()->entity_id);
+
+        $field = 'new_field';
+        $this->assertTrue($lead->createCustomField($field)->name == $field);
     }
 }

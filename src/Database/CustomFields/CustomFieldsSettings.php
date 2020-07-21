@@ -6,25 +6,9 @@ use Baka\Database\Model;
 
 class CustomFieldsSettings extends Model
 {
-    /**
-     * @var integer
-     */
-    public $id;
-
-    /**
-     * @var int
-     */
-    public $companies_id;
-
-    /**
-     * @var int
-     */
-    public $name;
-
-    /**
-     * @var int
-     */
-    public $value;
+    public int $companies_id;
+    public string $name;
+    public ?string $value = null;
 
     /**
      * Initialize.

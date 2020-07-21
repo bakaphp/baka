@@ -2,17 +2,17 @@
 
 namespace Baka\Elasticsearch;
 
-use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 
 class Client
 {
-    private $host;
+    private string $host;
 
     /**
      * Set the host.
      *
      * @param string $host
+     *
      * @return void
      */
     public function __construct(string $host)
@@ -24,9 +24,10 @@ class Client
      * Given a SQL search the elastic indices.
      *
      * @param string $sql
+     *
      * @return void
      */
-    public function findBySql(string $sql): array
+    public function findBySql(string $sql) : array
     {
         $client = new GuzzleClient([
             'base_uri' => $this->host,
@@ -54,10 +55,11 @@ class Client
     /**
      * Given the elastic results, return only the data.
      *
-     * @param array $resonse
+     * @param array $response
+     *
      * @return array
      */
-    private function getResults(array $results): array
+    private function getResults(array $results) : array
     {
         $data = [];
         foreach ($results['hits']['hits'] as $result) {

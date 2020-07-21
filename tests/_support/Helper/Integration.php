@@ -2,12 +2,12 @@
 
 namespace Helper;
 
+use Baka\Auth\Models\Users;
 use Baka\TestCase\Phinx;
 use Codeception\Module;
 use Codeception\TestInterface;
-use Niden\Mvc\Model\AbstractModel;
 use Phalcon\Config as PhConfig;
-use Phalcon\DI\FactoryDefault as PhDI;
+use Phalcon\Di\FactoryDefault;
 
 // here you can define custom actions
 // all public methods declared in helper class will be available in $I
@@ -16,7 +16,7 @@ class Integration extends Module
     /**
      * @var null|PhDI
      */
-    protected $diContainer = null;
+    protected ?FactoryDefault $diContainer = null;
     protected $savedModels = [];
     protected $savedRecords = [];
     protected $config = ['rollback' => false];
@@ -26,6 +26,10 @@ class Integration extends Module
      */
     public function _before(TestInterface $test)
     {
+        FactoryDefault::reset();
+        $this->setDi();
+
+        $this->grabDi()->setShared('userProvider', new Users());
     }
 
     public function _after(TestInterface $test)
@@ -53,6 +57,16 @@ class Integration extends Module
     public function _afterSuite()
     {
         //Phinx::dropTables();
+    }
+
+    /**
+     * Set DI.
+     *
+     * @return void
+     */
+    public function setDi()
+    {
+        $this->diContainer = new FactoryDefault();
     }
 
     /**
@@ -106,32 +120,6 @@ class Integration extends Module
     {
         $config = new PhConfig($configData);
         $this->diContainer->set('config', $config);
-    }
-
-    /**
-     * Checks model fields.
-     *
-     * @param string $modelName
-     * @param array  $fields
-     */
-    public function haveModelDefinition(string $modelName, array $fields)
-    {
-        /** @var AbstractModel $model */
-        $model = new $modelName;
-        $metadata = $model->getModelsMetaData();
-        $attributes = $metadata->getAttributes($model);
-        $this->assertEquals(
-            count($fields),
-            count($attributes),
-            "Field count not correct for $modelName"
-        );
-        foreach ($fields as $value) {
-            $this->assertContains(
-                $value,
-                $attributes,
-                "Field not exists in $modelName"
-            );
-        }
     }
 
     /**

@@ -8,7 +8,7 @@ use PhalconUnitTestCase;
 class ModelTest extends PhalconUnitTestCase
 {
     /**
-     * Create the index if it doesnt exist to run some test.
+     * Create the index if it doesn't exist to run some test.
      *
      * @return void
      */
@@ -80,7 +80,7 @@ class ModelTest extends PhalconUnitTestCase
                 'companies_id' => 1,
                 'leads_owner_id' => 1,
             ]
-            );
+        );
 
         $this->assertTrue($lead->email == $email);
         $this->assertTrue(get_class($lead) == Leads::class);
@@ -105,7 +105,7 @@ class ModelTest extends PhalconUnitTestCase
                 'companies_id' => 1,
                 'leads_owner_id' => 1,
             ]
-            );
+        );
 
         $this->assertTrue($lead->email == $email);
         $this->assertTrue(get_class($lead) == Leads::class);

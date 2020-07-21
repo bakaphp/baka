@@ -2,34 +2,30 @@
 
 namespace Baka\Elasticsearch;
 
-use Baka\Elasticsearch\Model as ModelCustomFields;
+use Baka\Contracts\CustomFields\CustomFieldModelInterface;
 use Baka\Database\CustomFields\CustomFields;
+use Baka\Elasticsearch\Model as ModelCustomFields;
 use Elasticsearch\ClientBuilder as Client;
 use Exception;
 use Phalcon\Db\Column;
+use Phalcon\Di;
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\ModelInterface;
 
 class IndexBuilder
 {
-    /**
-     * @var \Phalcon\Di
-     */
-    protected static $di;
+    protected static ?Di $di = null;
+    protected static ?Client $client = null;
 
     /**
-     * @var \Elasticsearch\ClientBuilder
-     */
-    protected static $client;
-
-    /**
-     * Initialize some classes for internal use
+     * Initialize some classes for internal use.
      *
      * @return void
      */
     protected static function initialize()
     {
         // Get the DI and set it to a property.
-        self::$di = (new \Phalcon\Di())->getDefault();
+        self::$di = Di::getDefault();
 
         // Load the config through the DI.
         if (!self::$di->has('config')) {
@@ -37,7 +33,7 @@ class IndexBuilder
         }
 
         // Load the config through the DI.
-        if (!$config = self::$di->getConfig()->get('elasticSearch')) {
+        if (!$config = self::$di->get('config')->get('elasticSearch')) {
             throw new Exception('Please add the elasticSearch configuration.');
         }
 
@@ -57,7 +53,7 @@ class IndexBuilder
      *
      * @return string
      */
-    protected static function checks(string $model): string
+    protected static function checks(string $model) : string
     {
         // Call the initializer.
         self::initialize();
@@ -87,12 +83,13 @@ class IndexBuilder
     }
 
     /**
-     * Get the general settings for our predefind indices
+     * Get the general settings for our predefine indices.
      *
-     * @param integer $nestedLimit
+     * @param int $nestedLimit
+     *
      * @return array
      */
-    protected static function getIndicesSettings(int $nestedLimit): array
+    protected static function getIndicesSettings(int $nestedLimit) : array
     {
         return [
             'index.mapping.nested_fields.limit' => $nestedLimit,
@@ -110,12 +107,13 @@ class IndexBuilder
     }
 
     /**
-     * Check if the index exist
+     * Check if the index exist.
      *
      * @param string $model
+     *
      * @return void
      */
-    public static function existIndices(string $model): bool
+    public static function existIndices(string $model) : bool
     {
         // Run checks to make sure everything is in order.
         $modelPath = self::checks($model);
@@ -125,14 +123,14 @@ class IndexBuilder
     }
 
     /**
-     * Create an index for a model
+     * Create an index for a model.
      *
      * @param string $model
      * @param int $maxDepth
      *
      * @return array
      */
-    public static function createIndices(string $model, int $maxDepth = 3, int $nestedLimit = 75): array
+    public static function createIndices(string $model, int $maxDepth = 3, int $nestedLimit = 75) : array
     {
         // Run checks to make sure everything is in order.
         $modelPath = self::checks($model);
@@ -183,7 +181,8 @@ class IndexBuilder
         self::getRelatedParams($params['body']['mappings'][$model]['properties'], $modelPath, $modelPath, 1, $maxDepth);
 
         /**
-         * Delete the index before creating it again
+         * Delete the index before creating it again.
+         *
          * @todo move this to its own function
          */
         if (self::$client->indices()->exists(['index' => $model])) {
@@ -201,15 +200,15 @@ class IndexBuilder
      *
      * @return array
      */
-    public static function indexDocument(Model $object, int $maxDepth = 3): array
+    public static function indexDocument(CustomFieldModelInterface $object, int $maxDepth = 3) : array
     {
         // Call the initializer.
         self::initialize();
 
-        // Start the document we are going to insert by convertin the object to an array.
-        $document = ModelCustomFields::getCustomFields($object, true);
+        // Start the document we are going to insert by converting the object to an array.
+        $document = $object->getAll();
 
-        // Use reflection to extract neccessary information from the object.
+        // Use reflection to extract necessary information from the object.
         $modelReflection = (new \ReflectionClass($object));
 
         self::getRelatedData($document, $object, $modelReflection->name, 1, $maxDepth);
@@ -225,17 +224,18 @@ class IndexBuilder
     }
 
     /**
-     * Delete a document from Elastic
+     * Delete a document from Elastic.
      *
      * @param Model $object
+     *
      * @return array
      */
-    public static function deleteDocument(Model $object): array
+    public static function deleteDocument(Model $object) : array
     {
         // Call the initializer.
         self::initialize();
 
-        // Use reflection to extract neccessary information from the object.
+        // Use reflection to extract necessary information from the object.
         $modelReflection = (new \ReflectionClass($object));
 
         $params = [
@@ -248,13 +248,13 @@ class IndexBuilder
     }
 
     /**
-     * Retrieve a model's table structure so that we can define the appropiate Elasticsearch data type.
+     * Retrieve a model's table structure so that we can define the appropriate Elasticsearch data type.
      *
      * @param string $modelPath
      *
      * @return array
      */
-    protected static function getFieldsTypes(string $modelPath): array
+    protected static function getFieldsTypes(string $modelPath) : array
     {
         // Get the columns description.
         $columns = self::$di->getDb()->describeColumns(strtolower($modelPath));
@@ -303,7 +303,7 @@ class IndexBuilder
      *
      * @return void
      */
-    protected static function getRelatedParams(array &$params, string $parentModel, string $model, int $depth, int $maxDepth): void
+    protected static function getRelatedParams(array &$params, string $parentModel, string $model, int $depth, int $maxDepth) : void
     {
         $depth++;
         $relationsData = self::$di->getModelsManager()->getRelations($model);
@@ -314,7 +314,7 @@ class IndexBuilder
             if ($referencedModel != $parentModel) {
                 $referencedModel = new $referencedModel();
 
-                //ignore properies we dont need right now
+                //ignore properties we don't need right now
                 if (array_key_exists('elasticSearch', $relation->getOptions())) {
                     if (!$relation->getOptions()['elasticSearch']) {
                         continue;
@@ -405,7 +405,7 @@ class IndexBuilder
      *
      * @return void
      */
-    protected static function getRelatedData(array &$document, Model $data, string $parentModel, int $depth, int $maxDepth): void
+    protected static function getRelatedData(array &$document, Model $data, string $parentModel, int $depth, int $maxDepth) : void
     {
         $depth++;
         $modelPath = (new \ReflectionClass($data))->name;

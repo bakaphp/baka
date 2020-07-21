@@ -2,29 +2,29 @@
 
 namespace Baka\Contracts\Elasticsearch;
 
+use Baka\Elasticsearch\IndexBuilder;
 use Phalcon\Queue\Beanstalk\Extended as BeanstalkExtended;
 use Phalcon\Queue\Beanstalk\Job;
 use Throwable;
-use Baka\Elasticsearch\IndexBuilder;
 
 /**
- * This is the CLI to create you index based on this package
+ * This is the CLI to create you index based on this package.
  *
  */
 trait IndexBuilderTaskTrait
 {
     /**
-     * Main function
+     * Main function.
      *
      * @return void
      */
-    public function mainAction(): void
+    public function mainAction() : void
     {
         echo 'This is the cli to index using elasticsearch' . PHP_EOL;
     }
 
     /**
-     * Action Descriptor
+     * Action Descriptor.
      *
      * Command: indices
      * Description: Create the elasticsearch index for a model.
@@ -37,7 +37,7 @@ trait IndexBuilderTaskTrait
      *
      * @return void
      */
-    public function createIndexAction(array $params): void
+    public function createIndexAction(array $params) : void
     {
         //for participant u need 500 depth
         list($model, $maxDepth, $nestedLimit) = $params + ['', 3, 75];
@@ -51,7 +51,7 @@ trait IndexBuilderTaskTrait
     }
 
     /**
-     * Action Descriptor
+     * Action Descriptor.
      *
      * Command: insert
      * Description: Create the elasticsearch index all info for a model.
@@ -63,7 +63,7 @@ trait IndexBuilderTaskTrait
      *
      * @return void
      */
-    public function insertAction($params): void
+    public function insertAction($params) : void
     {
         list($model, $maxDepth) = $params + ['', 3];
 
@@ -82,13 +82,13 @@ trait IndexBuilderTaskTrait
     }
 
     /**
-      * Elastic Search insert Queue
-      *
-      *  php cli/app.php elasticsearch queue queueName
-      *
-      * @return void
-      */
-    public function queueAction(array $queueName): void
+     * Elastic Search insert Queue.
+     *
+     *  php cli/app.php elasticsearch queue queueName
+     *
+     * @return void
+     */
+    public function queueAction(array $queueName) : void
     {
         try {
             // Check that a queue name has been provided

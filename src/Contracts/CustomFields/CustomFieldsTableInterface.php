@@ -3,13 +3,14 @@
 namespace Baka\Contracts\CustomFields;
 
 /**
- * Trait to implemented everything needed from a simple CRUD in a API
+ * Trait to implemented everything needed from a simple CRUD in a API.
  *
+ * @deprecated version 1
  */
 interface CustomFieldsTableInterface
 {
     /**
-     * Set the custom primary field id
+     * Set the custom primary field id.
      *
      * @param int $id
      */

@@ -6,20 +6,9 @@ use Baka\Database\Model;
 
 class FieldsValues extends Model
 {
-    /**
-     * @var int
-     */
-    public $custom_fields_id;
-
-    /**
-     * @var string
-     */
-    public $value;
-
-    /**
-     * @var int
-     */
-    public $is_default;
+    public int $custom_fields_id;
+    public string $value;
+    public int $is_default;
 
     /**
      * Initialize.

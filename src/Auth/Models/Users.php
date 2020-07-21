@@ -61,7 +61,7 @@ class Users extends Model implements UserInterface
     public string $session_id = '';
     public string $session_key = '';
     public ?string $banned = null;
-    public int $user_last_login_try = 0;
+    public ?int $user_last_login_try = 0;
     public int $user_level = 0;
     public static string $locale = 'ja_jp';
 

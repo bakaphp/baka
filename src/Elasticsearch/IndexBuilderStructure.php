@@ -60,9 +60,10 @@ class IndexBuilderStructure extends IndexBuilder
     }
 
     /**
-     * Delete a document from Elastic
+     * Delete a document from Elastic.
      *
      * @param Model $object
+     *
      * @return array
      */
     public static function deleteDocument(Model $object) : array
@@ -86,23 +87,25 @@ class IndexBuilderStructure extends IndexBuilder
     }
 
     /**
-     * Given the need to use this same structure and have diff index with diff name, overwrite the name
+     * Given the need to use this same structure and have diff index with diff name, overwrite the name.
      *
      * @param string $indexName
+     *
      * @return void
      */
-    public static function setIndexName(string $indexName): void
+    public static function setIndexName(string $indexName) : void
     {
         static::$indexName = strtolower($indexName);
     }
 
     /**
-     * Check if the index exist
+     * Check if the index exist.
      *
      * @param string $model
+     *
      * @return void
      */
-    public static function existIndices(string $model): bool
+    public static function existIndices(string $model) : bool
     {
         // Run checks to make sure everything is in order.
         $modelPath = self::checks($model);
@@ -115,7 +118,7 @@ class IndexBuilderStructure extends IndexBuilder
     }
 
     /**
-     * Create an index for a model
+     * Create an index for a model.
      *
      * @param string $model
      * @param int $maxDepth
@@ -178,16 +181,17 @@ class IndexBuilderStructure extends IndexBuilder
     }
 
     /**
-     * Map the neste properties of a index by using recursive calls
+     * Map the neste properties of a index by using recursive calls.
      *
      * @todo we are reusing this code on top so we must find a better way to handle it @kaioken
      *
      * @param array $params
      * @param string $column
      * @param array $columns
+     *
      * @return void
      */
-    protected static function mapNestedProperties(array &$params, string $column, array $columns): void
+    protected static function mapNestedProperties(array &$params, string $column, array $columns) : void
     {
         $params[$column] = ['type' => 'nested'];
 

@@ -16,7 +16,7 @@ class CashierTest extends PhalconUnitTestCase
      */
     public function testSubscriptionsCanBeCreatedAndUpdated()
     {
-        $user = Users::findFirstOrFail(2);
+        $user = Users::findFirstOrFail();
         $company = Companies::findFirstOrFail(1);
         $apps = Apps::findFirstOrFail(1);
 
@@ -52,7 +52,7 @@ class CashierTest extends PhalconUnitTestCase
 
     public function testCreatingSubscriptionWithTrial()
     {
-        $user = Users::findFirstOrFail(2);
+        $user = Users::findFirstOrFail();
         $company = Companies::findFirstOrFail(1);
         $apps = Apps::findFirstOrFail(1);
 
@@ -76,7 +76,7 @@ class CashierTest extends PhalconUnitTestCase
 
     public function testCreatingOneOffInvoices()
     {
-        $user = Users::findFirstOrFail(2);
+        $user = Users::findFirstOrFail();
 
         // Create Invoice
         $user->createAsStripeCustomer($this->getTestToken());
@@ -90,7 +90,7 @@ class CashierTest extends PhalconUnitTestCase
 
     public function testRefunds()
     {
-        $user = Users::findFirstOrFail(2);
+        $user = Users::findFirstOrFail();
 
         // Create Invoice
         $user->createAsStripeCustomer($this->getTestToken());
@@ -108,8 +108,8 @@ class CashierTest extends PhalconUnitTestCase
         return \Stripe\Token::create([
             'card' => [
                 'number' => '4242424242424242',
-                'exp_month' => 5,
-                'exp_year' => 2020,
+                'exp_month' => date('m', strtotime('+1 month')),
+                'exp_year' => date('Y', strtotime('+1 year')),
                 'cvc' => '123',
             ],
         ], ['api_key' => getenv('STRIPE_SECRET')])->id;

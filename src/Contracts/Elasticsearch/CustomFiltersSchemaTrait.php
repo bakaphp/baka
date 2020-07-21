@@ -11,9 +11,10 @@ trait CustomFiltersSchemaTrait
      * Given the indices get the Schema configuration for the filter.
      *
      * @param string $index
+     *
      * @return array
      */
-    public function getSchema(string $index): array
+    public function getSchema(string $index) : array
     {
         $mapping = $this->elastic->indices()->getMapping([
             'index' => $index,
@@ -42,9 +43,10 @@ trait CustomFiltersSchemaTrait
      * @param array $mappings
      * @param string $parent
      * @param array $result
+     *
      * @return array
      */
-    protected function mappingToArray(array $mappings, string $parent = null, array &$result): array
+    protected function mappingToArray(array $mappings, string $parent = null, array &$result) : array
     {
         foreach ($mappings as $key => $mapping) {
             if (isset($mapping['type']) && $mapping['type'] != 'nested') {

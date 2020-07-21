@@ -31,7 +31,7 @@ class WebhookTest extends PhalconUnitTestCase
      */
     public function testPendingPayment()
     {
-        $user = Users::findFirst(2);
+        $user = Users::findFirst();
 
         $payload = [
             'data' => [
@@ -56,7 +56,7 @@ class WebhookTest extends PhalconUnitTestCase
      */
     public function testFailedPayment()
     {
-        $user = Users::findFirst(2);
+        $user = Users::findFirst();
 
         $payload = [
             'data' => [
@@ -79,7 +79,7 @@ class WebhookTest extends PhalconUnitTestCase
      */
     public function testSucceededPayment()
     {
-        $user = Users::findFirst(2);
+        $user = Users::findFirst();
 
         $payload = [
             'data' => [
@@ -102,7 +102,7 @@ class WebhookTest extends PhalconUnitTestCase
      */
     public function testSubscriptionUpdate()
     {
-        $user = Users::findFirst(2);
+        $user = Users::findFirst();
 
         $payload = [
             'data' => [
@@ -125,7 +125,7 @@ class WebhookTest extends PhalconUnitTestCase
      */
     public function testFreeTrialEnding()
     {
-        $user = Users::findFirst(2);
+        $user = Users::findFirst();
         $trialEnd = time();
 
         $payload = [
