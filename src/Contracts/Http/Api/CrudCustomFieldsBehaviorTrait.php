@@ -15,38 +15,6 @@ trait CrudCustomFieldsBehaviorTrait
     }
 
     /**
-     * Given the results we append the relationships.
-     *
-     * @param RequestInterface $request
-     * @param array|object $results
-     *
-     * @return array
-     */
-    protected function appendRelationshipsToResult(RequestInterface $request, $results)
-    {
-        // Relationships, but we have to change it to sparo full implementation
-        if ($request->hasQuery('relationships')) {
-            $relationships = $request->getQuery('relationships', 'string');
-
-            $results = is_object($results) ? RequestUriToElasticSearch::parseRelationShips($relationships, $results) : $results;
-        }
-
-        return $results;
-    }
-
-    /**
-     * Process output.
-     *
-     * @param mixed $results
-     *
-     * @return mixed
-     */
-    protected function processOutput($results)
-    {
-        return is_object($results) ? $results->toFullArray() : $results;
-    }
-
-    /**
      * Process the create request and records the object.
      *
      * @return ModelInterface
