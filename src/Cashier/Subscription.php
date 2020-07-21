@@ -9,6 +9,8 @@ use LogicException;
 
 class Subscription extends Model
 {
+    public ?string $name = null;
+
     /**
      * The attributes that aren't mass assignable.
      *
