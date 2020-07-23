@@ -102,7 +102,7 @@ trait IndexBuilderTaskTrait
                 'prefix' => $this->config->beanstalk->prefix,
             ]);
 
-            // Variables needed by the annonymous function
+            // Variables needed by the anonymous function
             $config = $this->config;
             $di = \Phalcon\DI\FactoryDefault::getDefault();
 

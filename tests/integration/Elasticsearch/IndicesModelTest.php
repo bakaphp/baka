@@ -5,8 +5,8 @@ namespace Baka\Test\Integration\Elasticsearch;
 use Baka\Contracts\Elasticsearch\CustomFiltersSchemaTrait;
 use Baka\Contracts\Elasticsearch\IndexBuilderTaskTrait;
 use Baka\Elasticsearch\IndexBuilder;
-use PhalconUnitTestCase;
 use Baka\Test\Support\Models\Leads;
+use PhalconUnitTestCase;
 
 class IndicesModelTest extends PhalconUnitTestCase
 {
@@ -26,7 +26,7 @@ class IndicesModelTest extends PhalconUnitTestCase
 
         //create index
         $this->createIndexAction([
-            'Leads', //model
+            Leads::class,
             '1' //depth
         ]);
 

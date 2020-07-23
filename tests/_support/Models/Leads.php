@@ -12,5 +12,6 @@ class Leads extends Model
     public function initialize()
     {
         $this->setSource('leads');
+        $this->belongsTo('users_id', 'Baka\Test\Support\Models\Users', 'user_id', ['alias' => 'user']);
     }
 }

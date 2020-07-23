@@ -7,7 +7,6 @@ use Baka\Database\CustomFields\CustomFields;
 use Baka\Elasticsearch\Model as ModelCustomFields;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-use Exception;
 use Phalcon\Db\Column;
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
@@ -61,27 +60,6 @@ class IndexBuilder
         // Call the initializer.
         self::initialize();
 
-        // Check that there is a configuration for namespaces.
-        if (!$config = self::$di->getConfig()->get('namespace')) {
-            throw new Exception('Please add your namespace definitions to the configuration.');
-        }
-
-        // Check that there is a namespace definition for modules.
-        if (!array_key_exists('models', $config)) {
-            throw new Exception('Please add the namespace definition for your models.');
-        }
-
-        // Get the namespace.
-        $namespace = $config['models'];
-
-        // We have to do some work with the model name before we continue to avoid issues.
-        $model = str_replace(' ', '', ucwords(str_replace(['_', '-'], ' ', $model)));
-
-        // Check that the defined model actually exists.
-        if (!class_exists($model = $namespace . '\\' . $model)) {
-            throw new Exception('The specified model does not exist.');
-        }
-
         return $model;
     }
 
@@ -133,12 +111,14 @@ class IndexBuilder
      *
      * @return array
      */
-    public static function createIndices(string $model, int $maxDepth = 3, int $nestedLimit = 75) : array
+    public static function createIndices(string $modelClass, int $maxDepth = 3, int $nestedLimit = 75) : array
     {
-        // Run checks to make sure everything is in order.
-        $modelPath = self::checks($model);
+        self::initialize();
+
         // We need to instance the model in order to access some of its properties.
-        $modelInstance = new $modelPath();
+        $modelInstance = new $modelClass();
+        $model = $modelInstance->getSource();
+
         // Get the model's table structure.
         $columns = self::getFieldsTypes($model);
         // Set the model variable for use as a key.
@@ -150,9 +130,7 @@ class IndexBuilder
             'body' => [
                 'settings' => self::getIndicesSettings($nestedLimit),
                 'mappings' => [
-                    $model => [
-                        'properties' => [],
-                    ],
+                    'properties' => [],
                 ],
             ],
         ];
@@ -161,27 +139,27 @@ class IndexBuilder
         foreach ($columns as $column => $type) {
             if (is_array($type)) {
                 // Remember we used an array to define the types for dates. This is the only case for now.
-                $params['body']['mappings'][$model]['properties'][$column] = [
+                $params['body']['mappings']['properties'][$column] = [
                     'type' => $type[0],
                     'format' => $type[1],
                 ];
             } else {
-                $params['body']['mappings'][$model]['properties'][$column] = ['type' => $type];
+                $params['body']['mappings']['properties'][$column] = ['type' => $type];
 
                 if ($type == 'string'
                     && property_exists($modelInstance, 'elasticSearchNotAnalyzed')
                     && $modelInstance->elasticSearchNotAnalyzed
                 ) {
-                    $params['body']['mappings'][$model]['properties'][$column]['analyzer'] = 'lowercase';
+                    $params['body']['mappings']['properties'][$column]['analyzer'] = 'lowercase';
                 }
             }
         }
 
         // Get custom fields... fields.
-        self::getCustomParams($params['body']['mappings'][$model]['properties'], $modelPath);
+        //self::getCustomParams($params['body']['mappings']['properties'], $model);
 
         // Call to get the information from related models.
-        self::getRelatedParams($params['body']['mappings'][$model]['properties'], $modelPath, $modelPath, 1, $maxDepth);
+        self::getRelatedParams($params['body']['mappings']['properties'], $modelClass, $modelClass, 1, $maxDepth);
 
         /**
          * Delete the index before creating it again.
@@ -372,11 +350,9 @@ class IndexBuilder
      */
     protected static function getCustomParams(array &$params, string $modelPath) : void
     {
-        $modelPath = explode('\\', $modelPath);
-        $modelName = end($modelPath);
-        $customFields = CustomFields::getFields($modelName);
+        $customFields = CustomFields::getFields($modelPath);
 
-        if (!is_null($customFields)) {
+        if (!empty($customFields)) {
             $params['custom_fields'] = ['type' => 'nested'];
 
             foreach ($customFields as $field) {

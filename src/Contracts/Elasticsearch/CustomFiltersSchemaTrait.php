@@ -32,7 +32,7 @@ trait CustomFiltersSchemaTrait
         //we only need the info from the properly onward
         //we want the result to be in a linear array so we pass it by reference
         $result = [];
-        $results = $this->mappingToArray(array_shift($mapping)['properties'], null, $result);
+        $results = $this->mappingToArray(array_shift($mapping), null, $result);
         rsort($results); //revert order?
         return $results;
     }

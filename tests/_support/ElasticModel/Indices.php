@@ -4,6 +4,7 @@ namespace Baka\Test\Support\ElasticModel;
 
 use Baka\Database\Model;
 use Baka\Elasticsearch\Contracts\ElasticIndexTrait;
+use stdClass;
 
 class Indices extends Model
 {
@@ -44,10 +45,10 @@ class Indices extends Model
                 'id' => 2,
                 'date' => '2018-01-02',
                 'name' => 'wtf', ], [
-                'id' => 2,
-                'date' => '2018-01-02',
-                'name' => 'wtf',
-            ]
+                    'id' => 2,
+                    'date' => '2018-01-02',
+                    'name' => 'wtf',
+                ]
             ]
         ];
 
