@@ -5,12 +5,13 @@ namespace Baka\Elasticsearch;
 use Baka\Contracts\CustomFields\CustomFieldModelInterface;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Elasticsearch\Model as ModelCustomFields;
-use Elasticsearch\ClientBuilder as Client;
+use Elasticsearch\Client;
+use Elasticsearch\ClientBuilder;
 use Exception;
 use Phalcon\Db\Column;
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
-use Phalcon\Mvc\ModelInterface;
+use RuntimeException;
 
 class IndexBuilder
 {
@@ -29,21 +30,23 @@ class IndexBuilder
 
         // Load the config through the DI.
         if (!self::$di->has('config')) {
-            throw new Exception('Please add your configuration as a service (`config`).');
+            throw new RuntimeException('Please add your configuration as a service (`config`).');
         }
 
         // Load the config through the DI.
         if (!$config = self::$di->get('config')->get('elasticSearch')) {
-            throw new Exception('Please add the elasticSearch configuration.');
+            throw new RuntimeException('Please add the elasticSearch configuration.');
         }
 
         // Check that there is a hosts definition for Elasticsearch.
-        if (!array_key_exists('hosts', $config)) {
-            throw new Exception('Please add the hosts definition for elasticSearch.');
+        if (!$config->has('hosts')) {
+            throw new RuntimeException('Please add the hosts definition for elasticSearch.');
         }
 
         // Instance the Elasticsearch client.
-        self::$client = Client::create()->setHosts($config['hosts']->toArray())->build();
+        self::$client = ClientBuilder::create()
+            ->setHosts($config->get('hosts')->toArray())
+            ->build();
     }
 
     /**
