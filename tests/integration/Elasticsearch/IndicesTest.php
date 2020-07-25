@@ -3,7 +3,7 @@
 namespace Baka\Test\Integration\Elasticsearch;
 
 use Baka\Elasticsearch\Objects\Indices;
-use Baka\Test\Support\ElasticModel\Money;
+use Baka\Test\Support\ElasticModel\Vehicle;
 use PhalconUnitTestCase;
 
 class IndicesTest extends PhalconUnitTestCase
@@ -25,8 +25,8 @@ class IndicesTest extends PhalconUnitTestCase
                 'name' => 'wtf',
             ]
         ];
-        $money = new Money(1, $data);
-        $indices = Indices::create($money);
+        $vehicle = new Vehicle(1, $data);
+        $indices = Indices::create($vehicle);
 
         $this->assertArrayHasKey('index', $indices);
         $this->assertTrue((int) $indices['acknowledged'] == 1);
@@ -48,27 +48,27 @@ class IndicesTest extends PhalconUnitTestCase
                 'name' => 'wtf',
             ]
         ];
-        $money = new Money(1, $data);
-        $moneyElastic = $money->add();
+        $vehicle = new Vehicle(1, $data);
+        $vehicleElastic = $vehicle->add();
 
-        $this->assertArrayHasKey('result', $moneyElastic);
-        $this->assertTrue($moneyElastic['result'] == 'created');
-        $this->assertTrue($money->getId() == $moneyElastic['_id']);
+        $this->assertArrayHasKey('result', $vehicleElastic);
+        $this->assertTrue($vehicleElastic['result'] == 'created');
+        $this->assertTrue($vehicle->getId() == $vehicleElastic['_id']);
     }
 
     public function testGetById()
     {
-        $money = Money::getById(1);
+        $vehicle = Vehicle::getById(1);
 
-        $this->assertTrue($money->getId() == 1);
+        $this->assertTrue($vehicle->getId() == 1);
     }
 
     public function testDeletetDocumentToIndex()
     {
-        $money = Money::getById(1)->delete();
+        $vehicle = Vehicle::getById(1)->delete();
 
-        $this->assertArrayHasKey('result', $money);
-        $this->assertTrue($money['result'] == 'deleted');
-        $this->assertTrue($money['_id'] == 1);
+        $this->assertArrayHasKey('result', $vehicle);
+        $this->assertTrue($vehicle['result'] == 'deleted');
+        $this->assertTrue($vehicle['_id'] == 1);
     }
 }

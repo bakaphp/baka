@@ -5,7 +5,7 @@ namespace Baka\Test\Support\ElasticModel;
 use Baka\Elasticsearch\Objects\Documents;
 use stdClass;
 
-class Money extends Documents
+class Vehicle extends Documents
 {
 
     /**
