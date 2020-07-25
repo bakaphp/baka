@@ -2,22 +2,18 @@
 
 namespace Baka\Test\Support\ElasticModel;
 
-use Baka\Database\Model;
-use Baka\Elasticsearch\Contracts\ElasticIndexTrait;
+use Baka\Elasticsearch\Objects\Documents;
 use stdClass;
 
-class Indices extends Model
+class Money extends Documents
 {
-    //use ElasticIndexTrait;
-
-    public $id;
 
     /**
      * Index data.
      *
      * @return stdClass
      */
-    public function data() : stdClass
+    /* public function data() : stdClass
     {
         $object = new stdClass();
         $object->id = 1;
@@ -55,10 +51,10 @@ class Indices extends Model
         $object->photo = $photos;
 
         return $object;
-    }
+    } */
 
     /**
-     * Define the structure of thies index.
+     * Define the structure of this index.
      *
      * @return array
      */

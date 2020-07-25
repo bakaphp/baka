@@ -2,8 +2,8 @@
 
 namespace Baka\Test\Integration\Elasticsearch;
 
-use Baka\Elasticsearch\IndexBuilderStructure;
-use Baka\Test\Support\ElasticModel\Indices;
+use Baka\Elasticsearch\Objects\Indices;
+use Baka\Test\Support\ElasticModel\Money;
 use PhalconUnitTestCase;
 
 class IndicesTest extends PhalconUnitTestCase
@@ -16,24 +16,20 @@ class IndicesTest extends PhalconUnitTestCase
      */
     public function testCreateNormalIndex()
     {
-        $elasticsearch = new IndexBuilderStructure();
+        $data = [
+            'name' => 'test',
+            'url' => 'http://mctekk.com',
+            'vehicles' => [
+                'id' => 2,
+                'date' => '2018-01-02',
+                'name' => 'wtf',
+            ]
+        ];
+        $money = new Money(1, $data);
+        $indices = Indices::create($money);
 
-        $indices = new Indices();
-        $elasticsearch::createIndices('Indices');
-    }
-
-    /**
-     * Test the creation of a index base on a class and specify the name.
-     *
-     * @return void
-     */
-    public function testCreateNormalIndexWithSpecifiedName()
-    {
-        $elasticsearch = new IndexBuilderStructure();
-
-        $indices = new Indices();
-        $elasticsearch::setIndexName('MyManualIndexName');
-        $elasticsearch::createIndices('Indices');
+        $this->assertArrayHasKey('index', $indices);
+        $this->assertTrue((int) $indices['acknowledged'] == 1);
     }
 
     /**
@@ -43,35 +39,36 @@ class IndicesTest extends PhalconUnitTestCase
      */
     public function testInsertDocumentToIndex()
     {
-        $elasticsearch = new IndexBuilderStructure();
-        $indices = new Indices();
-        //$elasticsearch::setIndexName('Indices');
-        $elasticsearch::indexDocument($indices);
+        $data = [
+            'name' => 'test',
+            'url' => 'http://mctekk.com',
+            'vehicles' => [
+                'id' => 2,
+                'date' => '2018-01-02',
+                'name' => 'wtf',
+            ]
+        ];
+        $money = new Money(1, $data);
+        $moneyElastic = $money->add();
+
+        $this->assertArrayHasKey('result', $moneyElastic);
+        $this->assertTrue($moneyElastic['result'] == 'created');
+        $this->assertTrue($money->getId() == $moneyElastic['_id']);
     }
 
-    /**
-     * Inset document test with specified name.
-     *
-     * @return void
-     */
-    public function testInsertDocumentToIndexWithSpecifiedName()
+    public function testGetById()
     {
-        $elasticsearch = new IndexBuilderStructure();
-        $indices = new Indices();
-        $elasticsearch::setIndexName('MyManualIndexName');
-        $elasticsearch::indexDocument($indices);
+        $money = Money::getById(1);
+
+        $this->assertTrue($money->getId() == 1);
     }
 
-    /**
-     * Inset document test.
-     *
-     * @return void
-     */
     public function testDeletetDocumentToIndex()
     {
-        $elasticsearch = new IndexBuilderStructure();
-        $indices = new Indices();
-        // $elasticsearch::setIndexName('Indices');
-        $elasticsearch::deleteDocument($indices);
+        $money = Money::getById(1)->delete();
+
+        $this->assertArrayHasKey('result', $money);
+        $this->assertTrue($money['result'] == 'deleted');
+        $this->assertTrue($money['_id'] == 1);
     }
 }
