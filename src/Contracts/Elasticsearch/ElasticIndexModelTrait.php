@@ -2,13 +2,10 @@
 
 namespace Baka\Contracts\Elasticsearch;
 
-use Baka\Contracts\CustomFields\CustomFieldsTrait;
 use Baka\Elasticsearch\Models\Documents;
 
 trait ElasticIndexModelTrait
 {
-    use CustomFieldsTrait;
-
     protected int $elasticMaxDepth = 3;
 
     /**
