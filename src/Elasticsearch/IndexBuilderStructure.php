@@ -4,86 +4,24 @@ namespace Baka\Elasticsearch;
 
 use Exception;
 use Phalcon\Mvc\Model;
-use ReflectionClass;
+use Phalcon\Mvc\ModelInterface;
 
 class IndexBuilderStructure extends IndexBuilder
 {
-    protected static $indexName = null;
+    protected static ?string $indexName = null;
 
     /**
-     * Run checks to avoid unwanted errors.
+     * Confirm the current model has ElasticIndex Trait.
      *
-     * @param string $model
+     * @param ModelInterface $model
      *
-     * @return string
+     * @return void
      */
-    protected static function checks(string $model) : string
+    protected static function checks(ModelInterface $model) : void
     {
-        // Call the initializer.
-        self::initialize();
-
-        // Check that the defined model actually exists.
-        if (!class_exists($model)) {
-            throw new Exception('The specified model does not exist.');
+        if (!method_exists($model, 'document')) {
+            throw new Exception('Add the ElasticIndexTrait to your model in order to use this function');
         }
-
-        return $model;
-    }
-
-    /**
-     * Save the object to an elastic index.
-     *
-     * @param Model $object
-     * @param int $maxDepth
-     *
-     * @return array
-     */
-    public static function indexDocument(Model $object, int $maxDepth = 3) : array
-    {
-        // Call the initializer.
-        self::initialize();
-
-        // Use reflection to extract neccessary information from the object.
-        $modelReflection = (new \ReflectionClass($object));
-        $document = $object->document();
-
-        $indexName = static::$indexName ?: strtolower($modelReflection->getShortName());
-
-        $params = [
-            'index' => $indexName,
-            'type' => $indexName,
-            'id' => $object->getId(),
-            'body' => $document,
-        ];
-
-        return self::$client->index($params);
-    }
-
-    /**
-     * Delete a document from Elastic.
-     *
-     * @param Model $object
-     *
-     * @return array
-     */
-    public static function deleteDocument(Model $object) : array
-    {
-        // Call the initializer.
-        self::initialize();
-
-        // Use reflection to extract neccessary information from the object.
-        $modelReflection = (new \ReflectionClass($object));
-        $object->document();
-
-        $indexName = static::$indexName ?: strtolower($modelReflection->getShortName());
-
-        $params = [
-            'index' => $indexName,
-            'type' => $indexName,
-            'id' => $object->getId(),
-        ];
-
-        return self::$client->delete($params);
     }
 
     /**
@@ -99,22 +37,80 @@ class IndexBuilderStructure extends IndexBuilder
     }
 
     /**
+     * Overwrite get instance name to use manual name.
+     *
+     * @param ModelInterface $model
+     *
+     * @return string
+     */
+    public static function getIndexName(ModelInterface $model) : string
+    {
+        return static::$indexName ?: parent::getIndexName($model);
+    }
+
+    /**
+     * Save the object to an elastic index.
+     *
+     * @param Model $object
+     * @param int $maxDepth
+     *
+     * @return array
+     */
+    public static function add(ModelInterface $model, int $maxDepth = 3) : array
+    {
+        // Call the initializer.
+        self::initialize();
+        self::checks($model);
+
+        $document = $model->document();
+
+        $indexName = self::getIndexName($model);
+
+        $params = [
+            'index' => $indexName,
+            'id' => $model->getId(),
+            'body' => $document,
+        ];
+
+        return self::$client->index($params);
+    }
+
+    /**
+     * Delete a document from Elastic.
+     *
+     * @param Model $object
+     *
+     * @return array
+     */
+    public static function delete(ModelInterface $model) : array
+    {
+        // Call the initializer.
+        self::initialize();
+        self::checks($model);
+
+        $indexName = self::getIndexName($model);
+
+        $params = [
+            'index' => $indexName,
+            'id' => $model->getId(),
+        ];
+
+        return self::$client->delete($params);
+    }
+
+    /**
      * Check if the index exist.
      *
      * @param string $model
      *
      * @return void
      */
-    public static function existIndices(string $model) : bool
+    public static function existIndices(ModelInterface $model) : bool
     {
         // Run checks to make sure everything is in order.
-        $modelPath = self::checks($model);
+        self::checks($model);
 
-        // We need to instance the model in order to access some of its properties.
-        $modelInstance = new $modelPath();
-        $model = self::$indexName ?: strtolower(str_replace(['_', '-'], '', (new ReflectionClass($modelInstance))->getShortName()));
-
-        return self::$client->indices()->exists(['index' => $model]);
+        return self::$client->indices()->exists(['index' => self::getIndexName($mode)]);
     }
 
     /**
@@ -125,29 +121,23 @@ class IndexBuilderStructure extends IndexBuilder
      *
      * @return array
      */
-    public static function createIndices(string $model, int $maxDepth = 3, int $nestedLimit = 75) : array
+    public static function createIndices(ModelInterface $model, int $maxDepth = 3, int $nestedLimit = 75) : array
     {
         // Run checks to make sure everything is in order.
-        $modelPath = self::checks($model);
-
-        // We need to instance the model in order to access some of its properties.
-        $modelInstance = new $modelPath();
+        self::checks($model);
 
         // Get the model's table structure.
-        $columns = $modelInstance->structure();
+        $columns = $model->structure();
 
         // Set the model variable for use as a key.
-        $model = self::$indexName ?: strtolower(str_replace(['_', '-'], '', (new ReflectionClass($modelInstance))->getShortName()));
+        $index = self::getIndexName($model);
 
         // Define the initial parameters that will be sent to Elasticsearch.
         $params = [
-            'index' => $model,
+            'index' => $index,
             'body' => [
                 'settings' => self::getIndicesSettings($nestedLimit),
                 'mappings' => [
-                    $model => [
-                        'properties' => [],
-                    ],
                 ],
             ],
         ];
@@ -156,32 +146,33 @@ class IndexBuilderStructure extends IndexBuilder
         foreach ($columns as $column => $type) {
             if (is_array($type) && isset($type[0])) {
                 // Remember we used an array to define the types for dates. This is the only case for now.
-                $params['body']['mappings'][$model]['properties'][$column] = [
+                $params['body']['mappings']['properties'][$column] = [
                     'type' => $type[0],
                     'format' => $type[1],
                 ];
             } elseif (!is_array($type)) {
-                $params['body']['mappings'][$model]['properties'][$column] = ['type' => $type];
+                $params['body']['mappings']['properties'][$column] = ['type' => $type];
 
                 if ($type == 'string') {
-                    $params['body']['mappings'][$model]['properties'][$column]['analyzer'] = 'lowercase';
+                    $params['body']['mappings']['properties'][$column]['analyzer'] = 'lowercase';
                 }
             } else {
                 //nested
-                self::mapNestedProperties($params['body']['mappings'][$model]['properties'], $column, $type);
+                self::mapNestedProperties($params['body']['mappings']['properties'], $column, $type);
             }
         }
 
         // Delete the index before creating it again
         // @TODO move this to its own function
-        if (self::$client->indices()->exists(['index' => $model])) {
-            self::$client->indices()->delete(['index' => $model]);
+        if (self::$client->indices()->exists(['index' => $index])) {
+            self::$client->indices()->delete(['index' => $index]);
         }
+
         return self::$client->indices()->create($params);
     }
 
     /**
-     * Map the neste properties of a index by using recursive calls.
+     * Map the nested properties of a index by using recursive calls.
      *
      * @todo we are reusing this code on top so we must find a better way to handle it @kaioken
      *
@@ -209,7 +200,7 @@ class IndexBuilderStructure extends IndexBuilder
                     $params[$column]['properties'][$innerColumn]['analyzer'] = 'lowercase';
                 }
             } else {
-                //fix issues when neste arrays  contains another array with no fields
+                //fix issues when nested arrays  contains another array with no fields
                 if (!array_key_exists('properties', $params[$column])) {
                     $params[$column]['properties'] = [];
                 }
