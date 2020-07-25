@@ -36,9 +36,11 @@ trait CustomFieldsTrait
      * @return array
      *
      */
-    public function getCustomFields() : array
+    public static function getCustomFields(?ModelInterface $className = null) : array
     {
-        if (!$module = Modules::findFirstByModelName(get_class($this))) {
+        $class = !is_null($className) ? get_class($className) : static::class;
+
+        if (!$module = Modules::findFirstByModelName($class)) {
             return [];
         }
 
@@ -252,7 +254,7 @@ trait CustomFieldsTrait
     {
         $di = Di::getDefault();
         $appsId = $di->has('app') ? $di->get('app')->getId() : 0;
-        $companiesId =  $di->has('userData') ? UserProvider::get()->currentCompanyId() : 0;
+        $companiesId = $di->has('userData') ? UserProvider::get()->currentCompanyId() : 0;
         $textField = 1;
         $cacheKey = Slug::generate(get_class($this) . '-' . $appsId . '-' . $name);
         $lifetime = 604800;

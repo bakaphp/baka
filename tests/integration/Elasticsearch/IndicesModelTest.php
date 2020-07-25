@@ -47,7 +47,7 @@ class IndicesModelTest extends PhalconUnitTestCase
         $this->elastic = $this->getDI()->getElastic();
 
         $this->insertAction([
-            'Leads', //model
+            Leads::class,
             1, //depth
         ]);
 

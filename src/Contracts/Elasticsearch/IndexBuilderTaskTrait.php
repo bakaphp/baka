@@ -29,7 +29,7 @@ trait IndexBuilderTaskTrait
      * Command: indices
      * Description: Create the elasticsearch index for a model.
      *
-     * php cli/app.php elasticsearch createIndex indexname 4 (model relationship lenght)
+     * php cli/app.php elasticsearch createIndex indexname 4 (model relationship length)
      *
      * @param string $model
      * @param int $maxDepth
@@ -68,8 +68,6 @@ trait IndexBuilderTaskTrait
         list($model, $maxDepth) = $params + ['', 3];
 
         if (!empty($model)) {
-            // Get model
-            $model = $this->config->namespace->models . '\\' . $model;
             // Get model's records
             $records = $model::find('is_deleted = 0');
             // Get elasticsearch class handler instance

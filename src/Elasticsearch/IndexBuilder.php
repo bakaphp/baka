@@ -2,7 +2,6 @@
 
 namespace Baka\Elasticsearch;
 
-use Baka\Contracts\CustomFields\CustomFieldModelInterface;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Elasticsearch\Model as ModelCustomFields;
 use Elasticsearch\Client;
@@ -10,6 +9,7 @@ use Elasticsearch\ClientBuilder;
 use Phalcon\Db\Column;
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\ModelInterface;
 use RuntimeException;
 
 class IndexBuilder
@@ -181,18 +181,19 @@ class IndexBuilder
      *
      * @return array
      */
-    public static function indexDocument(CustomFieldModelInterface $object, int $maxDepth = 3) : array
+    public static function indexDocument(ModelInterface $object, int $maxDepth = 3) : array
     {
         // Call the initializer.
         self::initialize();
 
         // Start the document we are going to insert by converting the object to an array.
-        $document = $object->getAll();
+        //$document = method_exists($object, 'getAll') ? $object->getAll() : $object->toArray();
+        $document = $object->toArray();
 
         // Use reflection to extract necessary information from the object.
         $modelReflection = (new \ReflectionClass($object));
 
-        self::getRelatedData($document, $object, $modelReflection->name, 1, $maxDepth);
+        //self::getRelatedData($document, $object, $modelReflection->name, 1, $maxDepth);
 
         $params = [
             'index' => strtolower($modelReflection->getShortName()),
@@ -201,6 +202,8 @@ class IndexBuilder
             'body' => $document,
         ];
 
+        print_r($params);
+        die();
         return self::$client->index($params);
     }
 
@@ -415,10 +418,10 @@ class IndexBuilder
                 if ($data->$alias) {
                     //if alias exist over write it and get the none deleted
                     $alias = 'get' . $has->getOptions()['alias'];
-                    $aliasRecords = $data->$alias('is_deleted = 0');
 
+                    $aliasRecords = $data->$alias('is_deleted = 0');
                     if ($aliasRecords) {
-                        $document[$aliasKey] = ModelCustomFields::getCustomFields($aliasRecords, true);
+                        $document[$aliasKey] = ModelCustomFields::getCustomFields($aliasRecords);
 
                         if ($depth < $maxDepth) {
                             self::getRelatedData($document[$aliasKey], $aliasRecords, $parentModel, $depth, $maxDepth);
@@ -451,7 +454,7 @@ class IndexBuilder
 
                     if (count($aliasRecords) > 0) {
                         foreach ($aliasRecords as $k => $relation) {
-                            $document[$aliasKey][$k] = ModelCustomFields::getCustomFields($relation, true);
+                            $document[$aliasKey][$k] = ModelCustomFields::getCustomFields($relation);
 
                             if ($depth < $maxDepth) {
                                 self::getRelatedData($document[$aliasKey][$k], $relation, $parentModel, $depth, $maxDepth);

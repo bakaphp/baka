@@ -22,7 +22,7 @@ trait CustomFiltersSchemaTrait
 
         $mapping = array_shift($mapping);
 
-        //if we dont find mapping return empty
+        //if we don't find mapping return empty
         if (!isset($mapping['mappings'])) {
             return [];
         }
