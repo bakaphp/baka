@@ -5,6 +5,8 @@ namespace Baka\Test\Integration\Elasticsearch;
 use PhalconUnitTestCase;
 use Baka\Contracts\Elasticsearch\CustomFiltersSchemaTrait;
 use Baka\Elasticsearch\IndexBuilderStructure;
+use Baka\Elasticsearch\Models\Indices;
+use Baka\Test\Support\ElasticModel\Leads;
 
 class CustomFilterSchemaTest extends PhalconUnitTestCase
 {
@@ -25,11 +27,15 @@ class CustomFilterSchemaTest extends PhalconUnitTestCase
      */
     public function testFilterSchema()
     {
+        Indices::create(Leads::class);
+
         $this->elastic = $this->getDI()->getElastic();
 
         $mapping = $this->getSchema('leads');
 
         $this->assertTrue(!empty($mapping));
         $this->assertTrue(array_search('id', $mapping) > 0);
+
+        Indices::delete(Leads::findFirst());
     }
 }
