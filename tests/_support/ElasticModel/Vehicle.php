@@ -7,7 +7,6 @@ use stdClass;
 
 class Vehicle extends Documents
 {
-
     /**
      * Index data.
      *
@@ -74,6 +73,23 @@ class Vehicle extends Documents
                     'id' => $this->integer,
                     'date' => $this->dateNormal,
                     'name' => $this->text,
+                    'model' => [
+                        'id' => $this->integer,
+                        'name' => $this->text
+                    ]
+                ]
+            ],
+            'rooftop' => [
+                'id' => $this->integer,
+                'name' => $this->text,
+                'description' => $this->text,
+                'category' => [
+                    'id' => $this->integer,
+                    'name' => $this->text,
+                    'parent' => [
+                        'id' => $this->integer,
+                        'name' => $this->text
+                    ]
                 ]
             ]
         ];

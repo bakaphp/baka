@@ -23,9 +23,26 @@ class IndicesTest extends PhalconUnitTestCase
                 'name' => $this->faker->name,
                 'url' => '3234',
                 'vehicles' => [
-                'id' => 2,
-                'date' => '2018-01-02',
-                'name' => 'wtf',
+                    'id' => 2,
+                    'date' => '2018-01-02',
+                    'name' => 'wtf',
+                    'model' => [
+                        'id' => $this->faker->randomDigit,
+                        'name' => $this->faker->name,
+                    ]
+                ]
+            ],
+            'rooftop' => [
+                'id' => $this->faker->randomDigit,
+                'name' => $this->faker->name,
+                'description' => $this->faker->sentence(),
+                'category' => [
+                    'id' => $this->faker->randomDigit,
+                    'name' => $this->faker->name,
+                    'parent' => [
+                        'id' => $this->faker->randomDigit,
+                        'name' => $this->faker->name,
+                    ]
                 ]
             ]
         ];
@@ -44,25 +61,52 @@ class IndicesTest extends PhalconUnitTestCase
      */
     public function testInsertDocumentToIndex()
     {
-        $data = [
-            'name' => $this->faker->name,
-            'url' => 'http://mctekk.com',
-            'photos' => [
+        $limit = 15;
+        for ($i = 1; $i < $limit; $i++) {
+            $data = [
                 'name' => $this->faker->name,
-                'url' => '3234',
-                'vehicles' => [
-                'id' => 2,
-                'date' => '2018-01-02',
-                'name' => $this->faker->name,
+                'url' => 'http://mctekk.com',
+                'photos' => [
+                    'name' => $this->faker->name,
+                    'url' => '3234',
+                    'vehicles' => [
+                        'id' => 2,
+                        'date' => '2018-01-02',
+                        'name' => 'wtf',
+                        'model' => [
+                            [
+                                'id' => $this->faker->randomDigit,
+                                'name' => $this->faker->name,
+                            ],
+                            [
+                                'id' => $this->faker->randomDigit,
+                                'name' => $this->faker->name,
+                            ],
+                        ]
+                    ]
+                ],
+                'rooftop' => [
+                    'id' => $this->faker->randomDigit,
+                    'name' => $this->faker->name,
+                    'description' => $this->faker->sentence(),
+                    'category' => [
+                        'id' => $this->faker->randomDigit,
+                        'name' => $this->faker->name,
+                        'parent' => [
+                            'id' => $this->faker->randomDigit,
+                            'name' => $this->faker->name,
+                        ]
+                    ]
                 ]
-            ]
-        ];
-        $vehicle = new Vehicle(1, $data);
-        $vehicleElastic = $vehicle->add();
+            ];
 
-        $this->assertArrayHasKey('result', $vehicleElastic);
-        $this->assertTrue($vehicleElastic['result'] == 'created');
-        $this->assertTrue($vehicle->getId() == $vehicleElastic['_id']);
+            $vehicle = new Vehicle($i, $data);
+            $vehicleElastic = $vehicle->add();
+
+            $this->assertArrayHasKey('result', $vehicleElastic);
+            $this->assertTrue($vehicleElastic['result'] == 'created');
+            $this->assertTrue($vehicle->getId() == $vehicleElastic['_id']);
+        }
     }
 
     public function testGetById()
