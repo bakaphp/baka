@@ -91,7 +91,7 @@ class IndicesModelTest extends PhalconUnitTestCase
         $this->assertTrue(Indices::getName($lead) == $lead->getSource());
     }
 
-    public function testCreateIndice()
+    public function testCreateIndices()
     {
         $indices = Indices::create(Leads::class);
 
@@ -99,7 +99,7 @@ class IndicesModelTest extends PhalconUnitTestCase
         $this->assertTrue((int) $indices['acknowledged'] == 1);
     }
 
-    public function testCreateDeleteIndice()
+    public function testCreateDeleteIndices()
     {
         $lead = Leads::findFirst();
         $indices = Indices::delete($lead);

@@ -17,14 +17,19 @@ class IndicesTest extends PhalconUnitTestCase
     public function testCreateNormalIndex()
     {
         $data = [
-            'name' => 'test',
+            'name' => $this->faker->name,
             'url' => 'http://mctekk.com',
-            'vehicles' => [
+            'photos' => [
+                'name' => $this->faker->name,
+                'url' => '3234',
+                'vehicles' => [
                 'id' => 2,
                 'date' => '2018-01-02',
                 'name' => 'wtf',
+                ]
             ]
         ];
+
         $vehicle = new Vehicle(1, $data);
         $indices = Indices::create($vehicle);
 
@@ -40,12 +45,16 @@ class IndicesTest extends PhalconUnitTestCase
     public function testInsertDocumentToIndex()
     {
         $data = [
-            'name' => 'test',
+            'name' => $this->faker->name,
             'url' => 'http://mctekk.com',
-            'vehicles' => [
+            'photos' => [
+                'name' => $this->faker->name,
+                'url' => '3234',
+                'vehicles' => [
                 'id' => 2,
                 'date' => '2018-01-02',
-                'name' => 'wtf',
+                'name' => $this->faker->name,
+                ]
             ]
         ];
         $vehicle = new Vehicle(1, $data);
@@ -63,7 +72,7 @@ class IndicesTest extends PhalconUnitTestCase
         $this->assertTrue($vehicle->getId() == 1);
     }
 
-    public function testDeletetDocumentToIndex()
+    public function testDeleteDocumentToIndex()
     {
         $vehicle = Vehicle::getById(1)->delete();
 
