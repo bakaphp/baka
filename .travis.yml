@@ -6,6 +6,7 @@ services:
 - memcached
 - redis-server
 - rabbitmq
+- elasticsearch
 addons:
   apt:
     packages:
