@@ -10,7 +10,6 @@ addons:
   apt:
     packages:
     - rabbitmq-server
-    - oracle-java8-set-default
 sudo: false
 env:
   global:
