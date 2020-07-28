@@ -1,13 +1,13 @@
 <?php
 
-namespace Baka\Test\Support\Models;
+namespace Baka\Test\Support\ElasticModel;
 
-use Baka\Contracts\CustomFields\CustomFieldsTrait;
+use Baka\Contracts\Elasticsearch\ElasticIndexModelTrait;
 use Baka\Database\Model;
 
 class Leads extends Model
 {
-    use CustomFieldsTrait;
+    use ElasticIndexModelTrait;
 
     public function initialize()
     {

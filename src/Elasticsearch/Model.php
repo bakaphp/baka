@@ -2,9 +2,10 @@
 
 namespace Baka\Elasticsearch;
 
-use Baka\Database\Contracts\CustomFields\CustomFieldsTrait;
+use Baka\Contracts\CustomFields\CustomFieldsTrait;
+use Baka\Database\Model as BakaDatabaseModel;
 
-class Model extends \Baka\Database\Model
+class Model extends BakaDatabaseModel
 {
     use CustomFieldsTrait;
 
@@ -26,7 +27,7 @@ class Model extends \Baka\Database\Model
     public $elasticSearchNotAnalyzed = true;
 
     /**
-     * Send the corrent objet to elastic to update or insert.
+     * Send the current objet to elastic to update or insert.
      *
      * @return void
      */

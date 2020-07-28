@@ -2,21 +2,17 @@
 
 namespace Baka\Test\Support\ElasticModel;
 
-use Baka\Database\Model;
-use Baka\Elasticsearch\Contracts\ElasticIndexTrait;
+use Baka\Elasticsearch\Objects\Documents;
+use stdClass;
 
-class Indices extends Model
+class Vehicle extends Documents
 {
-    //use ElasticIndexTrait;
-
-    public $id;
-
     /**
      * Index data.
      *
      * @return stdClass
      */
-    public function data() : stdClass
+    /* public function data() : stdClass
     {
         $object = new stdClass();
         $object->id = 1;
@@ -44,20 +40,20 @@ class Indices extends Model
                 'id' => 2,
                 'date' => '2018-01-02',
                 'name' => 'wtf', ], [
-                'id' => 2,
-                'date' => '2018-01-02',
-                'name' => 'wtf',
-            ]
+                    'id' => 2,
+                    'date' => '2018-01-02',
+                    'name' => 'wtf',
+                ]
             ]
         ];
 
         $object->photo = $photos;
 
         return $object;
-    }
+    } */
 
     /**
-     * Define the structure of thies index.
+     * Define the structure of this index.
      *
      * @return array
      */
@@ -77,6 +73,23 @@ class Indices extends Model
                     'id' => $this->integer,
                     'date' => $this->dateNormal,
                     'name' => $this->text,
+                    'model' => [
+                        'id' => $this->integer,
+                        'name' => $this->text
+                    ]
+                ]
+            ],
+            'rooftop' => [
+                'id' => $this->integer,
+                'name' => $this->text,
+                'description' => $this->text,
+                'category' => [
+                    'id' => $this->integer,
+                    'name' => $this->text,
+                    'parent' => [
+                        'id' => $this->integer,
+                        'name' => $this->text
+                    ]
                 ]
             ]
         ];
