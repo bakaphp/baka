@@ -6,7 +6,6 @@ use Baka\Auth\UserProvider;
 use Baka\Database\CustomFields\AppsCustomFields;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\CustomFieldsModules;
-use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
 use Phalcon\Di;
 use Phalcon\Mvc\ModelInterface;
@@ -40,7 +39,7 @@ trait CustomFieldsTrait
     {
         $class = !is_null($className) ? get_class($className) : static::class;
 
-        if (!$module = Modules::findFirstByModelName($class)) {
+        if (!$module = CustomFieldsModules::findFirstByModelName($class)) {
             return [];
         }
 
@@ -80,7 +79,7 @@ trait CustomFieldsTrait
 
         $companyId = $this->companies_id ?? 0;
 
-        $result = $this->getReadConnection()->prepare('
+        $result = Di::getDefault()->get('db')->prepare('
             SELECT name, value 
                 FROM apps_custom_fields
                 WHERE
@@ -353,7 +352,7 @@ trait CustomFieldsTrait
     {
         $companyId = $this->companies_id ?? 0;
 
-        $result = $this->getReadConnection()->prepare('DELETE FROM apps_custom_fields WHERE companies_id = ? AND model_name = ? and entity_id = ?');
+        $result = Di::getDefault()->get('db')->prepare('DELETE FROM apps_custom_fields WHERE companies_id = ? AND model_name = ? and entity_id = ?');
         return $result->execute([
             $companyId,
             get_class($this),
