@@ -302,7 +302,7 @@ class Model extends PhalconModel
         $primaryKeys = $this->getPrimaryKeys();
 
         if (empty($primaryKeys)) {
-            throw new RuntimeException('No primary key defined in this Model ' . self::getModelNameAlias());
+            throw new RuntimeException('No primary key defined in this Model ' . getShortClassName($this));
         }
 
         return $primaryKeys[0];
