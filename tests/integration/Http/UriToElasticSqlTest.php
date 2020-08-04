@@ -2,14 +2,11 @@
 
 namespace Baka\Test\Integration\Http;
 
-use PhalconUnitTestCase;
-use Baka\Http\Converter\RequestUriToSql;
-use Phalcon\Mvc\Model\Resultset\Simpl as SimpleRecords;
-use Baka\Http\Converter\RequestUriToElasticSearch;
-use Baka\Elasticsearch\IndexBuilderStructure;
-use Baka\Test\Support\ElasticModel\Indices;
 use Baka\Elasticsearch\Client;
+use Baka\Elasticsearch\IndexBuilderStructure;
+use Baka\Http\Converter\RequestUriToElasticSearch;
 use Baka\Test\Support\Models\Leads;
+use PhalconUnitTestCase;
 
 class UriToElasticSqlTest extends PhalconUnitTestCase
 {
