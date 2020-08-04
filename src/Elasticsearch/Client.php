@@ -10,11 +10,13 @@ use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use Iterator;
 use Phalcon\Di;
+use Phalcon\Mvc\ModelInterface;
 
 class Client
 {
     private string $host;
     private static ?ElasticClient $instance = null;
+    private ?ModelInterface $model = null;
 
     /**
      * Set the host.
@@ -135,6 +137,18 @@ class Client
     }
 
     /**
+     * If we plan on returning Phalcon Models.
+     *
+     * @param ModelInterface $model
+     *
+     * @return void
+     */
+    public function setModel(ModelInterface $model)
+    {
+        $this->model = $model;
+    }
+
+    /**
      * Given the elastic results, return only the data.
      *
      * @param array $results
@@ -145,7 +159,13 @@ class Client
     {
         $results = isset($results['datarows']) ? $results['datarows'] : $results['hits']['hits'];
         foreach ($results as $result) {
-            yield isset($result['_source']) ? $result['_source'] : $result;
+            $result = isset($result['_source']) ? $result['_source'] : $result;
+
+            if ($this->model) {
+                yield new $this->model($result);
+            } else {
+                yield $result;
+            }
         }
     }
 }

@@ -33,7 +33,28 @@ class QueryParserTest extends PhalconUnitTestCase
             $this->assertTrue(isset($result['id']));
             $this->assertTrue(isset($result['user']['id']));
         }
+    }
 
+    public function testSimpleQueryWithModel()
+    {
+        $limit = 100;
+        $params = [];
+        $params['q'] = '(is_deleted:0,companies_id>0,user.displayname:mc%,user.id>0;user.user_level:3)';
+        //$params['fields'] = '';
+        $params['limit'] = $limit;
+        $params['page'] = '1';
+        $params['sort'] = 'id|desc';
 
+        $lead = new Leads();
+        $queryParser = new QueryParser($lead, $params);
+
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
+        $client->setModel($lead);
+        $results = $client->findBySql($queryParser->getParsedQuery());
+        
+        foreach ($results as $result) {
+            $this->assertTrue($result->getId() > 0);
+            $this->assertTrue($result instanceof $lead);
+        }
     }
 }
