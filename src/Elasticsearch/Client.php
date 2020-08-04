@@ -2,6 +2,7 @@
 
 namespace Baka\Elasticsearch;
 
+use ArrayIterator;
 use function Baka\envValue;
 use Elasticsearch\Client as ElasticClient;
 use Elasticsearch\ClientBuilder;
@@ -70,7 +71,9 @@ class Client
 
         // since 6.x+ we need to use POST
         $response = $client->post($this->getDriverUrl(), [
-            $this->getPostKey() => trim($sql),
+            'body' => json_encode([
+                $this->getPostKey() => trim($sql)
+            ]),
             'headers' => [
                 'content-type' => 'application/json',
                 'Accept' => 'application/json'
@@ -83,8 +86,10 @@ class Client
             true
         );
 
-        if ($results['hits']['total'] == 0) {
-            yield [];
+        if ((isset($results['total']) && $results['total'] == 0) ||
+            (isset($results['hits']['total']) && $results['hits']['total']['value'] == 0)
+            ) {
+            return new ArrayIterator([]);
         }
 
         return $this->getResults($results);
@@ -100,7 +105,7 @@ class Client
     {
         switch (envValue('ELASTIC_DRIVE', 'opendistro')) {
             case 'opendistro':
-                $url = '/_opendistro/_sql';
+                $url = '/_opendistro/_sql?format=json';
                 break;
             default:
                 $url = '/_nlpcn/sql';
@@ -117,7 +122,7 @@ class Client
      */
     protected function getPostKey() : string
     {
-        switch (getenv('ELASTIC_DRIVE')) {
+        switch (envValue('ELASTIC_DRIVE', 'opendistro')) {
             case 'opendistro':
                 $key = 'query';
                 break;
@@ -138,8 +143,9 @@ class Client
      */
     private function getResults(array $results) : Iterator
     {
-        foreach ($results['hits']['hits'] as $result) {
-            yield $result['_source'];
+        $results = isset($results['datarows']) ? $results['datarows'] : $results['hits']['hits'];
+        foreach ($results as $result) {
+            yield isset($result['_source']) ? $result['_source'] : $result;
         }
     }
 }
