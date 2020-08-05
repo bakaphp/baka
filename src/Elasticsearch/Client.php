@@ -65,7 +65,7 @@ class Client
      *
      * @return Iterator
      */
-    public function findBySql(string $sql) : Iterator
+    public function findBySql(string $sql) : array
     {
         $client = new GuzzleClient([
             'base_uri' => $this->host,
@@ -91,7 +91,7 @@ class Client
         if ((isset($results['total']) && $results['total'] == 0) ||
             (isset($results['hits']['total']) && $results['hits']['total']['value'] == 0)
             ) {
-            return new ArrayIterator([]);
+            return [];
         }
 
         return $this->getResults($results);
@@ -155,17 +155,20 @@ class Client
      *
      * @return array
      */
-    private function getResults(array $results) : Iterator
+    private function getResults(array $elasticResults) : array
     {
-        $results = isset($results['datarows']) ? $results['datarows'] : $results['hits']['hits'];
-        foreach ($results as $result) {
+        $elasticResults = isset($elasticResults['datarows']) ? $elasticResults['datarows'] : $elasticResults['hits']['hits'];
+        $results = [];
+        foreach ($elasticResults as $result) {
             $result = isset($result['_source']) ? $result['_source'] : $result;
 
             if ($this->model) {
-                yield new $this->model($result);
+                $results[] = new $this->model($result);
             } else {
-                yield $result;
+                $results[] = $result;
             }
         }
+
+        return $results;
     }
 }

@@ -32,7 +32,7 @@ class Documents
         // Use reflection to extract necessary information from the object.
         $modelReflection = (new ReflectionClass($model));
 
-        IndexBuilder::getRelatedData($document, $model, $modelReflection->name, 1, $maxDepth);
+        IndexBuilder::getRelatedData($document, $model, $modelReflection->name, 0, $maxDepth);
         $params = [
             'index' => Indices::getName($model),
             'id' => $model->getId(),
