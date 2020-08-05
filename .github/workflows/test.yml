@@ -97,7 +97,7 @@ jobs:
         run: composer update --prefer-dist --no-suggest
 
       - name: Setup Env Variable
-        run: cp storage/ci/.env.example .env
+        run: cp .env.example .env
 
       - name: Run all test suites
         if: success()
