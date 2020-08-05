@@ -143,11 +143,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
     public function testMultiNestedQuery()
     {
-        $limit = 2;
         $params = [];
-        $params['q'] = '(is_deleted:0,companies_id>0)';
+        $params['q'] = '(is_deleted:0,companies_id>0,user.subscriptions.apps_id:1)';
         //$params['fields'] = '';
-        $params['limit'] = $limit;
         $params['page'] = '1';
         $params['sort'] = 'id|desc';
 
@@ -158,7 +156,6 @@ class QueryParserTest extends PhalconUnitTestCase
         $client->setModel($lead);
         $results = $client->findBySql($queryParser->getParsedQuery());
 
-        $this->assertTrue(count($results) == $limit);
         foreach ($results as $result) {
             $this->assertTrue($result->getId() > 0);
             $this->assertTrue($result instanceof $lead);
