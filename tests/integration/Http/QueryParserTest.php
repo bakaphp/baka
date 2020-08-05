@@ -161,4 +161,25 @@ class QueryParserTest extends PhalconUnitTestCase
             $this->assertTrue($result instanceof $lead);
         }
     }
+
+    public function testMultiNestedWithNestedQuery()
+    {
+        $params = [];
+        $params['q'] = '(is_deleted:0,companies_id>0,user.subscriptions.apps_id:1,user.welcome:0)';
+        //$params['fields'] = '';
+        $params['page'] = '1';
+        $params['sort'] = 'id|desc';
+
+        $lead = new Leads();
+        $queryParser = new QueryParser($lead, $params);
+
+        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
+        $client->setModel($lead);
+        $results = $client->findBySql($queryParser->getParsedQuery());
+
+        foreach ($results as $result) {
+            $this->assertTrue($result->getId() > 0);
+            $this->assertTrue($result instanceof $lead);
+        }
+    }
 }
