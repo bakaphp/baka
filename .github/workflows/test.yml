@@ -84,6 +84,11 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           extensions: ${{ env.extensions }}
           tools: pecl
+      
+      - name: Setup and Start Elasticsearch
+        run: |
+          ./bin/elasticsearch-plugin install https://d3g5vo6xdbdb9a.cloudfront.net/downloads/elasticsearch-plugins/opendistro-sql/opendistro_sql-1.6.0.0.zip
+          ./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-sql/releases/download/7.5.1.0/elasticsearch-sql-7.5.1.0.zip
 
       - name: Get Composer Cache Directory
         id: composer-cache
