@@ -208,7 +208,7 @@ class Users extends Model implements UserInterface
      *
      * @return string
      */
-    public function getEmail() : string
+    public function getEmail() : ?string
     {
         return $this->email;
     }
