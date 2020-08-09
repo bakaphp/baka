@@ -3,6 +3,8 @@
 namespace Baka\Elasticsearch\Objects;
 
 use Baka\Elasticsearch\Client;
+use Baka\Elasticsearch\Query;
+
 use function Baka\getShortClassName;
 
 abstract class Documents
@@ -140,5 +142,18 @@ abstract class Documents
             $id,
             $response['_source']
         );
+    }
+
+    /**
+     * Find by query in this document
+     *
+     * @param string $sql
+     * @return array
+     */
+    public static function findBySql(string $sql) : array
+    {
+        $elasticQuery = new Query($sql);
+
+        return $elasticQuery->find();
     }
 }

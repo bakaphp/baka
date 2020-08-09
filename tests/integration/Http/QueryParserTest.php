@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Baka\Test\Integration\Http;
 
-use Baka\Elasticsearch\Client;
+use Baka\Elasticsearch\Models\Documents as ModelsDocuments;
+use Baka\Elasticsearch\Objects\Documents as ElasticDocuments;
 use Baka\Http\QueryParser\QueryParser;
 use Baka\Test\Support\ElasticModel\Leads;
 use PhalconUnitTestCase;
@@ -21,9 +22,7 @@ class QueryParserTest extends PhalconUnitTestCase
         $params['q'] = '';
 
         $queryParser = new QueryParser(new Leads(), $params);
-
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
@@ -40,9 +39,7 @@ class QueryParserTest extends PhalconUnitTestCase
         $params['sort'] = 'id|desc';
 
         $queryParser = new QueryParser(new Leads(), $params);
-
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
@@ -61,11 +58,7 @@ class QueryParserTest extends PhalconUnitTestCase
         $params['sort'] = 'id|desc';
 
         $queryParser = new QueryParser(new Leads(), $params);
-
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-        //echo $queryParser->getParsedQuery(); die();
-
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
@@ -89,9 +82,7 @@ class QueryParserTest extends PhalconUnitTestCase
             ['companies_id', ':', 1],
         ]);
 
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
@@ -111,10 +102,7 @@ class QueryParserTest extends PhalconUnitTestCase
 
         $lead = new Leads();
         $queryParser = new QueryParser($lead, $params);
-
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-        $client->setModel($lead);
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ModelsDocuments::findBySql($queryParser->getParsedQuery(), new Leads());
 
         foreach ($results as $result) {
             $this->assertTrue($result->getId() > 0);
@@ -134,10 +122,7 @@ class QueryParserTest extends PhalconUnitTestCase
 
         $lead = new Leads();
         $queryParser = new QueryParser($lead, $params);
-
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-        $client->setModel($lead);
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ModelsDocuments::findBySql($queryParser->getParsedQuery(), new Leads());
 
         $this->assertTrue(count($results) == $limit);
         foreach ($results as $result) {
@@ -158,10 +143,7 @@ class QueryParserTest extends PhalconUnitTestCase
 
         $lead = new Leads();
         $queryParser = new QueryParser($lead, $params);
-
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-        $client->setModel($lead);
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ModelsDocuments::findBySql($queryParser->getParsedQuery(), new Leads());
 
         $this->assertTrue(count($results) == $limit);
         foreach ($results as $result) {
@@ -180,10 +162,7 @@ class QueryParserTest extends PhalconUnitTestCase
 
         $lead = new Leads();
         $queryParser = new QueryParser($lead, $params);
-
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-        $client->setModel($lead);
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ModelsDocuments::findBySql($queryParser->getParsedQuery(), new Leads());
 
         foreach ($results as $result) {
             $this->assertTrue($result->getId() > 0);
@@ -201,10 +180,7 @@ class QueryParserTest extends PhalconUnitTestCase
 
         $lead = new Leads();
         $queryParser = new QueryParser($lead, $params);
-
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-        $client->setModel($lead);
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ModelsDocuments::findBySql($queryParser->getParsedQuery(), new Leads());
 
         foreach ($results as $result) {
             $this->assertTrue($result->getId() > 0);
@@ -222,10 +198,7 @@ class QueryParserTest extends PhalconUnitTestCase
 
         $lead = new Leads();
         $queryParser = new QueryParser($lead, $params);
-
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-        $client->setModel($lead);
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ModelsDocuments::findBySql($queryParser->getParsedQuery(), new Leads());
 
         foreach ($results as $result) {
             $this->assertTrue($result->getId() > 0);
@@ -244,9 +217,7 @@ class QueryParserTest extends PhalconUnitTestCase
 
         $lead = new Leads();
         $queryParser = new QueryParser($lead, $params);
-
-        $client = new Client('http://' . $this->config->elasticSearch['hosts'][0]);
-        $results = $client->findBySql($queryParser->getParsedQuery());
+        $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
 
         foreach ($results as $result) {
             $this->assertTrue($result['id'] > 0);

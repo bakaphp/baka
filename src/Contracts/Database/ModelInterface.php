@@ -7,6 +7,8 @@ use Phalcon\Mvc\Model\ResultsetInterface;
 
 interface ModelInterface
 {
+    public function getId();
+    
     public static function getByIdOrFail($id) : ModelInterface;
 
     public static function findFirstOrFail($parameters = null) : ModelInterface;

@@ -3,10 +3,11 @@
 namespace Baka\Elasticsearch\Models;
 
 use Baka\Contracts\CustomFields\CustomFieldsTrait;
+use Baka\Contracts\Database\ModelInterface;
 use Baka\Elasticsearch\Client;
 use Baka\Elasticsearch\IndexBuilder;
+use Baka\Elasticsearch\Query;
 use Phalcon\Mvc\Model;
-use Phalcon\Mvc\ModelInterface;
 use ReflectionClass;
 
 class Documents
@@ -57,5 +58,19 @@ class Documents
         ];
 
         return Client::getInstance()->delete($params);
+    }
+
+    /**
+     * Find by query in this document.
+     *
+     * @param string $sql
+     *
+     * @return array
+     */
+    public static function findBySql(string $sql, ModelInterface $model) : array
+    {
+        $elasticQuery = new Query($sql, $model);
+
+        return $elasticQuery->find();
     }
 }

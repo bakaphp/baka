@@ -5,7 +5,7 @@ namespace Baka\Elasticsearch\Models;
 use Baka\Elasticsearch\Client;
 use Baka\Elasticsearch\IndexBuilder;
 use Phalcon\Mvc\Model;
-use Phalcon\Mvc\ModelInterface;
+use Baka\Contracts\Database\ModelInterface;
 use RuntimeException;
 
 class Indices
