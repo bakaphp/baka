@@ -1,21 +1,21 @@
 <?php
 
-namespace Baka\Test\Integration\Http;
+namespace Baka\Tes\Integration\Http;
 
 use Baka\Elasticsearch\Client;
 use Baka\Elasticsearch\IndexBuilderStructure;
 use Baka\Http\Converter\RequestUriToElasticSearch;
-use Baka\Test\Support\Models\Leads;
+use Baka\Tes\Support\Models\Leads;
 use PhalconUnitTestCase;
 
-class UriToElasticSqlTest extends PhalconUnitTestCase
+class UriToElasticSqlTes extends PhalconUnitTestCase
 {
     /**
-     * Create the index if it doesnt exist to run some test.
+     * Create the index if it doesnt exist to run some tes.
      *
      * @return void
      */
-    public function testInitElastic()
+    public function tesInitElastic()
     {
         $elasticsearch = new IndexBuilderStructure();
         if (!$elasticsearch->existIndices(Leads::class)) {
@@ -30,11 +30,11 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test a normal query with no conditional.
+     * Tes a normal query with no conditional.
      *
      * @return boolean
      */
-    public function testSimpleQuery()
+    public function tesSimpleQuery()
     {
         //create the index first
 
@@ -62,11 +62,11 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test a normal query with no conditional.
+     * Tes a normal query with no conditional.
      *
      * @return boolean
      */
-    public function testQueryColumns()
+    public function tesQueryColumns()
     {
         //create the index first
 
@@ -98,11 +98,11 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test a normal query with no conditional.
+     * Tes a normal query with no conditional.
      *
      * @return boolean
      */
-    public function testQueryConditionals()
+    public function tesQueryConditionals()
     {
         //create the index first
 
@@ -130,11 +130,11 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test a normal query with no conditional.
+     * Tes a normal query with no conditional.
      *
      * @return boolean
      */
-    public function testQueryConditionalsWithAnd()
+    public function tesQueryConditionalsWithAnd()
     {
         //create the index first
 
@@ -162,11 +162,11 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test normal with Or.
+     * Tes normal with Or.
      *
      * @return boolean
      */
-    public function testQueryConditionalsWithOr()
+    public function tesQueryConditionalsWithOr()
     {
         //create the index first
 
@@ -194,11 +194,11 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test and and Or conditions.
+     * Tes and and Or conditions.
      *
      * @return boolean
      */
-    public function testQueryConditionalsWithAndOr()
+    public function tesQueryConditionalsWithAndOr()
     {
         //create the index first
 
@@ -226,11 +226,11 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test limit.
+     * Tes limit.
      *
      * @return void
      */
-    public function testQueryConditionalsLimit()
+    public function tesQueryConditionalsLimit()
     {
         //create the index first
 
@@ -258,11 +258,11 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test nested.
+     * Tes nested.
      *
      * @return void
      */
-    public function testQueryWithNestedCondition()
+    public function tesQueryWithNestedCondition()
     {
         //create the index first
 
@@ -290,29 +290,29 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test nested 2 dimesional.
+     * Tes nested 2 dimesional.
      *
      * @return void
      */
-    public function testQueryWithNestedConditionTwoDimensional()
+    public function tesQueryWithNestedConditionTwoDimensional()
     {
     }
 
     /**
-     * Test nested 3 dimesional.
+     * Tes nested 3 dimesional.
      *
      * @return void
      */
-    public function testQueryWithNestedConditionThreeDimensional()
+    public function tesQueryWithNestedConditionThreeDimensional()
     {
     }
 
     /**
-     * Test with and and Or.
+     * Tes with and and Or.
      *
      * @return void
      */
-    public function testQueryWithNestedConditionWithAndOr()
+    public function tesQueryWithNestedConditionWithAndOr()
     {
         //create the index first
 
@@ -344,7 +344,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
      *
      * @return void
      */
-    public function testQueryConditionalsWithCustomColumns()
+    public function tesQueryConditionalsWithCustomColumns()
     {
         //create the index first
         $params = [];
@@ -377,7 +377,7 @@ class UriToElasticSqlTest extends PhalconUnitTestCase
      *
      * @return void
      */
-    public function testQueryConditionalsWithCustomCondition()
+    public function tesQueryConditionalsWithCustomCondition()
     {
         //create the index first
         $params = [];
