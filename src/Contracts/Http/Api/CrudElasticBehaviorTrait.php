@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Baka\Contracts\Http\Api;
 
-use ArgumentCountError;
+use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Elasticsearch\Client;
-use Baka\Http\Converter\RequestUriToElasticSearch;
 use Baka\Http\QueryParser\QueryParser;
 use Phalcon\Http\RequestInterface;
+
+use function Baka\getShortClassName;
 
 trait CrudElasticBehaviorTrait
 {
@@ -40,7 +41,9 @@ trait CrudElasticBehaviorTrait
         $parse->setAdditionalQueryFields($this->additionalSearchFields);
 
         //convert to SQL
-        return $parse;
+        return [
+            'sql' => $parse
+        ];
     }
 
     /**
@@ -50,18 +53,13 @@ trait CrudElasticBehaviorTrait
      */
     protected function getRecords(array $processedRequest) : array
     {
-        $required = ['sql', 'countSql', 'bind'];
-
-        if (count(array_intersect_key(array_flip($required), $processedRequest)) != count($required)) {
-            throw new ArgumentCountError('Not a processed request missing any of the following params : SQL, CountSQL, Bind');
-        }
-
         $client = new Client('http://' . current($this->config->elasticSearch['hosts']));
-        $results = $client->findBySql($processedRequest['sql']);
+
+        $results = $client->findBySql($processedRequest['sql']->getParsedQuery());
 
         return [
             'results' => $results,
-            'total' => 0 //@todo fix this
+            'total' => 0,
         ];
     }
 
@@ -74,10 +72,7 @@ trait CrudElasticBehaviorTrait
     {
         //convert the request to sql
         $processedRequest = $this->processRequest($this->request);
-        $records = $this->getRecords($processedRequest);
-
-        //get the results and append its relationships
-        $results = $this->appendRelationshipsToResult($this->request, $records['results']);
+        $results = $this->getRecords($processedRequest);
 
         //this means the want the response in a vuejs format
         if ($this->request->hasQuery('format')) {
@@ -87,7 +82,7 @@ trait CrudElasticBehaviorTrait
                 'data' => $results,
                 'limit' => $limit,
                 'page' => $this->request->getQuery('page', 'int', 1),
-                'total_pages' => ceil($records['total'] / $limit),
+                'total_pages' => ceil($results['total'] / $limit),
             ];
         }
 
