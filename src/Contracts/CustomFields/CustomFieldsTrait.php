@@ -352,12 +352,32 @@ trait CustomFieldsTrait
     {
         $companyId = $this->companies_id ?? 0;
 
+        $this->deleteAllCustomFieldsFromRedis();
+
         $result = Di::getDefault()->get('db')->prepare('DELETE FROM apps_custom_fields WHERE companies_id = ? AND model_name = ? and entity_id = ?');
         return $result->execute([
             $companyId,
             get_class($this),
             $this->getId(),
         ]);
+    }
+
+    /**
+     * Delete all custom fields from redis.
+     *
+     * @return boolean
+     */
+    protected function deleteAllCustomFieldsFromRedis() : bool
+    {
+        if (Di::getDefault()->has('redis')) {
+            $redis = Di::getDefault()->get('redis');
+
+            return $redis->delete(
+                $this->getCustomFieldPrimaryKey(),
+            );
+        }
+
+        return false;
     }
 
     /**
