@@ -5,22 +5,31 @@ namespace Baka\Http\QueryParser;
 class NestedParenthesesParser
 {
     // something to keep track of parens nesting
-    protected $stack = null;
+    protected array $stack = [];
     // current level
-    protected $currentScope = null;
+    protected array $currentScope = [];
     // input string to parse
-    protected $query = null;
+    protected ?string $query = null;
     // current character offset in string
-    protected $currentPosition = null;
+    protected ?int $currentPosition = null;
 
-    protected $lastJoiner = null;
+    protected ?string $lastJoiner = null;
     // start of text-buffer
-    protected $bufferStartAt = null;
+    protected ?int $bufferStartAt = null;
 
     // Ignore current char meaning on the iteration
-    protected $ignoreMode = false;
+    protected bool $ignoreMode = false;
 
-    public function parse($query)
+    protected array $additionalQueryFields = [];
+
+    /**
+     * Convert query string to associated parse array.
+     *
+     * @param string $query
+     *
+     * @return array
+     */
+    public function parse(string $query) : array
     {
         if (!$query) {
             // no string, no data
@@ -78,10 +87,17 @@ class NestedParenthesesParser
             $this->push();
         }
 
+        $this->overwriteCurrentScope();
+
         return $this->currentScope;
     }
 
-    protected function push()
+    /**
+     * Add elements to the current scope.
+     *
+     * @return void
+     */
+    protected function push() : void
     {
         if (null === $this->bufferStartAt) {
             return;
@@ -90,10 +106,52 @@ class NestedParenthesesParser
         $buffer = mb_substr($this->query, $this->bufferStartAt, $this->currentPosition - $this->bufferStartAt);
         // clean buffer
         $this->bufferStartAt = null;
+
+        preg_match('/^[._a-zA-Z0-9]+/', $buffer, $matches);
+
         // throw token into current scope
         $this->currentScope[] = [
             'comparison' => $buffer,
             'joiner' => $this->lastJoiner,
+            'key' => !empty($matches) ? $matches[0] : null
         ];
+    }
+
+    /**
+     * Overwrite the current scope by adding the additional query fields.
+     *
+     * @return void
+     */
+    protected function overwriteCurrentScope() : void
+    {
+        foreach ($this->currentScope as $index => $currentScope) {
+            foreach ($currentScope as $key => $value) {
+                if (isset($this->additionalQueryFields[$value['key']])) {
+                    $this->currentScope[$index][$key] = $this->additionalQueryFields[$value['key']];
+                }
+            }
+        }
+    }
+
+    /**
+     * Set additional params.
+     *
+     * @param array $additionalQueryFields
+     *
+     * @return void
+     */
+    public function setAdditionalQueryFields(array $additionalQueryFields)
+    {
+        $newAdditionalQueryFields = [];
+
+        foreach ($additionalQueryFields as $query) {
+            $newAdditionalQueryFields[$query[0]] = [
+                'comparison' => implode('', $query),
+                'joiner' => ',',
+                'key' => $query[0]
+            ];
+        }
+
+        $this->additionalQueryFields = $newAdditionalQueryFields;
     }
 }

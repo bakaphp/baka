@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Baka\Contracts\CustomFields;
 
@@ -310,7 +311,7 @@ trait CustomFieldsTrait
         if (Di::getDefault()->has('redis')) {
             $redis = Di::getDefault()->get('redis');
 
-            return $redis->hSet(
+            return (bool) $redis->hSet(
                 $this->getCustomFieldPrimaryKey(),
                 $name,
                 $value
@@ -372,7 +373,7 @@ trait CustomFieldsTrait
         if (Di::getDefault()->has('redis')) {
             $redis = Di::getDefault()->get('redis');
 
-            return $redis->delete(
+            return (bool) $redis->delete(
                 $this->getCustomFieldPrimaryKey(),
             );
         }

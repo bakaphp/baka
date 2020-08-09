@@ -7,7 +7,6 @@ use Baka\Support\Str;
 use Phalcon\Di;
 use Phalcon\Mvc\ModelInterface;
 use Phalcon\Utils\Slug;
-use Redis;
 
 /**
  * QueryParser translates a complex syntax query provided via an url in an string format to a SQL alike syntax.
@@ -89,6 +88,10 @@ class QueryParser
 
     protected array $notQueryableFields = [];
 
+    protected ?string $queryFields = null;
+
+    protected array $additionalQueryFields = [];
+
     /**
      * Constructor.
      *
@@ -104,6 +107,18 @@ class QueryParser
         $this->setPage($params['page'] ?? $this->page);
         $this->setFields($params['fields'] ?? $this->fields);
         $this->setQuery($params['q'] ?? '');
+    }
+
+    /**
+     * Set Additional query fields.
+     *
+     * @param array $additionalQueryFields
+     *
+     * @return void
+     */
+    public function setAdditionalQueryFields(array $additionalQueryFields)
+    {
+        $this->additionalQueryFields = $additionalQueryFields;
     }
 
     /**
@@ -190,7 +205,7 @@ class QueryParser
             return;
         }
 
-        $this->appendFilters($this->parseQuery($query));
+        $this->queryFields = $query;
     }
 
     /**
@@ -224,27 +239,14 @@ class QueryParser
         $class = get_class($this->model);
         $relationshipCacheKey = 'query_parse_cache' . Slug::generate($class);
 
-        if ($redis) {
-            $results = BakaRedis::get($relationshipCacheKey, function ($data) {
-                $filters = $data['filters'];
-                $source = $data['source'];
-
-                $this->filters = $filters;
-                $this->source = $source;
-
-                return true;
-            });
-
-            if (!empty($results)) {
-                return ;
-            }
-        }
-
         $relationShips = $this->model->getModelsManager()->getRelations($class);
         $queryNodes = [null]; //add 1 element to force , at the start
         $searchNodes = [];
         $replaceNodes = [];
 
+        /**
+         * @todo cache the relationships
+         */
         if (count($relationShips) > 0) {
             foreach ($relationShips as $relation) {
                 $options = $relation->getOptions();
@@ -260,14 +262,37 @@ class QueryParser
 
             $this->filters = str_replace($searchNodes, $replaceNodes, $this->filters);
             $this->source .= implode(', ', $queryNodes);
+        }
+    }
 
-            if ($redis instanceof Redis) {
-                $redis->set($relationshipCacheKey, [
-                    'filters' => $this->filters,
-                    'source' => $this->source
-                ]);
+    /**
+     * Set Relationships from cache.
+     *
+     * @return boolean
+     */
+    protected function setCacheRelationships() : bool
+    {
+        $redis = Di::getDefault()->get('redis');
+        $class = get_class($this->model);
+        $relationshipCacheKey = 'query_parse_cache' . Slug::generate($class);
+
+        if ($redis) {
+            $results = BakaRedis::get($relationshipCacheKey, function ($data) {
+                $filters = $data['filters'];
+                $source = $data['source'];
+
+                $this->filters = $filters;
+                $this->source = $source;
+
+                return true;
+            });
+
+            if (!empty($results)) {
+                return true;
             }
         }
+
+        return false;
     }
 
     /**
@@ -289,6 +314,10 @@ class QueryParser
      */
     public function getParsedQuery() : string
     {
+        if ($this->queryFields) {
+            $this->appendFilters($this->parseQuery($this->queryFields));
+        }
+
         $limit = $this->withLimit ? " LIMIT {$this->getOffset()},  {$this->getLimit()}" : '';
 
         $this->setRelationships();
@@ -324,6 +353,7 @@ class QueryParser
     protected function parseQuery(string $query) : string
     {
         $parser = new NestedParenthesesParser();
+        $parser->setAdditionalQueryFields($this->additionalQueryFields);
         $comparisons = $parser->parse($query);
 
         if (!$comparisons) {

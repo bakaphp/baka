@@ -10,7 +10,7 @@ use Phalcon\Mvc\Model\ResultsetInterface;
 use Phalcon\Mvc\ModelInterface;
 use RuntimeException;
 
-class Model extends PhalconModel
+class Model extends PhalconModel implements ModelInterface
 {
     /**
      * Define a model alias to throw exception msg to the end user.
