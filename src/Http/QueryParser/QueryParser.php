@@ -2,8 +2,12 @@
 
 namespace Baka\Http\QueryParser;
 
+use Baka\Redis as BakaRedis;
 use Baka\Support\Str;
+use Phalcon\Di;
 use Phalcon\Mvc\ModelInterface;
+use Phalcon\Utils\Slug;
+use Redis;
 
 /**
  * QueryParser translates a complex syntax query provided via an url in an string format to a SQL alike syntax.
@@ -216,7 +220,27 @@ class QueryParser
      */
     public function setRelationships() : void
     {
-        $relationShips = $this->model->getModelsManager()->getRelations(get_class($this->model));
+        $redis = Di::getDefault()->get('redis');
+        $class = get_class($this->model);
+        $relationshipCacheKey = 'query_parse_cache' . Slug::generate($class);
+
+        if ($redis) {
+            $results = BakaRedis::get($relationshipCacheKey, function ($data) {
+                $filters = $data['filters'];
+                $source = $data['source'];
+
+                $this->filters = $filters;
+                $this->source = $source;
+
+                return true;
+            });
+
+            if (!empty($results)) {
+                return ;
+            }
+        }
+
+        $relationShips = $this->model->getModelsManager()->getRelations($class);
         $queryNodes = [null]; //add 1 element to force , at the start
         $searchNodes = [];
         $replaceNodes = [];
@@ -229,13 +253,20 @@ class QueryParser
                 if ($index) {
                     $elasticAlias = $options['elasticAlias'] ?? $options['alias'][0];
                     $queryNodes[] = $this->sourceAlias . '.' . $relation->getOptions()['alias'] . ' as ' . $elasticAlias;
-                    $searchNodes[] = $options['alias'].'.';
-                    $replaceNodes[] = $elasticAlias.'.';
+                    $searchNodes[] = $options['alias'] . '.';
+                    $replaceNodes[] = $elasticAlias . '.';
                 }
             }
 
             $this->filters = str_replace($searchNodes, $replaceNodes, $this->filters);
-            $this->source .=  implode(', ', $queryNodes);
+            $this->source .= implode(', ', $queryNodes);
+
+            if ($redis instanceof Redis) {
+                $redis->set($relationshipCacheKey, [
+                    'filters' => $this->filters,
+                    'source' => $this->source
+                ]);
+            }
         }
     }
 
