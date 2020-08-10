@@ -99,6 +99,17 @@ class IndicesModelTest extends PhalconUnitTestCase
         $this->assertTrue((int) $indices['acknowledged'] == 1);
     }
 
+    public function testCreateWithOptionsIndices()
+    {
+        //delete and create again
+        Indices::delete(Leads::findFirst());
+
+        $indices = Indices::create(Leads::class, 3, 300);
+
+        $this->assertArrayHasKey('index', $indices);
+        $this->assertTrue((int) $indices['acknowledged'] == 1);
+    }
+
     public function testAfterSave()
     {
         $lead = new ElasticModelLeads();
