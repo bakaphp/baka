@@ -1,12 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace Baka\Elasticsearch;
 
 use Baka\Contracts\Database\ModelInterface as BakaModelInterface;
+use Baka\Elasticsearch\Query\FromClause;
 use function Baka\envValue;
 use GuzzleHttp\Client as GuzzleClient;
 use Iterator;
 use Phalcon\Di;
+use Phalcon\Mvc\Model\Query\Builder;
 
 class Query
 {
@@ -136,5 +139,37 @@ class Query
         }
 
         return $results;
+    }
+
+    /**
+     * Convert Phalcon SQL To Elastic SQL.
+     *
+     * @param Builder $builder
+     * @param BakaModelInterface $model
+     *
+     * @return string
+     */
+    public static function convertPhlToSql(Builder $builder, BakaModelInterface $model) : string
+    {
+        $fromClause = new FromClause($model);
+        $fromClauseParser = $fromClause->get();
+
+        $sql = $builder->getPhql();
+        $from = $fromClause->getFromString();
+
+        if (!empty($fromClauseParser)) {
+            $from .= implode(' , ', $fromClauseParser['nodes']);
+            $sql = str_replace($fromClauseParser['searchNodes'], $fromClauseParser['replaceNodes'], $sql);
+        }
+
+        $sql = str_replace('[' . get_class($model) . ']', $from, $sql);
+
+        if (!empty($builder->getBindParams())) {
+            foreach ($builder->getBindParams() as $key => $value) {
+                $sql = str_replace(":{$key}:", $value, $sql);
+            }
+        }
+
+        return $sql;
     }
 }

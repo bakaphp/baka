@@ -1,8 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Baka\Contracts\Elasticsearch;
 
+use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Elasticsearch\Models\Documents;
+use Baka\Elasticsearch\Query;
+use function Baka\getShortClassName;
+use Phalcon\Mvc\Model\Query\Builder;
 
 trait ElasticIndexModelTrait
 {
@@ -49,5 +55,69 @@ trait ElasticIndexModelTrait
     {
         //insert into elastic
         return Documents::delete($this);
+    }
+
+    /**
+     * Find the first element in elastic indice.
+     *
+     * @param array $params
+     *
+     * @throws Exception
+     *
+     * @return self
+     */
+    public static function findFirstInElastic(array $params) : self
+    {
+        $params['models'] = self::class;
+        if (!isset($params['columns'])) {
+            $params['columns'] = ['*'];
+        }
+
+        $params['limit'] = 1;
+
+        $model = new self();
+        $builder = new Builder($params);
+        $sql = Query::convertPhlToSql($builder, $model);
+
+        $resultSet = (new Query($sql, $model))->find();
+
+        if (empty($resultSet)) {
+            throw new ModelNotFoundException(
+                getShortClassName(new static) . ' Record not found'
+            );
+        }
+
+        return $resultSet[0];
+    }
+
+    /**
+     * Find in elastic sql.
+     *
+     * @param array $params
+     *
+     * @throws Exception
+     *
+     * @return array
+     */
+    public static function findInElastic(array $params) : array
+    {
+        $params['models'] = self::class;
+        if (!isset($params['columns'])) {
+            $params['columns'] = ['*'];
+        }
+
+        $model = new self();
+        $builder = new Builder($params);
+        $sql = Query::convertPhlToSql($builder, $model);
+
+        $resultSets = (new Query($sql, $model))->find();
+
+        if (empty($resultSets)) {
+            throw new ModelNotFoundException(
+                getShortClassName(new static) . ' Record not found'
+            );
+        }
+
+        return $resultSets;
     }
 }

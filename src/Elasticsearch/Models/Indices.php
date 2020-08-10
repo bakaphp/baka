@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Baka\Elasticsearch\Models;
 
+use Baka\Contracts\Database\ModelInterface;
 use Baka\Elasticsearch\Client;
 use Baka\Elasticsearch\IndexBuilder;
 use Phalcon\Mvc\Model;
-use Baka\Contracts\Database\ModelInterface;
 use RuntimeException;
 
 class Indices

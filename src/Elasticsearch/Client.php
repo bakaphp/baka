@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Baka\Elasticsearch;
 
@@ -6,7 +7,6 @@ use Elasticsearch\Client as ElasticClient;
 use Elasticsearch\ClientBuilder;
 use Exception;
 use Phalcon\Di;
-use Phalcon\Mvc\ModelInterface;
 
 class Client
 {

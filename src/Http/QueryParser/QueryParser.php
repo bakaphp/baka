@@ -2,11 +2,9 @@
 
 namespace Baka\Http\QueryParser;
 
-use Baka\Redis as BakaRedis;
+use Baka\Elasticsearch\Query\FromClause;
 use Baka\Support\Str;
-use Phalcon\Di;
 use Phalcon\Mvc\ModelInterface;
-use Phalcon\Utils\Slug;
 
 /**
  * QueryParser translates a complex syntax query provided via an url in an string format to a SQL alike syntax.
@@ -229,73 +227,6 @@ class QueryParser
     }
 
     /**
-     * Get the relationship join nodes.
-     *
-     * @return void
-     */
-    public function setRelationships() : void
-    {
-        $redis = Di::getDefault()->get('redis');
-        $class = get_class($this->model);
-        $relationshipCacheKey = 'query_parse_cache' . Slug::generate($class);
-
-        $relationShips = $this->model->getModelsManager()->getRelations($class);
-        $queryNodes = [null]; //add 1 element to force , at the start
-        $searchNodes = [];
-        $replaceNodes = [];
-
-        /**
-         * @todo cache the relationships
-         */
-        if (count($relationShips) > 0) {
-            foreach ($relationShips as $relation) {
-                $options = $relation->getOptions();
-                $index = isset($options['elasticIndex']) && (int) $options['elasticIndex'] == 0 ? false : true;
-
-                if ($index) {
-                    $elasticAlias = $options['elasticAlias'] ?? $options['alias'][0];
-                    $queryNodes[] = $this->sourceAlias . '.' . $relation->getOptions()['alias'] . ' as ' . $elasticAlias;
-                    $searchNodes[] = $options['alias'] . '.';
-                    $replaceNodes[] = $elasticAlias . '.';
-                }
-            }
-
-            $this->filters = str_replace($searchNodes, $replaceNodes, $this->filters);
-            $this->source .= implode(', ', $queryNodes);
-        }
-    }
-
-    /**
-     * Set Relationships from cache.
-     *
-     * @return boolean
-     */
-    protected function setCacheRelationships() : bool
-    {
-        $redis = Di::getDefault()->get('redis');
-        $class = get_class($this->model);
-        $relationshipCacheKey = 'query_parse_cache' . Slug::generate($class);
-
-        if ($redis) {
-            $results = BakaRedis::get($relationshipCacheKey, function ($data) {
-                $filters = $data['filters'];
-                $source = $data['source'];
-
-                $this->filters = $filters;
-                $this->source = $source;
-
-                return true;
-            });
-
-            if (!empty($results)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Returns wether the is a valid expected operator or not.
      *
      * @param string $operator The operator to validate
@@ -320,7 +251,11 @@ class QueryParser
 
         $limit = $this->withLimit ? " LIMIT {$this->getOffset()},  {$this->getLimit()}" : '';
 
-        $this->setRelationships();
+        $fromClause = new FromClause($this->model);
+        $fromClauseParsed = $fromClause->get();
+
+        $this->filters = str_replace($fromClauseParsed['searchNodes'], $fromClauseParsed['replaceNodes'], $this->filters);
+        $this->source .= implode(', ', $fromClauseParsed['nodes']);
 
         return "SELECT {$this->fields} FROM {$this->source} {$this->filters} ORDER BY {$this->sort} {$limit}";
     }
