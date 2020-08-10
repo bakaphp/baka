@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Baka\Contracts\Http\Api;
 
 use Baka\Database\Exception\ModelNotFoundException;
-use Baka\Elasticsearch\Client;
+use Baka\Elasticsearch\Models\Documents;
+use function Baka\getShortClassName;
 use Baka\Http\QueryParser\QueryParser;
 use Phalcon\Http\RequestInterface;
-
-use function Baka\getShortClassName;
+use Phalcon\Http\Response;
 
 trait CrudElasticBehaviorTrait
 {
@@ -53,13 +53,11 @@ trait CrudElasticBehaviorTrait
      */
     protected function getRecords(array $processedRequest) : array
     {
-        $client = new Client('http://' . current($this->config->elasticSearch['hosts']));
-
-        $results = $client->findBySql($processedRequest['sql']->getParsedQuery());
+        $results = Documents::findBySqlPaginated($processedRequest['sql']->getParsedQuery(), $this->model);
 
         return [
-            'results' => $results,
-            'total' => 0,
+            'results' => $results['results'],
+            'total' => $results['total']
         ];
     }
 

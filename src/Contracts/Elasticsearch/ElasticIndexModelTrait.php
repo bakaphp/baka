@@ -40,8 +40,12 @@ trait ElasticIndexModelTrait
      *
      * @return array
      */
-    public function saveToElastic(int $maxDepth = 1) : array
+    public function saveToElastic(int $maxDepth = 0) : array
     {
+        if ($maxDepth === 0) {
+            $maxDepth = $this->elasticMaxDepth;
+        }
+
         //insert into elastic
         return Documents::add($this, $maxDepth);
     }
@@ -58,6 +62,26 @@ trait ElasticIndexModelTrait
     }
 
     /**
+     * Save to elastic.
+     *
+     * @return void
+     */
+    public function afterSave()
+    {
+        $this->saveToElastic();
+    }
+
+    /**
+     * Remove from elastic.
+     *
+     * @return void
+     */
+    public function afterDelete()
+    {
+        $this->deleteFromElastic();
+    }
+
+    /**
      * Find the first element in elastic indice.
      *
      * @param array $params
@@ -66,26 +90,11 @@ trait ElasticIndexModelTrait
      *
      * @return self
      */
-    public static function findFirstInElastic(array $params) : self
+    public static function findFirstInElastic(array $params = []) : self
     {
-        $params['models'] = self::class;
-        if (!isset($params['columns'])) {
-            $params['columns'] = ['*'];
-        }
-
         $params['limit'] = 1;
 
-        $model = new self();
-        $builder = new Builder($params);
-        $sql = Query::convertPhlToSql($builder, $model);
-
-        $resultSet = (new Query($sql, $model))->find();
-
-        if (empty($resultSet)) {
-            throw new ModelNotFoundException(
-                getShortClassName(new static) . ' Record not found'
-            );
-        }
+        $resultSet = self::findInElastic($params);
 
         return $resultSet[0];
     }
@@ -99,7 +108,7 @@ trait ElasticIndexModelTrait
      *
      * @return array
      */
-    public static function findInElastic(array $params) : array
+    public static function findInElastic(array $params = []) : array
     {
         $params['models'] = self::class;
         if (!isset($params['columns'])) {

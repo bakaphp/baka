@@ -99,6 +99,28 @@ class IndicesModelTest extends PhalconUnitTestCase
         $this->assertTrue((int) $indices['acknowledged'] == 1);
     }
 
+    public function testAfterSave()
+    {
+        $lead = new ElasticModelLeads();
+        $lead->firstname = $this->faker->name;
+        $lead->lastname = $this->faker->lastname;
+        $lead->email = $this->faker->email;
+        $lead->system_modules_id = 1;
+        $lead->apps_id = $this->getDI()->get('app')->getId();
+        $lead->companies_branch_id = 1;
+        $lead->users_id = 1;
+        $lead->companies_id = 1;
+        $lead->leads_owner_id = 1;
+        $lead->saveOrFail();
+
+        //need to wait 1 sec for it to showup on results (will need to review this later on)
+        sleep(1);
+
+        $this->assertTrue(
+            ElasticModelLeads::findFirstInElastic(['conditions' => 'id = ' . $lead->getId()]) instanceof ElasticModelLeads
+        );
+    }
+
     public function testCreateDeleteIndices()
     {
         $lead = Leads::findFirst();

@@ -74,4 +74,24 @@ class Documents
 
         return $elasticQuery->find();
     }
+
+    /**
+     * Find by query and get total results.
+     *
+     * @todo this is shitting we should implement resultset interface
+     *
+     * @param string $sql
+     * @param ModelInterface $model
+     *
+     * @return array
+     */
+    public static function findBySqlPaginated(string $sql, ModelInterface $model) : array
+    {
+        $elasticQuery = new Query($sql, $model);
+
+        return [
+            'results' => $elasticQuery->find(),
+            'total' => $elasticQuery->getTotal()
+        ];
+    }
 }

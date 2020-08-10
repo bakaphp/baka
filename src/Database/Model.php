@@ -8,10 +8,9 @@ use Baka\Database\Exception\ModelNotProcessedException;
 use function Baka\getShortClassName;
 use Phalcon\Mvc\Model as PhalconModel;
 use Phalcon\Mvc\Model\ResultsetInterface;
-use Phalcon\Mvc\ModelInterface as PhalconModelInterface;
 use RuntimeException;
 
-class Model extends PhalconModel implements  ModelInterface
+class Model extends PhalconModel implements ModelInterface
 {
     /**
      * Define a model alias to throw exception msg to the end user.

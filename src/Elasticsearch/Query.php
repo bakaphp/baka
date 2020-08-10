@@ -15,6 +15,7 @@ class Query
 {
     public ?BakaModelInterface $model = null;
     protected string $sql;
+    protected int $total = 0;
 
     /**
      * Constructor.
@@ -68,6 +69,9 @@ class Query
             $response->getBody()->getContents(),
             true
         );
+
+        //set total
+        $this->total = isset($results['total']) ? $results['total'] : $results['hits']['total']['value'];
 
         if ((isset($results['total']) && $results['total'] == 0) ||
             (isset($results['hits']['total']) && $results['hits']['total']['value'] == 0)
@@ -139,6 +143,16 @@ class Query
         }
 
         return $results;
+    }
+
+    /**
+     * From the current result set get the total count.
+     *
+     * @return integer
+     */
+    public function getTotal() : int
+    {
+        return $this->total;
     }
 
     /**
