@@ -120,6 +120,8 @@ jobs:
         uses: elastic/elastic-github-actions/elasticsearch@master
         with:
           stack-version: 7.8.0
+
+      - name: Docker images
         run: |
           sudo docker container ls
 
