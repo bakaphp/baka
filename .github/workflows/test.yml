@@ -123,8 +123,7 @@ jobs:
 
       - name: Docker images
         run: |
-          sudo docker container ls
-          docker run -it docker.elastic.co/elasticsearch/elasticsearch:7.8.0 ls
+          sudo docker run -it docker.elastic.co/elasticsearch/elasticsearch:7.8.0 ls
 
       - name: Run all test suites
         if: success()
