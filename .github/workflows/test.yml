@@ -123,8 +123,9 @@ jobs:
 
       - name: Docker images
         run: |
-          sudo docker run -it docker.elastic.co/elasticsearch/elasticsearch:7.8.0 ls
+          sudo docker run docker.elastic.co/elasticsearch/elasticsearch:7.8.0 ls
 
       - name: Run all test suites
         if: success()
         run: vendor/bin/codecept run
+x
