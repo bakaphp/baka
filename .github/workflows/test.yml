@@ -126,7 +126,7 @@ jobs:
           sudo docker run  docker.elastic.co/elasticsearch/elasticsearch:7.8.0 ./bin/elasticsearch-plugin install https://d3g5vo6xdbdb9a.cloudfront.net/downloads/elasticsearch-plugins/opendistro-sql/opendistro_sql-1.9.0.0.zip
           sudo curl 127.0.0.1:9200/_opendistro/_sql?format=json
 
-      - name: Run all test suites
+      - name: Run all integration test suites
         if: success()
         run: |
           sudo curl 127.0.0.1:9200/_opendistro/_sql?format=json
