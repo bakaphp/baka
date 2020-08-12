@@ -128,4 +128,6 @@ jobs:
 
       - name: Run all test suites
         if: success()
-        run: vendor/bin/codecept run
+        run: |
+          sudo curl 127.0.0.1:9200/_opendistro/_sql?format=json
+          vendor/bin/codecept run
