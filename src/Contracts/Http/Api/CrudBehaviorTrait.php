@@ -14,7 +14,7 @@ use PDOException;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
-use Baka\Contracts\Database\ModelInterface;
+use Phalcon\Mvc\ModelInterface;
 
 trait CrudBehaviorTrait
 {
