@@ -50,12 +50,6 @@ jobs:
         image: rabbitmq
         ports:
           - 5672:5672
-      elasticsearch: # Elasticsearch Instance
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
-        volumes: # Persist ES data in seperate "esdata" volume
-          - elastic-data:/usr/share/elasticsearch/data
-        ports: # Expose Elasticsearch ports
-          - "9200:9200"
       memcached:
         image: memcached
         ports:
