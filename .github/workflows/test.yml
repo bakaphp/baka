@@ -22,7 +22,7 @@ jobs:
       EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
       REDIS_HOST: 127.0.0.1
       REDIS_PORT: 6379
-      ELASTIC_HOST: es1:9200
+      ELASTIC_HOST: 127.0.0.1:9200
       APP_IP: api.baka.ld
       APP_ENV: development
       PHINX_CONFIG_DIR: storage
