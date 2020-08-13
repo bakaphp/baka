@@ -373,7 +373,7 @@ trait CustomFieldsTrait
         if (Di::getDefault()->has('redis')) {
             $redis = Di::getDefault()->get('redis');
 
-            return (bool) $redis->delete(
+            return (bool) $redis->del(
                 $this->getCustomFieldPrimaryKey(),
             );
         }
