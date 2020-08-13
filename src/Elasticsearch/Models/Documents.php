@@ -1,12 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace Baka\Elasticsearch\Models;
 
 use Baka\Contracts\CustomFields\CustomFieldsTrait;
+use Baka\Contracts\Database\ModelInterface;
 use Baka\Elasticsearch\Client;
 use Baka\Elasticsearch\IndexBuilder;
+use Baka\Elasticsearch\Query;
 use Phalcon\Mvc\Model;
-use Phalcon\Mvc\ModelInterface;
 use ReflectionClass;
 
 class Documents
@@ -32,7 +34,7 @@ class Documents
         // Use reflection to extract necessary information from the object.
         $modelReflection = (new ReflectionClass($model));
 
-        IndexBuilder::getRelatedData($document, $model, $modelReflection->name, 1, $maxDepth);
+        IndexBuilder::getRelatedData($document, $model, $modelReflection->name, 0, $maxDepth);
         $params = [
             'index' => Indices::getName($model),
             'id' => $model->getId(),
@@ -57,5 +59,39 @@ class Documents
         ];
 
         return Client::getInstance()->delete($params);
+    }
+
+    /**
+     * Find by query in this document.
+     *
+     * @param string $sql
+     *
+     * @return array
+     */
+    public static function findBySql(string $sql, ModelInterface $model) : array
+    {
+        $elasticQuery = new Query($sql, $model);
+
+        return $elasticQuery->find();
+    }
+
+    /**
+     * Find by query and get total results.
+     *
+     * @todo this is shitting we should implement resultset interface
+     *
+     * @param string $sql
+     * @param ModelInterface $model
+     *
+     * @return array
+     */
+    public static function findBySqlPaginated(string $sql, ModelInterface $model) : array
+    {
+        $elasticQuery = new Query($sql, $model);
+
+        return [
+            'results' => $elasticQuery->find(),
+            'total' => $elasticQuery->getTotal()
+        ];
     }
 }

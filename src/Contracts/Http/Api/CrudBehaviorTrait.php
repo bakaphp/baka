@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Baka\Contracts\Http\Api;
 
@@ -13,7 +14,7 @@ use PDOException;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
-use Phalcon\Mvc\ModelInterface;
+use Baka\Contracts\Database\ModelInterface;
 
 trait CrudBehaviorTrait
 {

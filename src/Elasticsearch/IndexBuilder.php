@@ -1,14 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace Baka\Elasticsearch;
 
+use Baka\Contracts\Database\ModelInterface;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Elasticsearch\Model as ModelCustomFields;
 use Exception;
 use Phalcon\Db\Column;
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
-use Phalcon\Mvc\ModelInterface;
 use ReflectionClass;
 
 class IndexBuilder

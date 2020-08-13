@@ -2,10 +2,10 @@
 
 namespace Baka\Test\Integration\Http;
 
-use PhalconUnitTestCase;
 use Baka\Http\Converter\RequestUriToSql;
 use Baka\Test\Support\Models\Leads;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
+use PhalconUnitTestCase;
 
 class UriToSqlTest extends PhalconUnitTestCase
 {
@@ -35,7 +35,6 @@ class UriToSqlTest extends PhalconUnitTestCase
 
         $this->assertTrue(count($results->toArray()) > 0);
         $this->assertTrue($count > 0);
-
     }
 
     /**
@@ -66,8 +65,6 @@ class UriToSqlTest extends PhalconUnitTestCase
 
         $this->assertTrue(count($results->toArray()) == 10);
         $this->assertTrue($count > 0);
-
-
     }
 
     /**
@@ -125,7 +122,6 @@ class UriToSqlTest extends PhalconUnitTestCase
         }
 
         $this->assertTrue(count($results->toArray()) == 12);
-
     }
 
     /**
@@ -261,7 +257,7 @@ class UriToSqlTest extends PhalconUnitTestCase
             $this->assertFalse(isset($result->users_id));
         }
 
-        $this->assertTrue(count($results->toArray())  > 0);
+        $this->assertTrue(count($results->toArray()) > 0);
         $this->assertTrue($count > 0);
     }
 
@@ -294,7 +290,7 @@ class UriToSqlTest extends PhalconUnitTestCase
             $this->assertTrue(isset($result->users_id));
         }
 
-        $this->assertTrue(count($results->toArray())  > 0);
+        $this->assertTrue(count($results->toArray()) > 0);
         $this->assertTrue($count > 0);
     }
 

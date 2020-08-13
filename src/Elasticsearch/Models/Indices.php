@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Baka\Elasticsearch\Models;
 
+use Baka\Contracts\Database\ModelInterface;
 use Baka\Elasticsearch\Client;
 use Baka\Elasticsearch\IndexBuilder;
 use Phalcon\Mvc\Model;
-use Phalcon\Mvc\ModelInterface;
 use RuntimeException;
 
 class Indices
@@ -109,7 +110,7 @@ class Indices
         IndexBuilder::getCustomParams($params['body']['mappings']['properties'], $modelClass);
 
         // Call to get the information from related models.
-        IndexBuilder::getRelatedParams($params['body']['mappings']['properties'], $modelClass, $modelClass, 1, $maxDepth);
+        IndexBuilder::getRelatedParams($params['body']['mappings']['properties'], $modelClass, $modelClass, 0, $maxDepth);
 
         /**
          * Delete the index before creating it again.

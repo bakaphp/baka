@@ -216,6 +216,8 @@ class PhalconUnitTestCase extends PhalconUnit
         $this->di->setShared('redis', function () {
             $redis = new \Redis();
             $redis->connect(envValue('REDIS_HOST', 'redis'));
+            $serializeEngine = !extension_loaded('igbinary') ? \Redis::SERIALIZER_PHP : \Redis::SERIALIZER_IGBINARY;
+            $redis->setOption(\Redis::OPT_SERIALIZER, $serializeEngine);
             return $redis;
         });
     }

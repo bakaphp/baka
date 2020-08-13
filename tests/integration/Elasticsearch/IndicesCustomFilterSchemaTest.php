@@ -2,11 +2,10 @@
 
 namespace Baka\Test\Integration\Elasticsearch;
 
-use PhalconUnitTestCase;
 use Baka\Contracts\Elasticsearch\CustomFiltersSchemaTrait;
-use Baka\Elasticsearch\IndexBuilderStructure;
 use Baka\Elasticsearch\Models\Indices;
 use Baka\Test\Support\ElasticModel\Leads;
+use PhalconUnitTestCase;
 
 class CustomFilterSchemaTest extends PhalconUnitTestCase
 {
