@@ -26,7 +26,24 @@ trait IndexBuilderTaskTrait
      */
     public function createIndexAction(string $model, int $maxDepth = 3, int $nestedLimit = 75) : void
     {
-        Indices::create($model, $maxDepth, $nestedLimit);
+        $indices = Indices::create($model, $maxDepth, $nestedLimit);
+
+        echo "Indices {$model} created " . json_encode($indices);
+    }
+
+    /**
+     * Delete a indice base on its model namespace name.
+     *
+     * @param string $model
+     *
+     * @return void
+     */
+    public function deleteIndexAction(string $model) : void
+    {
+        $modelName = new $model();
+        $indices = Indices::delete($modelName);
+
+        echo "Indices {$model} deleted " . json_encode($indices);
     }
 
     /**
@@ -46,11 +63,14 @@ trait IndexBuilderTaskTrait
     {
         // Get model's records
         $records = $model::find('is_deleted = 0');
+        $totalRecords = $records->count();
         // Get elasticsearch class handler instance
         $elasticsearch = new IndexBuilder();
 
         foreach ($records as $record) {
             Documents::add($record, $maxDepth);
         }
+
+        echo "Total records inserted for {$model} " . $totalRecords;
     }
 }
