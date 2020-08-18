@@ -4,6 +4,7 @@ namespace Baka\Test\Integration\Elasticsearch;
 
 use Baka\Contracts\Elasticsearch\CustomFiltersSchemaTrait;
 use Baka\Contracts\Elasticsearch\IndexBuilderTaskTrait;
+use Baka\Elasticsearch\Models\Indices;
 use Baka\Test\Support\Models\Leads;
 use PhalconUnitTestCase;
 
@@ -30,6 +31,15 @@ class TasksTest extends PhalconUnitTestCase
         $this->assertTrue(array_search('id', $mapping) > 0);
     }
 
+    public function testdeleteIndiceFromModel()
+    {
+        $this->elastic = $this->getDI()->getElastic();
+
+        $this->deleteIndexAction(Leads::class);
+
+        $this->assertFalse(Indices::exist(Leads::class));
+    }
+
     /**
      * Test inserting data to elastic search from module.
      *
@@ -37,6 +47,8 @@ class TasksTest extends PhalconUnitTestCase
      */
     public function testInsertAllDataFromModel()
     {
+        $this->createIndexAction(Leads::class, 2);
+
         //cli need the config
         $this->config = $this->getDI()->getConfig();
         $this->elastic = $this->getDI()->getElastic();
