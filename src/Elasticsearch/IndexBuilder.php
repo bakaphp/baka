@@ -237,8 +237,8 @@ class IndexBuilder
                     $alias = 'get' . $has->getOptions()['alias'];
                     $aliasRecords = $data->$alias('is_deleted = 0');
 
-                    if ($aliasRecords) {
-                        $document[$aliasKey] = $aliasRecords->toFullArray();
+                    if ($aliasRecords && is_object($aliasRecords)) {
+                        $document[$aliasKey] = $aliasRecords->toArray();
                         //$document[$aliasKey] = ModelCustomFields::getCustomFields($aliasRecords, true);
 
                         if ($depth < $maxDepth) {
@@ -270,9 +270,9 @@ class IndexBuilder
                     $alias = 'get' . $has->getOptions()['alias'];
                     $aliasRecords = $data->$alias('is_deleted = 0');
 
-                    if (count($aliasRecords) > 0) {
+                    if (count($aliasRecords) > 0 && is_object($aliasRecords)) {
                         foreach ($aliasRecords as $k => $relation) {
-                            $document[$aliasKey][$k] = $relation->toFullArray();
+                            $document[$aliasKey][$k] = $relation->toArray();
                             //$document[$aliasKey][$k] = $relation::getCustomFields($relation, true);
 
                             if ($depth < $maxDepth) {
