@@ -235,10 +235,12 @@ class IndexBuilder
                 if ($data->$alias) {
                     //if alias exist over write it and get the none deleted
                     $alias = 'get' . $has->getOptions()['alias'];
-                    $aliasRecords = $data->$alias('is_deleted = 0');
-
+                    $aliasRecords = $data->$alias();
+                    if (is_object($aliasRecords) && $aliasRecords->hasProperty('is_deleted')) {
+                        $aliasRecords = $data->$alias('is_deleted = 0');
+                    }
                     if ($aliasRecords && is_object($aliasRecords)) {
-                        $document[$aliasKey] = $aliasRecords->toArray();
+                        $document[$aliasKey] = $aliasRecords->toFullArray();
                         //$document[$aliasKey] = ModelCustomFields::getCustomFields($aliasRecords, true);
 
                         if ($depth < $maxDepth) {
@@ -268,11 +270,15 @@ class IndexBuilder
                 if ($data->$alias->count()) {
                     //if alias exist over write it and get the none deleted
                     $alias = 'get' . $has->getOptions()['alias'];
-                    $aliasRecords = $data->$alias('is_deleted = 0');
-
-                    if (count($aliasRecords) > 0 && is_object($aliasRecords)) {
+                    $metadata = $data->$alias()[0];
+                    $aliasIsDeleted = null;
+                    if ($metadata->hasProperty('is_deleted')) {
+                        $aliasIsDeleted = 'is_deleted = 0';
+                    }
+                    $aliasRecords = $data->$alias($aliasIsDeleted);
+                    if (count($aliasRecords) > 0) {
                         foreach ($aliasRecords as $k => $relation) {
-                            $document[$aliasKey][$k] = $relation->toArray();
+                            $document[$aliasKey][$k] = $relation->toFullArray();
                             //$document[$aliasKey][$k] = $relation::getCustomFields($relation, true);
 
                             if ($depth < $maxDepth) {
