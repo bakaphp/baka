@@ -470,7 +470,7 @@ class QueryParser
     protected static function containsWildcards(string $string) : bool
     {
         foreach (self::WILDCARDS as $wildcard) {
-            if (Str::contains($wildcard, $string)) {
+            if (Str::contains($string, $wildcard)) {
                 return true;
             }
         }
