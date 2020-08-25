@@ -330,9 +330,8 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
      */
     public function hasProperty(string $property) : bool
     {
-        $model = self::findFirstOrFail();
-        $metadata = $model->getModelsMetaData();
-        $attributes = $metadata->getAttributes($model);
+        $metadata = $this->getModelsMetaData();
+        $attributes = $metadata->getAttributes($this);
         return key_exists($property, $attributes);
     }
 }
