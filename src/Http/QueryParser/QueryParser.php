@@ -51,6 +51,7 @@ class QueryParser
      * Joiners to be used with comparisons.
      */
     const JOINERS = [
+        '' => 'AND',
         ',' => 'AND',
         ';' => 'OR',
     ];
@@ -104,7 +105,9 @@ class QueryParser
         $this->setLimit($params['limit'] ?? $this->limit);
         $this->setPage($params['page'] ?? $this->page);
         $this->setFields($params['fields'] ?? $this->fields);
-        $this->setQuery($params['q'] ?? '');
+
+        //if empty default search 1 = 1
+        $this->setQuery($params['q'] ?? '(1:1)');
     }
 
     /**
@@ -257,7 +260,10 @@ class QueryParser
         $this->filters = str_replace($fromClauseParsed['searchNodes'], $fromClauseParsed['replaceNodes'], $this->filters);
         $this->source .= implode(', ', $fromClauseParsed['nodes']);
 
-        return "SELECT {$this->fields} FROM {$this->source} {$this->filters} ORDER BY {$this->sort} {$limit}";
+        $sql = "SELECT {$this->fields} FROM {$this->source} {$this->filters} ORDER BY {$this->sort} {$limit}";
+
+        $this->filters = ''; //clean up the filter
+        return $sql;
     }
 
     /**
@@ -310,7 +316,7 @@ class QueryParser
             if (count($comparison) != count($comparison, COUNT_RECURSIVE)) {
                 $sqlComparison = "{$this->transformNestedComparisons($comparison)}";
             } else {
-                $joiner = isset($comparisons[$index - 1]) ? self::JOINERS[$comparisons[$index - 1]['joiner']] : self::DEFAULT_JOINER;
+                $joiner = isset($comparisons[(int) $index - 1]) ? self::JOINERS[$comparisons[(int) $index - 1]['joiner']] : self::DEFAULT_JOINER;
 
                 list(
                     $parsedComparison['field'],
