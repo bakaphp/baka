@@ -128,8 +128,16 @@ class NestedParenthesesParser
             foreach ($currentScope as $key => $value) {
                 if (isset($this->additionalQueryFields[$value['key']])) {
                     $this->currentScope[$index][$key] = $this->additionalQueryFields[$value['key']];
+
+                    //if we overwrite remove
+                    unset($this->additionalQueryFields[$value['key']]);
                 }
             }
+        }
+
+        //add additional queries if we didn't overwrite
+        if (isset($this->currentScope[0])) {
+            $this->currentScope[0] = (array_values(($this->currentScope[0] + $this->additionalQueryFields)));
         }
     }
 
