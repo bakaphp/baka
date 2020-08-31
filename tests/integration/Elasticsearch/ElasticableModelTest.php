@@ -48,7 +48,7 @@ class ElasticableModelTest extends PhalconUnitTestCase
     {
         $limit = 100;
         $leads = Leads::findInElastic([
-            'conditions' => 'is_deleted >= :is_deleted: AND u.id > 1',
+            'conditions' => 'is_deleted >= :is_deleted: AND user.id > 1',
             'bind' => [
                 'is_deleted' => 0
             ],
