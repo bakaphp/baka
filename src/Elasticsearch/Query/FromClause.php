@@ -4,21 +4,24 @@ declare(strict_types=1);
 namespace Baka\Elasticsearch\Query;
 
 use Baka\Contracts\Database\ModelInterface;
+use Baka\Support\Str;
 
 class FromClause
 {
     protected ModelInterface $model;
     protected string $source;
+    protected ?string $whereClause;
 
     /**
      * Constructor.
      *
      * @param ModelInterface $model
      */
-    public function __construct(ModelInterface $model)
+    public function __construct(ModelInterface $model, ?string $whereClause = null)
     {
         $this->model = $model;
         $this->source = $this->model->getSource();
+        $this->whereClause = $whereClause ?? '';
     }
 
     /**
@@ -71,9 +74,14 @@ class FromClause
 
                 if ($index) {
                     $elasticAlias = $options['elasticAlias'] ?? $options['alias'][0];
-                    $queryNodes[] = $this->getFromAlias() . '.' . $relation->getOptions()['alias'] . ' as ' . $elasticAlias;
-                    $searchNodes[] = $options['alias'] . '.';
-                    $replaceNodes[] = $elasticAlias . '.';
+
+                    //if we find the alias in the where we add it to the table selection
+                    //example FROM leads as l , l.users as u
+                    if (Str::contains($this->whereClause, $elasticAlias)) {
+                        $queryNodes[] = $this->getFromAlias() . '.' . $relation->getOptions()['alias'] . ' as ' . $elasticAlias;
+                        $searchNodes[] = $options['alias'] . '.';
+                        $replaceNodes[] = $elasticAlias . '.';
+                    }
                 }
             }
 
