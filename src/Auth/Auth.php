@@ -142,7 +142,7 @@ class Auth
      *
      * @param Users $user
      *
-     * @return boolean
+     * @return bool
      */
     protected static function resetLoginTries(UserInterface $user) : bool
     {
