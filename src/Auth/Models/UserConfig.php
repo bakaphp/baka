@@ -2,16 +2,16 @@
 
 namespace Baka\Auth\Models;
 
-use Baka\Contracts\Database\HashTableTrait;
+// use Baka\Contracts\Database\HashTableTrait;
 use Baka\Database\Model;
 
 class UserConfig extends Model
 {
-    use HashTableTrait;
+    // use HashTableTrait;
 
-    public int $users_id;
-    public string $name;
-    public string $value;
+    public ?int $users_id = null;
+    public ?string $name = null;
+    public ?string $value = null;
 
     /**
      * Initialize.
