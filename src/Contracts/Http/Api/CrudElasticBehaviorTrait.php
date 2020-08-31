@@ -98,10 +98,7 @@ trait CrudElasticBehaviorTrait
         ];
 
         $processedRequest = $this->processRequest($this->request);
-        $records = $this->getRecords($processedRequest);
-
-        //get the results and append its relationships
-        $results = $records['results'];
+        $results = $this->getRecords($processedRequest);
 
         if (empty($results) || !isset($results[0])) {
             throw new ModelNotFoundException(
