@@ -29,7 +29,7 @@ trait ElasticIndexModelTrait
      * With this variable we tell elasticsearch to not analyze string fields in order to allow us
      * to perform wildcard matches.
      *
-     * @var boolean
+     * @var bool
      */
     public bool $elasticSearchNotAnalyzed = true;
 
