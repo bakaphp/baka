@@ -254,7 +254,7 @@ class QueryParser
 
         $limit = $this->withLimit ? " LIMIT {$this->getOffset()},  {$this->getLimit()}" : '';
 
-        $fromClause = new FromClause($this->model);
+        $fromClause = new FromClause($this->model, $this->filters);
         $fromClauseParsed = $fromClause->get();
 
         $this->filters = str_replace($fromClauseParsed['searchNodes'], $fromClauseParsed['replaceNodes'], $this->filters);

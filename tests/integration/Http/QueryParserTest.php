@@ -14,7 +14,7 @@ class QueryParserTest extends PhalconUnitTestCase
     /**
      * Test a normal query with no conditional.
      *
-     * @return boolean
+     * @return bool
      */
     public function testSimpleQuery()
     {
