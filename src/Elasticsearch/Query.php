@@ -7,7 +7,6 @@ use Baka\Contracts\Database\ModelInterface as BakaModelInterface;
 use Baka\Elasticsearch\Query\FromClause;
 use function Baka\envValue;
 use GuzzleHttp\Client as GuzzleClient;
-use Iterator;
 use Phalcon\Di;
 use Phalcon\Mvc\Model\Query\Builder;
 
@@ -45,7 +44,7 @@ class Query
      *
      * @param string $sql
      *
-     * @return Iterator
+     * @return array
      */
     public function find() : array
     {

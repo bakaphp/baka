@@ -48,7 +48,7 @@ class Indices
      *
      * @param ModelInterface $model
      *
-     * @return boolean
+     * @return bool
      */
     public static function delete(ModelInterface $model) : array
     {
@@ -97,11 +97,18 @@ class Indices
             } else {
                 $params['body']['mappings']['properties'][$column] = ['type' => $type];
 
-                if ($type == 'string'
+                if ($type == 'text'
                     && property_exists($model, 'elasticSearchNotAnalyzed')
                     && $model->elasticSearchNotAnalyzed
                 ) {
                     $params['body']['mappings']['properties'][$column]['analyzer'] = 'lowercase';
+                }
+
+                if ($type == 'text'
+                    && property_exists($model, 'elasticSearchTextFieldData')
+                    && $model->elasticSearchTextFieldData
+                ) {
+                    $params['body']['mappings']['properties'][$column]['fielddata'] = true;
                 }
             }
         }

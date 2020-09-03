@@ -134,11 +134,18 @@ class IndexBuilder
                     } else {
                         $params[$alias]['properties'][$column] = ['type' => $type];
 
-                        if ($type == 'string'
+                        if ($type == 'text'
                             && property_exists($referencedModel, 'elasticSearchNotAnalyzed')
                             && $referencedModel->elasticSearchNotAnalyzed
                         ) {
                             $params[$alias]['properties'][$column]['analyzer'] = 'lowercase';
+                        }
+
+                        if ($type == 'text'
+                            && property_exists($referencedModel, 'elasticSearchTextFieldData')
+                            && $referencedModel->elasticSearchTextFieldData
+                        ) {
+                            $params[$alias]['properties'][$column]['fielddata'] = true;
                         }
                     }
                 }
