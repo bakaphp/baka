@@ -8,6 +8,7 @@ use Baka\Database\Model;
 class Leads extends Model
 {
     use CustomFieldsTrait;
+    public bool $elasticSearchTextFieldData = true;
 
     public function initialize()
     {

@@ -5,6 +5,17 @@ namespace Baka\Blameable;
 trait BlameableTrait
 {
     /**
+     * Fields we want to have excluded from the audits.
+     *
+     * @var array
+     */
+    public array $auditExcludeFields = [
+        'id',
+        'created_at',
+        'updated_at'
+    ];
+
+    /**
      * Column descriptions for audit module.
      *
      * @return array

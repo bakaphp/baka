@@ -13,23 +13,20 @@ use Phalcon\Mvc\Model\Query\Builder;
 trait ElasticIndexModelTrait
 {
     /**
-     * Fields we want to have excluded from the audits.
-     *
-     * @var array
-     */
-    public array $auditExcludeFields = [
-        'id',
-        'created_at',
-        'updated_at'
-    ];
-
-    /**
      * With this variable we tell elasticsearch to not analyze string fields in order to allow us
      * to perform wildcard matches.
      *
      * @var bool
      */
     public bool $elasticSearchNotAnalyzed = true;
+
+    /**
+     * With this variable we tell elasticsearch to enable sorting text fields.
+     * https://www.elastic.co/guide/en/elasticsearch/reference/current/fielddata.html.
+     *
+     * @var bool
+     */
+    public bool $elasticSearchTextFieldData = true;
 
     /**
      * Current object save to elastic.

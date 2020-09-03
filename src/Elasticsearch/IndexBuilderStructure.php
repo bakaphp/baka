@@ -30,8 +30,9 @@ class IndexBuilderStructure extends IndexBuilder
             } elseif (!is_array($type)) {
                 $params[$column]['properties'][$innerColumn] = ['type' => $type];
 
-                if ($type == 'string') {
+                if ($type == 'text') {
                     $params[$column]['properties'][$innerColumn]['analyzer'] = 'lowercase';
+                    $params[$column]['properties'][$innerColumn]['fielddata'] = true;
                 }
             } else {
                 //fix issues when nested arrays  contains another array with no fields
