@@ -53,11 +53,7 @@ trait CrudElasticBehaviorTrait
     protected function getRecords(array $processedRequest) : array
     {
         $results = Documents::findBySqlPaginated($processedRequest['sql']->getParsedQuery(), $this->model);
-
-        return [
-            'results' => $results['results'],
-            'total' => $results['total']
-        ];
+        return $results['results'];
     }
 
     /**
@@ -102,10 +98,7 @@ trait CrudElasticBehaviorTrait
         ];
 
         $processedRequest = $this->processRequest($this->request);
-        $records = $this->getRecords($processedRequest);
-
-        //get the results and append its relationships
-        $results = $records['results'];
+        $results = $this->getRecords($processedRequest);
 
         if (empty($results) || !isset($results[0])) {
             throw new ModelNotFoundException(

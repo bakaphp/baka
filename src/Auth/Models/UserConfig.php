@@ -9,9 +9,9 @@ class UserConfig extends Model
 {
     use HashTableTrait;
 
-    public int $users_id;
-    public string $name;
-    public string $value;
+    public ?int $users_id = null;
+    public ?string $name = null;
+    public ?string $value = null;
 
     /**
      * Initialize.

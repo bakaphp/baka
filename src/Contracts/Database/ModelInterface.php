@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace Baka\Contracts\Database;
 
 use Phalcon\Mvc\Model\ResultsetInterface;
+use Phalcon\Mvc\ModelInterface as PhalconModelInterface;
 
-interface ModelInterface
+interface ModelInterface extends PhalconModelInterface
 {
     public function getId();
     

@@ -8,9 +8,10 @@ use Baka\Database\Exception\ModelNotProcessedException;
 use function Baka\getShortClassName;
 use Phalcon\Mvc\Model as PhalconModel;
 use Phalcon\Mvc\Model\ResultsetInterface;
+use Phalcon\Mvc\ModelInterface as PhalconModelInterface;
 use RuntimeException;
 
-class Model extends PhalconModel implements ModelInterface
+class Model extends PhalconModel implements ModelInterface, PhalconModelInterface
 {
     /**
      * Define a model alias to throw exception msg to the end user.
@@ -318,5 +319,19 @@ class Model extends PhalconModel implements ModelInterface
         throw new ModelNotProcessedException(
             getShortClassName(new static) . ' ' . current($this->getMessages())->getMessage()
         );
+    }
+
+    /**
+     * hasProperty.
+     *
+     * @param  string $property
+     *
+     * @return bool
+     */
+    public function hasProperty(string $property) : bool
+    {
+        $metadata = $this->getModelsMetaData();
+        $attributes = $metadata->getAttributes($this);
+        return key_exists($property, $attributes);
     }
 }

@@ -146,7 +146,7 @@ trait CustomFieldsTrait
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function del(string $name) : bool
     {
@@ -304,7 +304,7 @@ trait CustomFieldsTrait
      * @param string $name
      * @param [type] $value
      *
-     * @return boolean
+     * @return bool
      */
     protected function setInRedis(string $name, $value) : bool
     {
@@ -338,7 +338,6 @@ trait CustomFieldsTrait
             }
         }
 
-        unset($this->customFields);
         return true;
     }
 
@@ -366,14 +365,14 @@ trait CustomFieldsTrait
     /**
      * Delete all custom fields from redis.
      *
-     * @return boolean
+     * @return bool
      */
     protected function deleteAllCustomFieldsFromRedis() : bool
     {
         if (Di::getDefault()->has('redis')) {
             $redis = Di::getDefault()->get('redis');
 
-            return (bool) $redis->delete(
+            return (bool) $redis->del(
                 $this->getCustomFieldPrimaryKey(),
             );
         }

@@ -12,8 +12,6 @@ use Phalcon\Mvc\Model\Query\Builder;
 
 trait ElasticIndexModelTrait
 {
-    protected int $elasticMaxDepth = 3;
-
     /**
      * With this variable we tell elasticsearch to not analyze string fields in order to allow us
      * to perform wildcard matches.
@@ -40,7 +38,7 @@ trait ElasticIndexModelTrait
     public function saveToElastic(int $maxDepth = 0) : array
     {
         if ($maxDepth === 0) {
-            $maxDepth = $this->elasticMaxDepth;
+            $maxDepth = isset($this->elasticMaxDepth) ? $this->elasticMaxDepth : 3;
         }
 
         //insert into elastic
