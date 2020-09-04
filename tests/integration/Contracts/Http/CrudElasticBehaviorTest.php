@@ -90,6 +90,52 @@ class CrudElasticBehaviorTest extends PhalconUnitTestCase
         $this->assertTrue(Str::contains($parse->getParsedQuery(), 'is_deleted'));
     }
 
+    public function testAdditionalWithPagination()
+    {
+        $leads = new Leads();
+        $this->model = $leads;
+
+        $limit = 100;
+        $params = [];
+        // $params['q'] = '(is_deleted:0,companies_id>0,user.displayname:mc%,user.id>0;user.user_level:3)';
+        //$params['q'] = '(is_deleted:0)';
+        //$params['fields'] = '';
+        $params['limit'] = $limit;
+        $params['page'] = '1';
+        $params['sort'] = 'id|desc';
+
+        $additionalSearchFields = [
+            ['companies_id', ':', 1],
+            ['is_deleted', ':', 0],
+        ];
+
+        $parse = new QueryParser($leads, $params);
+        $parse->setAdditionalQueryFields($additionalSearchFields);
+
+        //convert to SQL
+        $processedRequest = [
+            'sql' => $parse
+        ];
+
+        $records = $this->getRecords($processedRequest);
+        $results = $records['results'];
+
+        //this means the want the response in a vuejs format
+
+        $results = [
+            'data' => $results,
+            'limit' => $limit,
+            'page' => $params['page'],
+            'total_pages' => ceil($records['total'] / $limit),
+        ];
+
+        $results = $this->processOutput($results);
+
+        $this->assertTrue($results['total_pages'] >= 1);
+        $this->assertTrue(Str::contains($parse->getParsedQuery(), 'companies_id'));
+        $this->assertTrue(Str::contains($parse->getParsedQuery(), 'is_deleted'));
+    }
+
     public function testIndexWithAditionals()
     {
         $leads = new Leads();

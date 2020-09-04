@@ -8,7 +8,6 @@ use Baka\Elasticsearch\Models\Documents;
 use function Baka\getShortClassName;
 use Baka\Http\QueryParser\QueryParser;
 use Phalcon\Http\RequestInterface;
-use Phalcon\Http\Response;
 
 trait CrudElasticBehaviorTrait
 {
@@ -70,9 +69,10 @@ trait CrudElasticBehaviorTrait
     {
         //convert the request to sql
         $processedRequest = $this->processRequest($this->request);
-        $results = $this->getRecords($processedRequest);
+        $records = $this->getRecords($processedRequest);
+        $results = $records['results'];
 
-        //this means the want the response in a vuejs format
+        //return the kanvas pagination format
         if ($this->request->hasQuery('format')) {
             $limit = (int) $this->request->getQuery('limit', 'int', 25);
 
@@ -80,7 +80,7 @@ trait CrudElasticBehaviorTrait
                 'data' => $results,
                 'limit' => $limit,
                 'page' => $this->request->getQuery('page', 'int', 1),
-                'total_pages' => ceil($results['total'] / $limit),
+                'total_pages' => ceil($records['total'] / $limit),
             ];
         }
 

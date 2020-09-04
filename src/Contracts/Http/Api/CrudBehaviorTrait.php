@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Baka\Contracts\Http\Api;
 
 use ArgumentCountError;
+use Baka\Contracts\Database\ModelInterface;
 use Baka\Database\Exception\ModelNotFoundException;
 use function Baka\getShortClassName;
 use Baka\Http\Converter\RequestUriToSql;
@@ -14,7 +15,6 @@ use PDOException;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
-use Baka\Contracts\Database\ModelInterface;
 
 trait CrudBehaviorTrait
 {
@@ -171,7 +171,7 @@ trait CrudBehaviorTrait
         //get the results and append its relationships
         $results = $this->appendRelationshipsToResult($this->request, $records['results']);
 
-        //this means the want the response in a vuejs format
+        //return the kanvas pagination format
         if ($this->request->hasQuery('format')) {
             $limit = (int) $this->request->getQuery('limit', 'int', 25);
 

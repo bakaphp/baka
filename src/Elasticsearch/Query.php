@@ -123,7 +123,7 @@ class Query
     /**
      * Given the elastic results, return only the data.
      *
-     * @param array $results
+     * @param array $elasticResults
      *
      * @return array
      */
