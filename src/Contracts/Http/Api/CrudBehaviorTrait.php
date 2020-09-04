@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Baka\Contracts\Http\Api;
 
 use ArgumentCountError;
-use Baka\Contracts\Database\ModelInterface;
 use Baka\Database\Exception\ModelNotFoundException;
 use function Baka\getShortClassName;
 use Baka\Http\Converter\RequestUriToSql;
@@ -15,6 +14,7 @@ use PDOException;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
+use Phalcon\Mvc\ModelInterface;
 
 trait CrudBehaviorTrait
 {
