@@ -52,8 +52,7 @@ trait CrudElasticBehaviorTrait
      */
     protected function getRecords(array $processedRequest) : array
     {
-        $results = Documents::findBySqlPaginated($processedRequest['sql']->getParsedQuery(), $this->model);
-        return $results['results'];
+        reutrn Documents::findBySqlPaginated($processedRequest['sql']->getParsedQuery(), $this->model);
     }
 
     /**
