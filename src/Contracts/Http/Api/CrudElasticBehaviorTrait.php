@@ -99,12 +99,12 @@ trait CrudElasticBehaviorTrait
         $processedRequest = $this->processRequest($this->request);
         $results = $this->getRecords($processedRequest);
 
-        if (empty($results) || !isset($results[0])) {
+        if (empty($results) || (int) $results['total'] === 0) {
             throw new ModelNotFoundException(
                 getShortClassName($this->model) . ' Record not found'
             );
         }
 
-        return $results[0];
+        return $results['results'][0];
     }
 }
