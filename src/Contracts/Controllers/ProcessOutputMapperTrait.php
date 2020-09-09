@@ -36,7 +36,8 @@ trait ProcessOutputMapperTrait
         if (
             (is_array($results) || is_iterable($results)) &&
             (($this->request->withPagination() && $this->request->withRelationships()) ||
-            (!$this->request->withPagination() && $this->request->withRelationships()))
+            (!$this->request->withPagination() && $this->request->withRelationships()) ||
+            (!$this->request->withPagination() && !$this->request->withRelationships() && empty($results)))
         ) {
             $mapperModel = DataType::ARRAY;
             $this->dto = StdClass::class;
@@ -59,6 +60,7 @@ trait ProcessOutputMapperTrait
                 is_array(current($results))
                 || is_object(current($results))
                 || $isSimpleResponse($results)
+                || (is_array($results) && empty($results))
             )) {
             return $this->mapper->mapMultiple(
                 $results,
@@ -77,7 +79,7 @@ trait ProcessOutputMapperTrait
     /**
      * Can we use the mapper on this request?
      *
-     * @return boolean
+     * @return bool
      */
     protected function canUseMapper() : bool
     {

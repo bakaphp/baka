@@ -78,7 +78,9 @@ class FromClause
                     //if we find the alias in the where we add it to the table selection
                     //example FROM leads as l , l.users as u
                     if (Str::contains($this->whereClause, $elasticAlias)) {
-                        $queryNodes[] = $this->getFromAlias() . '.' . $relation->getOptions()['alias'] . ' as ' . $elasticAlias;
+                        //relationship we index them in lowercase
+                        $relationAlias = strtolower($relation->getOptions()['alias']);
+                        $queryNodes[] = $this->getFromAlias() . '.' . $relationAlias . ' as ' . $elasticAlias;
                         $searchNodes[] = $options['alias'] . '.';
                         $replaceNodes[] = $elasticAlias . '.';
                     }
