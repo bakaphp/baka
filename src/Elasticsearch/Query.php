@@ -55,7 +55,7 @@ class Query
         // since 6.x+ we need to use POST
         $response = $client->post($this->getDriverUrl(), [
             'body' => json_encode([
-                $this->getPostKey() => strtolower(trim($this->sql))
+                $this->getPostKey() => trim($this->sql)
             ]),
             'headers' => [
                 'content-type' => 'application/json',
