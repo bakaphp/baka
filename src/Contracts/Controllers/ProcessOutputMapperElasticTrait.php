@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Baka\Contracts\Controllers;
 
 use AutoMapperPlus\DataType;
-use Baka\Http\Exception\InternalServerErrorException;
 use Phalcon\Mvc\Model\Resultset\Simple;
 use StdClass;
 
-trait ProcessOutputMapperTrait
+trait ProcessOutputMapperElasticTrait
 {
+    use ProcessOutputMapperTrait;
+
     protected $dto = null;
     protected $dtoMapper = null;
 
@@ -35,13 +36,11 @@ trait ProcessOutputMapperTrait
         //if its simple, pagination or relationship we need to map array to StdClass
         if (
             (is_array($results) || is_iterable($results)) &&
-            (($this->request->withPagination() && $this->request->withRelationships()) ||
-            (!$this->request->withPagination() && $this->request->withRelationships()))
+            empty($results)
         ) {
             $mapperModel = DataType::ARRAY;
             $this->dto = StdClass::class;
         }
-
         $this->dtoConfig->registerMapping($mapperModel, $this->dto)
             ->useCustomMapper($this->dtoMapper);
 
@@ -59,6 +58,7 @@ trait ProcessOutputMapperTrait
                 is_array(current($results))
                 || is_object(current($results))
                 || $isSimpleResponse($results)
+                || (is_array($results) && empty($results))
             )) {
             return $this->mapper->mapMultiple(
                 $results,
@@ -72,35 +72,5 @@ trait ProcessOutputMapperTrait
                 $this->getMapperOptions()
             );
         }
-    }
-
-    /**
-     * Can we use the mapper on this request?
-     *
-     * @return bool
-     */
-    protected function canUseMapper() : bool
-    {
-        if (!is_object($this->model) || empty($this->dto)) {
-            throw new InternalServerErrorException('No Mapper configured on this controller ' . get_class($this));
-        }
-
-        return true;
-    }
-
-    /**
-     * If we have relationships send them as additional context to the mapper.
-     *
-     * @return array
-     */
-    protected function getMapperOptions() : array
-    {
-        if ($this->request->hasQuery('relationships')) {
-            return [
-                'relationships' => explode(',', $this->request->getQuery('relationships'))
-            ];
-        }
-
-        return [];
     }
 }
