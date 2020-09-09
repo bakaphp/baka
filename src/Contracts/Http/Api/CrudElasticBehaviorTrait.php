@@ -52,8 +52,7 @@ trait CrudElasticBehaviorTrait
      */
     protected function getRecords(array $processedRequest) : array
     {
-        $results = Documents::findBySqlPaginated($processedRequest['sql']->getParsedQuery(), $this->model);
-        return $results['results'];
+        return Documents::findBySqlPaginated($processedRequest['sql']->getParsedQuery(), $this->model);
     }
 
     /**
@@ -100,12 +99,12 @@ trait CrudElasticBehaviorTrait
         $processedRequest = $this->processRequest($this->request);
         $results = $this->getRecords($processedRequest);
 
-        if (empty($results) || !isset($results[0])) {
+        if (empty($results) || (int) $results['total'] === 0) {
             throw new ModelNotFoundException(
                 getShortClassName($this->model) . ' Record not found'
             );
         }
 
-        return $results[0];
+        return $results['results'][0];
     }
 }

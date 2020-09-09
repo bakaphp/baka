@@ -65,8 +65,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
      */
     public function beforeCreate()
     {
-        $this->created_at = date('Y-m-d H:i:s');
-        $this->updated_at = null;
+        $this->updated_at = $this->created_at = date('Y-m-d H:i:s');
         $this->is_deleted = 0;
     }
 
