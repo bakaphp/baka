@@ -125,5 +125,4 @@ jobs:
       - name: Run all integration test suites
         if: success()
         run: |
-          curl -X POST http://127.0.0.1:9200/_opendistro/_sql?format=json
           vendor/bin/codecept run
