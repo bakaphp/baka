@@ -12,9 +12,6 @@ trait ProcessOutputMapperElasticTrait
 {
     use ProcessOutputMapperTrait;
 
-    protected $dto = null;
-    protected $dtoMapper = null;
-
     /**
      * Format Controller Result base on a Mapper.
      *
