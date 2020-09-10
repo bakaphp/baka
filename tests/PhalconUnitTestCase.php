@@ -1,7 +1,7 @@
 <?php
 
+use Baka\Contracts\Elasticsearch\IndexBuilderTaskTrait;
 use Baka\Database\Apps;
-use Baka\Elasticsearch\Models\Indices;
 use function Baka\envValue;
 use Baka\Test\Support\Models\Leads;
 use Baka\TestCase\PhalconUnit;
@@ -18,6 +18,8 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 class PhalconUnitTestCase extends PhalconUnit
 {
+    use IndexBuilderTaskTrait;
+
     /**
      * Set configuration.
      *
@@ -231,6 +233,8 @@ class PhalconUnitTestCase extends PhalconUnit
     {
         parent::setUp();
 
-        Indices::create(Leads::class);
+        $this->createIndexAction(Leads::class, 2);
+
+        $this->createDocumentsAction(Leads::class, 2);
     }
 }
