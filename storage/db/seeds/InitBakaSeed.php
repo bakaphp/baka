@@ -32,7 +32,7 @@ class InitBakaSeed extends AbstractSeed
                 'system_modules_id' => 1,
                 'created_at' => date('Y-m-d H:m:s'),
                 'is_deleted' => 0,
-            ]
+            ],
         ];
 
         for ($i = 0; $i < rand(10, 50) ; $i++) {
@@ -97,5 +97,143 @@ class InitBakaSeed extends AbstractSeed
         $table = $this->table('custom_fields_types');
         $table->insert($data)
                   ->save();
+
+        //add default languages
+        $data = [
+            [
+                'user_activation_email' => $random->uuid(),
+                'email' => $faker->email,
+                'password' => password_hash('bakatest123567', PASSWORD_DEFAULT),
+                'firstname' => 'Anonymous',
+                'lastname' => 'Anonymous',
+                'default_company' => 1,
+                'displayname' => 'anonymous',
+                'system_modules_id' => 2,
+                'default_company_branch' => 1,
+                'user_last_login_try' => 0,
+                'created_at' => date('Y-m-d H:i:s'),
+                'status' => 1,
+                'user_active' => 1,
+                'is_deleted' => 0
+            ],
+            [
+                'user_activation_email' => $random->uuid(),
+                'email' => $faker->email,
+                'password' => password_hash('bakatest123567', PASSWORD_DEFAULT),
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'default_company' => 1,
+                'displayname' => 'nobody' . time(),
+                'system_modules_id' => 2,
+                'default_company_branch' => 1,
+                'user_level' => 1,
+                'user_last_login_try' => 0,
+                'created_at' => date('Y-m-d H:i:s'),
+                'status' => 1,
+                'user_active' => 1,
+                'is_deleted' => 0
+            ],
+            [
+                'user_activation_email' => $random->uuid(),
+                'email' => $faker->email,
+                'password' => password_hash('bakatest123567', PASSWORD_DEFAULT),
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'default_company' => 1,
+                'displayname' => 'mcmnobody',
+                'system_modules_id' => 2,
+                'default_company_branch' => 1,
+                'user_level' => 3,
+                'user_last_login_try' => 0,
+                'created_at' => date('Y-m-d H:i:s'),
+                'status' => 1,
+                'user_active' => 1,
+                'is_deleted' => 0
+            ],
+            [
+                'user_activation_email' => $random->uuid(),
+                'email' => $faker->email,
+                'password' => password_hash('bakatest123567', PASSWORD_DEFAULT),
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'default_company' => 1,
+                'displayname' => 'nobodymc' . time(),
+                'system_modules_id' => 2,
+                'default_company_branch' => 1,
+                'user_last_login_try' => 0,
+                'user_level' => 3,
+                'created_at' => date('Y-m-d H:i:s'),
+                'status' => 1,
+                'user_active' => 1,
+                'is_deleted' => 0
+            ], [
+                'user_activation_email' => $random->uuid(),
+                'email' => $faker->email,
+                'password' => password_hash('bakatest123567', PASSWORD_DEFAULT),
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'default_company' => 1,
+                'displayname' => 'nobody' . time(),
+                'system_modules_id' => 2,
+                'user_level' => 2,
+                'default_company_branch' => 1,
+                'user_last_login_try' => 0,
+                'created_at' => date('Y-m-d H:i:s'),
+                'status' => 1,
+                'user_active' => 1,
+                'is_deleted' => 0
+            ], [
+                'user_activation_email' => $random->uuid(),
+                'email' => $faker->email,
+                'password' => password_hash('bakatest123567', PASSWORD_DEFAULT),
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'default_company' => 1,
+                'displayname' => 'nobody' . time(),
+                'system_modules_id' => 2,
+                'default_company_branch' => 1,
+                'user_level' => 1,
+                'user_last_login_try' => 0,
+                'created_at' => date('Y-m-d H:i:s'),
+                'status' => 1,
+                'user_active' => 1,
+                'is_deleted' => 0
+            ],  [
+                'user_activation_email' => $random->uuid(),
+                'email' => $faker->email,
+                'password' => password_hash('bakatest123567', PASSWORD_DEFAULT),
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'default_company' => 1,
+                'displayname' => 'nobody' . time(),
+                'system_modules_id' => 2,
+                'default_company_branch' => 1,
+                'user_last_login_try' => 0,
+                'user_level' => 3,
+                'created_at' => date('Y-m-d H:i:s'),
+                'status' => 1,
+                'user_active' => 1,
+                'is_deleted' => 0
+            ],  [
+                'user_activation_email' => $random->uuid(),
+                'email' => $faker->email,
+                'password' => password_hash('bakatest123567', PASSWORD_DEFAULT),
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'default_company' => 1,
+                'displayname' => 'mcsomethingn',
+                'system_modules_id' => 2,
+                'default_company_branch' => 1,
+                'user_last_login_try' => 0,
+                'user_level' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'status' => 1,
+                'user_active' => 1,
+                'is_deleted' => 0
+            ]
+        ];
+
+        $table = $this->table('users');
+        $table->insert($data)->save();
     }
 }
