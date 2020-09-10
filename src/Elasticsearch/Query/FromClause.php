@@ -11,6 +11,7 @@ class FromClause
     protected ModelInterface $model;
     protected string $source;
     protected ?string $whereClause;
+    protected array $whereClauseCleanup = ['AND', 'OR', 'WHERE'];
 
     /**
      * Constructor.
@@ -75,10 +76,15 @@ class FromClause
                 if ($index) {
                     $elasticAlias = $options['elasticAlias'] ?? $options['alias'][0];
 
-                    //if we find the alias in the where we add it to the table selection
-                    //example FROM leads as l , l.users as u
-                    if (Str::contains($this->whereClause, $elasticAlias)) {
-                        $queryNodes[] = $this->getFromAlias() . '.' . $relation->getOptions()['alias'] . ' as ' . $elasticAlias;
+                    /**
+                     * if we find the alias in the where clause we add it to the table selection
+                     * We also clean up some keywords to avoid collision and false positive
+                     * example FROM leads as l , l.users as u.
+                     */
+                    if (Str::contains(str_replace($this->whereClauseCleanup, '', $this->whereClause), $elasticAlias)) {
+                        //relationship we index them in lowercase
+                        $relationAlias = strtolower($relation->getOptions()['alias']);
+                        $queryNodes[] = $this->getFromAlias() . '.' . $relationAlias . ' as ' . $elasticAlias;
                         $searchNodes[] = $options['alias'] . '.';
                         $replaceNodes[] = $elasticAlias . '.';
                     }
