@@ -1,7 +1,9 @@
 <?php
 
 use Baka\Database\Apps;
+use Baka\Elasticsearch\Models\Indices;
 use function Baka\envValue;
+use Baka\Test\Support\Models\Leads;
 use Baka\TestCase\PhalconUnit;
 use Elasticsearch\ClientBuilder;
 use Phalcon\Cache;
@@ -228,5 +230,7 @@ class PhalconUnitTestCase extends PhalconUnit
     protected function setUp() : void
     {
         parent::setUp();
+
+        Indices::create(Leads::class);
     }
 }

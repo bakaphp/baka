@@ -133,7 +133,7 @@ class CrudElasticBehaviorTest extends PhalconUnitTestCase
         $this->assertTrue(Str::contains($parse->getParsedQuery(), 'is_deleted'));
     }
 
-    public function testIndexWithAditionals()
+    public function testIndexWithAdditional()
     {
         $leads = new Leads();
         $this->model = $leads;
