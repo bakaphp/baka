@@ -11,15 +11,18 @@ use PhalconUnitTestCase;
 
 class AuthTest extends PhalconUnitTestCase
 {
+    public ?string $email;
+
     /**
      * Test user signup.
      *
-     * @return boolean
+     * @return bool
      */
     public function testSignUp()
     {
         UserProvider::set(new Users());
 
+        $this->email = $this->faker->email;
         $userData = [
             'email' => $this->faker->email,
             'password' => 'nonenone',
@@ -36,7 +39,7 @@ class AuthTest extends PhalconUnitTestCase
     /**
      * Test userlogin.
      *
-     * @return boolean
+     * @return bool
      */
     public function testSessionGenerate()
     {
@@ -56,11 +59,11 @@ class AuthTest extends PhalconUnitTestCase
     /**
      * Test user logi.
      *
-     * @return boolean
+     * @return bool
      */
     public function testLogin()
     {
-        $user = UserProvider::get()::findFirst();
+        $user = UserProvider::get()::findFirstByEmail($this->email);
 
         $email = $user->email;
         $password = 'nonenone';
@@ -76,11 +79,11 @@ class AuthTest extends PhalconUnitTestCase
     /**
      * Logout.
      *
-     * @return boolean
+     * @return bool
      */
     public function testLogout()
     {
-        $user = UserProvider::get()::findFirst();
+        $user = UserProvider::get()::findFirstByEmail($this->email);
 
         $email = $user->email;
         $password = 'nonenone';
@@ -95,7 +98,7 @@ class AuthTest extends PhalconUnitTestCase
     /**
      * Test user forgot password.
      *
-     * @return boolean
+     * @return bool
      */
     public function testForgotPassword()
     {
