@@ -11,7 +11,7 @@ use PhalconUnitTestCase;
 
 class AuthTest extends PhalconUnitTestCase
 {
-    public ?string $email;
+    public ?string $email = null;
 
     /**
      * Test user signup.
