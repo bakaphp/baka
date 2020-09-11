@@ -11,8 +11,6 @@ use PhalconUnitTestCase;
 
 class AuthTest extends PhalconUnitTestCase
 {
-    public ?string $email = null;
-
     /**
      * Test user signup.
      *
@@ -22,9 +20,8 @@ class AuthTest extends PhalconUnitTestCase
     {
         UserProvider::set(new Users());
 
-        $this->email = $this->faker->email;
         $userData = [
-            'email' => $this->email,
+            'email' => 'bakatest@kanvas.dev',
             'password' => 'nonenone',
             'name' => $this->faker->name,
             'defaultCompanyName' => $this->faker->name,
@@ -63,7 +60,7 @@ class AuthTest extends PhalconUnitTestCase
      */
     public function testLogin()
     {
-        $user = UserProvider::get()::findFirstByEmail($this->email);
+        $user = UserProvider::get()::findFirstByEmail('bakatest@kanvas.dev');
 
         $email = $user->email;
         $password = 'nonenone';
@@ -83,7 +80,7 @@ class AuthTest extends PhalconUnitTestCase
      */
     public function testLogout()
     {
-        $user = UserProvider::get()::findFirstByEmail($this->email);
+        $user = UserProvider::get()::findFirstByEmail('bakatest@kanvas.dev');
 
         $email = $user->email;
         $password = 'nonenone';
