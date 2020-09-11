@@ -94,7 +94,7 @@ class QueryParserTest extends PhalconUnitTestCase
     {
         $limit = 100;
         $params = [];
-        $params['q'] = '(is_deleted:0,companies_id>0,user.displayname:%mc%,user.id>0;user.user_level>0)';
+        $params['q'] = '(is_deleted:0,companies_id>0,user.id>0;user.user_level>0)';
         //$params['fields'] = '';
         $params['limit'] = $limit;
         $params['page'] = '1';
@@ -114,7 +114,7 @@ class QueryParserTest extends PhalconUnitTestCase
     {
         $limit = 2;
         $params = [];
-        $params['q'] = '(is_deleted:0,companies_id>0,user.displayname:%mc%,user.id>0;user.user_level>0)';
+        $params['q'] = '(is_deleted:0,companies_id>0,user.id>0;user.user_level>0)';
         //$params['fields'] = '';
         $params['limit'] = $limit;
         $params['page'] = '1';
@@ -124,8 +124,6 @@ class QueryParserTest extends PhalconUnitTestCase
         $queryParser = new QueryParser($lead, $params);
         $results = ModelsDocuments::findBySql($queryParser->getParsedQuery(), new Leads());
 
-        echo count($results);
-        die();
         $this->assertTrue(count($results) == $limit);
         foreach ($results as $result) {
             $this->assertTrue($result->getId() > 0);
