@@ -114,6 +114,7 @@ class InitBakaSeed extends AbstractSeed
                 'system_modules_id' => 2,
                 'user_last_login_try' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
+                'registered' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
                 'is_deleted' => 0
             ],
@@ -129,6 +130,7 @@ class InitBakaSeed extends AbstractSeed
                 'user_level' => 1,
                 'user_last_login_try' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
+                'registered' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
                 'is_deleted' => 0
             ],
@@ -144,6 +146,7 @@ class InitBakaSeed extends AbstractSeed
                 'user_level' => 3,
                 'user_last_login_try' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
+                'registered' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
                 'is_deleted' => 0
             ],
@@ -159,6 +162,7 @@ class InitBakaSeed extends AbstractSeed
                 'user_last_login_try' => 0,
                 'user_level' => 3,
                 'created_at' => date('Y-m-d H:i:s'),
+                'registered' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
                 'is_deleted' => 0
             ], [
@@ -173,6 +177,7 @@ class InitBakaSeed extends AbstractSeed
                 'user_level' => 2,
                 'user_last_login_try' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
+                'registered' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
                 'is_deleted' => 0
             ], [
@@ -187,6 +192,7 @@ class InitBakaSeed extends AbstractSeed
                 'user_level' => 1,
                 'user_last_login_try' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
+                'registered' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
                 'is_deleted' => 0
             ],  [
@@ -201,6 +207,7 @@ class InitBakaSeed extends AbstractSeed
                 'user_last_login_try' => 0,
                 'user_level' => 3,
                 'created_at' => date('Y-m-d H:i:s'),
+                'registered' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
                 'is_deleted' => 0
             ],  [
@@ -215,6 +222,7 @@ class InitBakaSeed extends AbstractSeed
                 'user_last_login_try' => 0,
                 'user_level' => 1,
                 'created_at' => date('Y-m-d H:i:s'),
+                'registered' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
                 'is_deleted' => 0
             ]
