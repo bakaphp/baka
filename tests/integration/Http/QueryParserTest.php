@@ -124,6 +124,8 @@ class QueryParserTest extends PhalconUnitTestCase
         $queryParser = new QueryParser($lead, $params);
         $results = ModelsDocuments::findBySql($queryParser->getParsedQuery(), new Leads());
 
+        echo count($results);
+        die();
         $this->assertTrue(count($results) == $limit);
         foreach ($results as $result) {
             $this->assertTrue($result->getId() > 0);
