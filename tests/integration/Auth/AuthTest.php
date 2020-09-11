@@ -24,7 +24,7 @@ class AuthTest extends PhalconUnitTestCase
 
         $this->email = $this->faker->email;
         $userData = [
-            'email' => $this->faker->email,
+            'email' => $this->email,
             'password' => 'nonenone',
             'name' => $this->faker->name,
             'defaultCompanyName' => $this->faker->name,
