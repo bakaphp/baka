@@ -115,7 +115,11 @@ class InitBakaSeed extends AbstractSeed
                 'user_last_login_try' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
                 'registered' => date('Y-m-d H:i:s'),
+                'lastvisit' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
+                'dob' => date('Y-m-d'),
+                'sex' => 'M',
+                'user_login_tries' => 0,
                 'is_deleted' => 0
             ],
             [
@@ -131,7 +135,11 @@ class InitBakaSeed extends AbstractSeed
                 'user_last_login_try' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
                 'registered' => date('Y-m-d H:i:s'),
+                'lastvisit' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
+                'dob' => date('Y-m-d'),
+                'sex' => 'M',
+                'user_login_tries' => 0,
                 'is_deleted' => 0
             ],
             [
@@ -147,7 +155,11 @@ class InitBakaSeed extends AbstractSeed
                 'user_last_login_try' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
                 'registered' => date('Y-m-d H:i:s'),
+                'lastvisit' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
+                'dob' => date('Y-m-d'),
+                'sex' => 'M',
+                'user_login_tries' => 0,
                 'is_deleted' => 0
             ],
             [
@@ -163,7 +175,11 @@ class InitBakaSeed extends AbstractSeed
                 'user_level' => 3,
                 'created_at' => date('Y-m-d H:i:s'),
                 'registered' => date('Y-m-d H:i:s'),
+                'lastvisit' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
+                'dob' => date('Y-m-d'),
+                'sex' => 'M',
+                'user_login_tries' => 0,
                 'is_deleted' => 0
             ], [
                 'user_activation_email' => $random->uuid(),
@@ -178,7 +194,11 @@ class InitBakaSeed extends AbstractSeed
                 'user_last_login_try' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
                 'registered' => date('Y-m-d H:i:s'),
+                'lastvisit' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
+                'dob' => date('Y-m-d'),
+                'sex' => 'M',
+                'user_login_tries' => 0,
                 'is_deleted' => 0
             ], [
                 'user_activation_email' => $random->uuid(),
@@ -193,7 +213,11 @@ class InitBakaSeed extends AbstractSeed
                 'user_last_login_try' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
                 'registered' => date('Y-m-d H:i:s'),
+                'lastvisit' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
+                'dob' => date('Y-m-d'),
+                'sex' => 'M',
+                'user_login_tries' => 0,
                 'is_deleted' => 0
             ],  [
                 'user_activation_email' => $random->uuid(),
@@ -208,7 +232,11 @@ class InitBakaSeed extends AbstractSeed
                 'user_level' => 3,
                 'created_at' => date('Y-m-d H:i:s'),
                 'registered' => date('Y-m-d H:i:s'),
+                'lastvisit' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
+                'dob' => date('Y-m-d'),
+                'sex' => 'M',
+                'user_login_tries' => 0,
                 'is_deleted' => 0
             ],  [
                 'user_activation_email' => $random->uuid(),
@@ -223,7 +251,11 @@ class InitBakaSeed extends AbstractSeed
                 'user_level' => 1,
                 'created_at' => date('Y-m-d H:i:s'),
                 'registered' => date('Y-m-d H:i:s'),
+                'lastvisit' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
+                'dob' => date('Y-m-d'),
+                'sex' => 'M',
+                'user_login_tries' => 0,
                 'is_deleted' => 0
             ]
         ];
