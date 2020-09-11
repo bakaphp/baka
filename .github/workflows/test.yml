@@ -125,4 +125,4 @@ jobs:
       - name: Run all integration test suites
         if: success()
         run: |
-          vendor/bin/codecept run
+          vendor/bin/codecept run -v
