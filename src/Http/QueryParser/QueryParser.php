@@ -344,9 +344,9 @@ class QueryParser
     {
         $field = $this->parseComparisonField($comparison['field']);
 
-        $values = self::parseComparisonValues($comparison['values']);
+        $values = self::parseComparisonValues((string) $comparison['values']);
 
-        $operator = self::parseComparisonOperator($comparison['operator']);
+        $operator = self::parseComparisonOperator((string) $comparison['operator']);
 
         $comparison = self::buildComparison($field, $operator, array_shift($values));
 
@@ -414,7 +414,7 @@ class QueryParser
             return $operator;
         }
 
-        throw new UnknownOperatorException($operator);
+        throw new UnknownOperatorException((string) $operator);
     }
 
     /**
