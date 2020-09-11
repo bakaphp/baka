@@ -117,6 +117,7 @@ class InitBakaSeed extends AbstractSeed
                 'registered' => date('Y-m-d H:i:s'),
                 'lastvisit' => date('Y-m-d H:i:s'),
                 'user_active' => 1,
+                'user_level' => 1,
                 'dob' => date('Y-m-d'),
                 'sex' => 'M',
                 'user_login_tries' => 0,
