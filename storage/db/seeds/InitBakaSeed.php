@@ -2,6 +2,7 @@
 
 use Baka\Test\Support\Models\Leads;
 use Faker\Factory;
+use Phalcon\Security\Random;
 use Phinx\Seed\AbstractSeed;
 
 class InitBakaSeed extends AbstractSeed
@@ -97,6 +98,8 @@ class InitBakaSeed extends AbstractSeed
         $table = $this->table('custom_fields_types');
         $table->insert($data)
                   ->save();
+
+        $random = new Random();
 
         //add default languages
         $data = [
