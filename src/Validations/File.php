@@ -32,6 +32,7 @@ class File
                 'image/jpeg',
                 'image/png',
                 'image/webp',
+                'image/gif',
                 'audio/mpeg',
                 'audio/mp3',
                 'text/plain',
@@ -43,6 +44,8 @@ class File
                 'application/octet-stream',
                 'application/msword',
                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ],
             'messageType' => 'Allowed file types are :types',
         ];
