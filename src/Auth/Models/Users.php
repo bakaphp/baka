@@ -53,7 +53,7 @@ class Users extends Model implements UserInterface
     public ?string $user_activation_email = null;
     public ?string $profile_header = '';
     public bool $loggedIn = false;
-    public string $location = '';
+    public ?string $location = null;
     public string $interest = '';
     public int $profile_privacy = 0;
     public ?string $user_activation_forgot = null;
