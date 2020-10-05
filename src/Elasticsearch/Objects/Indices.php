@@ -69,8 +69,9 @@ class Indices
             } elseif (!is_array($type)) {
                 $params['body']['mappings']['properties'][$column] = ['type' => $type];
 
-                if ($type == 'string') {
+                if ($type == 'text') {
                     $params['body']['mappings']['properties'][$column]['analyzer'] = 'lowercase';
+                    $params['body']['mappings']['properties'][$column]['fielddata'] = true;
                 }
             } else {
                 //nested

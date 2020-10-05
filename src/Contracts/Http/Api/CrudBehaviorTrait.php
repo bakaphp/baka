@@ -171,7 +171,7 @@ trait CrudBehaviorTrait
         //get the results and append its relationships
         $results = $this->appendRelationshipsToResult($this->request, $records['results']);
 
-        //this means the want the response in a vuejs format
+        //return the kanvas pagination format
         if ($this->request->hasQuery('format')) {
             $limit = (int) $this->request->getQuery('limit', 'int', 25);
 

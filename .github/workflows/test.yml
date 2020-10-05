@@ -111,23 +111,18 @@ jobs:
           sudo sysctl -w fs.file-max=262144
           sudo sysctl -w vm.max_map_count=262144
 
-      - name: Runs Elasticsearch
-        uses: elastic/elastic-github-actions/elasticsearch@master
-        with:
-          stack-version: 7.8.0
-
-      - name: Elastic SQL
+      - name: Set up ES and install SQL plugin
         run: |
-          sudo docker run docker.elastic.co/elasticsearch/elasticsearch:7.8.0 ./bin/elasticsearch-plugin install https://d3g5vo6xdbdb9a.cloudfront.net/downloads/elasticsearch-plugins/opendistro-sql/opendistro_sql-1.9.0.0.zip
-          sudo docker restart $(docker ps -q)
-
-      - name: Sleep for 5 seconds
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '10s'
+          sudo add-apt-repository ppa:openjdk-r/ppa
+          sudo apt update
+          sudo apt install openjdk-11-jdk
+          sudo apt install unzip
+          wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-oss-7.8.0-amd64.deb
+          sudo dpkg -i elasticsearch-oss-7.8.0-amd64.deb
+          sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install https://d3g5vo6xdbdb9a.cloudfront.net/downloads/elasticsearch-plugins/opendistro-sql/opendistro_sql-1.9.0.0.zip
+          sudo systemctl start elasticsearch.service
 
       - name: Run all integration test suites
         if: success()
         run: |
-          curl -X POST http://127.0.0.1:9200/_opendistro/_sql?format=json
-          vendor/bin/codecept run
+          vendor/bin/codecept run -v

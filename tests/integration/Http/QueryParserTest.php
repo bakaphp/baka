@@ -14,7 +14,7 @@ class QueryParserTest extends PhalconUnitTestCase
     /**
      * Test a normal query with no conditional.
      *
-     * @return boolean
+     * @return bool
      */
     public function testSimpleQuery()
     {
@@ -94,7 +94,7 @@ class QueryParserTest extends PhalconUnitTestCase
     {
         $limit = 100;
         $params = [];
-        $params['q'] = '(is_deleted:0,companies_id>0,user.displayname:mc%,user.id>0;user.user_level:3)';
+        $params['q'] = '(is_deleted:0,companies_id>0,user.id>0;user.user_level>0)';
         //$params['fields'] = '';
         $params['limit'] = $limit;
         $params['page'] = '1';
@@ -114,7 +114,7 @@ class QueryParserTest extends PhalconUnitTestCase
     {
         $limit = 2;
         $params = [];
-        $params['q'] = '(is_deleted:0,companies_id>0,user.displayname:mc%,user.id>0;user.user_level:3)';
+        $params['q'] = '(is_deleted:0,companies_id>0,user.id>0;user.user_level>0)';
         //$params['fields'] = '';
         $params['limit'] = $limit;
         $params['page'] = '1';

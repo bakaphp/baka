@@ -134,11 +134,12 @@ class IndexBuilder
                     } else {
                         $params[$alias]['properties'][$column] = ['type' => $type];
 
-                        if ($type == 'string'
-                            && property_exists($referencedModel, 'elasticSearchNotAnalyzed')
-                            && $referencedModel->elasticSearchNotAnalyzed
-                        ) {
+                        if (self::useFieldSearchNotAnalyzed($type, $referencedModel)) {
                             $params[$alias]['properties'][$column]['analyzer'] = 'lowercase';
+                        }
+
+                        if (self::useFieldSearchTextFieldData($type, $referencedModel)) {
+                            $params[$alias]['properties'][$column]['fielddata'] = true;
                         }
                     }
                 }
@@ -289,5 +290,40 @@ class IndexBuilder
                 }
             }
         }
+    }
+
+    /**
+     * Validate if the model uses search not analyzed fields
+     * so we can create the indice with
+     *     $params['body']['mappings']['properties'][$column]['analyzer'] = 'lowercase';.
+     *
+     * @param string $type
+     * @param ModelInterface $model
+     *
+     * @return bool
+     */
+    public static function useFieldSearchNotAnalyzed(string $type, ModelInterface $model) : bool
+    {
+        return $type == 'text'
+                && property_exists($model, 'elasticSearchNotAnalyzed')
+                && $model->elasticSearchNotAnalyzed;
+    }
+
+    /**
+     * Validate if the model uses search fielddata for the text fields
+     * allowing us to sort this type of fields in elastic.
+     *
+     * @param string $type
+     * @param ModelInterface $model
+     *
+     * @return bool
+     */
+    public static function useFieldSearchTextFieldData(string $type, ModelInterface $model) : bool
+    {
+        return $type == 'text'
+                && (
+                    (property_exists($model, 'elasticSearchTextFieldData') && $model->elasticSearchTextFieldData)
+                    || !isset($model->elasticSearchTextFieldData)
+                );
     }
 }

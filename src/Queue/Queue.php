@@ -16,6 +16,11 @@ class Queue
     const NOTIFICATIONS = 'notifications';
     const JOBS = 'jobs';
     
+    public static bool $passive = false;
+    public static bool $durable = true;
+    public static bool $exclusive = false;
+    public static bool $auto_delete = false;
+
     /**
      * Send a msg to Queue.
      *
@@ -37,7 +42,14 @@ class Queue
             exclusive: false // the queue can be accessed in other channels
             auto_delete: false //the queue won't be deleted once the channel is closed.
         */
-        $channel->queue_declare($name, false, true, false, false);
+
+        $channel->queue_declare(
+            $name,
+            self::getPassive(),
+            self::getDurable(),
+            self::getExclusive(),
+            self::getAutoDelete()
+        );
 
         $msg = new AMQPMessage($msg, [
             'delivery_mode' => 2
@@ -88,5 +100,89 @@ class Queue
             $channel->close();
             $queue->close();
         });
+    }
+
+    /**
+     * Set queue $passive config value
+     *
+     * @param boolean $value
+     * @return void
+     */
+    public static function setPassive(bool $value): void
+    {
+        self::$passive = $value;
+    }
+
+    /**
+     * Set queue $auto_delete config value
+     *
+     * @param boolean $value
+     * @return void
+     */
+    public static function setAutoDelete(bool $value): void
+    {
+        self::$auto_delete = $value;
+    }
+
+    /**
+     * Set queue $exclusive config value
+     *
+     * @param boolean $value
+     * @return void
+     */
+    public static function setExclusive(bool $value): void
+    {
+        self::$exclusive = $value;
+    }
+
+    /**
+     * Set queue $durable config value
+     *
+     * @param boolean $value
+     * @return void
+     */
+    public static function setDurable(bool $value): void
+    {
+        self::$durable = $value;
+    }
+
+    /**
+     * Get queue $passive config value
+     *
+     * @return bool
+     */
+    public static function getPassive(): bool
+    {
+        return self::$passive;
+    }
+
+    /**
+     * Get queue $auto_delete config value
+     *
+     * @return bool
+     */
+    public static function getAutoDelete(): bool
+    {
+        return self::$auto_delete;
+    }
+
+    /**
+     * Get queue $exclusive config value
+     *
+     * @return bool
+     */
+    public static function getExclusive(): bool
+    {
+        return self::$exclusive;
+    }
+
+    /**
+     * Get queue $durable config value
+     *
+     * @return bool
+     */
+    public static function getDurable(): bool
+    {
+        return self::$durable;
     }
 }

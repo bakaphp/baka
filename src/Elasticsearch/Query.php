@@ -7,7 +7,6 @@ use Baka\Contracts\Database\ModelInterface as BakaModelInterface;
 use Baka\Elasticsearch\Query\FromClause;
 use function Baka\envValue;
 use GuzzleHttp\Client as GuzzleClient;
-use Iterator;
 use Phalcon\Di;
 use Phalcon\Mvc\Model\Query\Builder;
 
@@ -45,7 +44,7 @@ class Query
      *
      * @param string $sql
      *
-     * @return Iterator
+     * @return array
      */
     public function find() : array
     {
@@ -124,7 +123,7 @@ class Query
     /**
      * Given the elastic results, return only the data.
      *
-     * @param array $results
+     * @param array $elasticResults
      *
      * @return array
      */
@@ -148,7 +147,7 @@ class Query
     /**
      * From the current result set get the total count.
      *
-     * @return integer
+     * @return int
      */
     public function getTotal() : int
     {
@@ -165,7 +164,7 @@ class Query
      */
     public static function convertPhlToSql(Builder $builder, BakaModelInterface $model) : string
     {
-        $fromClause = new FromClause($model);
+        $fromClause = new FromClause($model, $builder->getPhql());
         $fromClauseParser = $fromClause->get();
 
         $sql = $builder->getPhql();
