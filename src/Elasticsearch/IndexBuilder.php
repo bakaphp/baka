@@ -114,8 +114,8 @@ class IndexBuilder
                 };
 
                 //ignore properties we don't need right now
-                if (array_key_exists('elasticSearch', $relation->getOptions())) {
-                    if (!$relation->getOptions()['elasticSearch']) {
+                if (array_key_exists('elasticIndex', $relation->getOptions())) {
+                    if (!$relation->getOptions()['elasticIndex']) {
                         continue;
                     }
                 }
@@ -224,8 +224,8 @@ class IndexBuilder
                 $options = $has->getOptions();
 
                 //ignore a relationship if we specify so
-                if (array_key_exists('elasticSearch', $options)) {
-                    if (!$options['elasticSearch']) {
+                if (array_key_exists('elasticIndex', $options)) {
+                    if (!$options['elasticIndex']) {
                         continue;
                     }
                 }
@@ -259,8 +259,8 @@ class IndexBuilder
                 $options = $has->getOptions();
 
                 //ignore a relationship if we specify so
-                if (array_key_exists('elasticSearch', $options)) {
-                    if (!$options['elasticSearch']) {
+                if (array_key_exists('elasticIndex', $options)) {
+                    if (!$options['elasticIndex']) {
                         continue;
                     }
                 }
