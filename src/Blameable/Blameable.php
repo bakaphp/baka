@@ -120,8 +120,9 @@ class Blameable extends Behavior implements BehaviorInterface
         $audit->users_id = is_object($user) ? $user->getId() : $anonymous;
 
         //The model who performed the action
-        $auditId = method_exists($model, 'getId') ? $model->getId() : $model->id;
-        $audit->entity_id = $auditId ?: 0;
+        $auditModelId = method_exists($model, 'getId') ? $model->getId() : 0;
+        $auditId = $model->id ?: 0;
+        $audit->entity_id = $auditId ?: $auditModelId;
 
         //The model who performed the action
         $audit->model_name = get_class($model);
