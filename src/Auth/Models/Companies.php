@@ -6,6 +6,7 @@ use Baka\Database\Model;
 use Exception;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Di;
 
 class Companies extends Model
 {
@@ -84,7 +85,8 @@ class Companies extends Model
         }
 
         //multi user asociation
-        $usersAssociatedCompany = new UsersAssociatedCompany();
+        $usersAssociatedCompany = new UsersAssociatedApps();
+        $usersAssociatedCompany->apps_id = Di::getDefault()->getApp()->getId();
         $usersAssociatedCompany->users_id = $this->user->getId();
         $usersAssociatedCompany->company_id = $this->getId();
         $usersAssociatedCompany->identify_id = $this->user->getId();
@@ -128,7 +130,7 @@ class Companies extends Model
         }
 
         //second try
-        $defaultCompany = UsersAssociatedCompany::findFirst([
+        $defaultCompany = UsersAssociatedApps::findFirst([
             'conditions' => 'users_id = ?0 and user_active =?1',
             'bind' => [$user->getId(), 1],
         ]);
