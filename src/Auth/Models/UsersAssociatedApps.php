@@ -19,6 +19,7 @@ class UsersAssociatedApps extends Model
     public function initialize()
     {
         $this->setSource('users_associated_apps');
+        $this->belongsTo('users_id', 'Baka\Auth\Models\Apps', 'id', ['alias' => 'app']);
         $this->belongsTo('users_id', 'Baka\Auth\Models\Users', 'id', ['alias' => 'user']);
         $this->belongsTo('company_id', 'Baka\Auth\Models\Companies', 'id', ['alias' => 'company']);
     }
