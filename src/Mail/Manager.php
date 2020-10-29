@@ -2,9 +2,9 @@
 
 namespace Baka\Mail;
 
-use function Baka\appPath;
+use Exception;
+use Phalcon\Di;
 use Phalcon\Mailer\Manager as ManagerPhalcon;
-use Phalcon\Mvc\View\Engine\Volt;
 
 class Manager extends ManagerPhalcon
 {
@@ -55,6 +55,16 @@ class Manager extends ManagerPhalcon
     }
 
     /**
+     * Get the configuration.
+     *
+     * @return object
+     */
+    public function getConfigure() : object
+    {
+        return (object) $this->getConfig();
+    }
+
+    /**
      * Renders a view.
      *
      * @param $viewPath
@@ -63,25 +73,13 @@ class Manager extends ManagerPhalcon
      *
      * @return string
      */
-    public function setRenderView($viewPath, $params)
+    public function setRenderView(string $viewPath, array $params) : string
     {
-        //Set volt template engine and specify the cache path
-        $di = $this->getDI();
-        $this->setViewEngines([
-            '.volt' => function ($view = null) use ($di) {
-                $volt = new Volt($view);
+        if (!Di::getDefault()->has('view')) {
+            throw new Exception('No view service define , please add a view service to your provider');
+        }
 
-                $volt->setOptions([
-                    'path' => appPath('/cache/volt/'),
-                    'separator' => '_',
-                    'always' => $di->has('config') ? !$di->get('config')->application->production : true,
-                ]);
-
-                return $volt;
-            }
-        ]);
-
-        $view = $this->getView();
+        $view = Di::getDefault()->get('view');
 
         $content = $view->render($viewPath, $params);
         return $content;

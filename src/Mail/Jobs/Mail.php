@@ -11,7 +11,7 @@ use Swift_SmtpTransport;
 
 class Mail extends Job implements QueueableJobInterface
 {
-    protected array $config;
+    protected object $config;
     protected array $options;
     protected Message $message;
 
@@ -24,7 +24,7 @@ class Mail extends Job implements QueueableJobInterface
     public function __construct(Message $message, array $options = [])
     {
         $this->message = $message;
-        $this->config = (array) $message->getManager()->getConfig();
+        $this->config =  $message->getManager()->getConfigure();
         $this->options = $options;
     }
 
@@ -35,10 +35,10 @@ class Mail extends Job implements QueueableJobInterface
      */
     public function handle()
     {
-        $username = $this->config['email']['username'];
-        $password = $this->config['email']['password'];
-        $host = $this->config['email']['host'];
-        $port = $this->config['email']['port'];
+        $username = $this->config->email['username'];
+        $password = $this->config->email['password'];
+        $host = $this->config->email['host'];
+        $port = $this->config->email['port'];
 
         //if get the the auth we need ot overwrite it
         if (isset($this->options['auth'])) {

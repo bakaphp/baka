@@ -84,13 +84,13 @@ class Message extends PhalconMessage
      */
     public function sendNow()
     {
-        $config = $this->getManager()->getConfig();
+        $config = $this->getManager()->getConfigure();
         $message = $this->getMessage();
 
-        $username = $config->email->username;
-        $password = $config->email->password;
-        $host = $config->email->host;
-        $port = $config->email->port;
+        $username = $config->username;
+        $password = $config->password;
+        $host = $config->host;
+        $port = $config->port;
 
         $transport = (new Swift_SmtpTransport($host, $port))
                         ->setUsername($username)
