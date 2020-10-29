@@ -8,8 +8,6 @@ use Phalcon\Mvc\View\Engine\Volt;
 
 class Manager extends ManagerPhalcon
 {
-    protected $queue;
-
     /**
      *  Overwrite this function.
      *
@@ -54,27 +52,6 @@ class Manager extends ManagerPhalcon
 
         $this->registerSwiftTransport();
         $this->registerSwiftMailer();
-        $this->registerQueue();
-    }
-
-    /**
-     * Register the queue service.
-     *
-     * @return BeanstalkExtended
-     */
-    public function registerQueue()
-    {
-        $this->queue = $this->getDI()->get('queue');
-    }
-
-    /**
-     * Get the queue service.
-     *
-     * @return BeanstalkExtended
-     */
-    public function getQueue()
-    {
-        return $this->queue;
     }
 
     /**
@@ -97,7 +74,7 @@ class Manager extends ManagerPhalcon
                 $volt->setOptions([
                     'path' => appPath('/cache/volt/'),
                     'separator' => '_',
-                    'always' => !$di->get('config')->application->production,
+                    'always' => $di->has('config') ? !$di->get('config')->application->production : true,
                 ]);
 
                 return $volt;

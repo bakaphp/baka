@@ -2,19 +2,14 @@
 
 namespace Baka\Mail;
 
-use Baka\Queue\Queue;
+use Baka\Mail\Jobs\Mail;
 use Exception;
+use Phalcon\Mailer\Message as PhalconMessage;
 use Swift_Mailer;
 use Swift_SmtpTransport;
 
-/**
- * Class Message.
- *
- * @package Phalcon\Mailer
- */
-class Message extends \Phalcon\Mailer\Message
+class Message extends PhalconMessage
 {
-    protected $queueName = 'email_queue';
     protected $viewPath = null;
     protected $params = [];
     protected $viewsDirLocal = null;
@@ -77,17 +72,9 @@ class Message extends \Phalcon\Mailer\Message
         }
 
         $this->failedRecipients = [];
+        $options = $this->auth ? ['auth' => $this->smtp] : [];
 
-        if ($this->auth) {
-            Queue::send($this->queueName, serialize([
-                'message' => $this->getMessage(),
-                'auth' => $this->smtp
-            ]));
-        } else {
-            Queue::send($this->queueName, serialize([
-                'message' => $this->getMessage()
-            ]));
-        }
+        Mail::dispatch($this, $options);
     }
 
     /**
@@ -97,7 +84,7 @@ class Message extends \Phalcon\Mailer\Message
      */
     public function sendNow()
     {
-        $config = $this->getManager()->getDI()->getConfig();
+        $config = $this->getManager()->getConfig();
         $message = $this->getMessage();
 
         $username = $config->email->username;
@@ -137,19 +124,6 @@ class Message extends \Phalcon\Mailer\Message
         $this->smtp = $params;
         $this->auth = true;
 
-        return $this;
-    }
-
-    /**
-     * Set the queue name if the user wants to shange it.
-     *
-     * @param string $queuName
-     *
-     * @return $this
-     */
-    public function queue(string $queue)
-    {
-        $this->queueName = $queue;
         return $this;
     }
 
