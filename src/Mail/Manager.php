@@ -2,21 +2,16 @@
 
 namespace Baka\Mail;
 
+use function Baka\appPath;
+use Phalcon\Mailer\Manager as ManagerPhalcon;
 use Phalcon\Mvc\View\Engine\Volt;
 
-use function Baka\appPath;
-
-/**
- * Class Manager.
- *
- * @package Phalcon\Manager
- */
-class Manager extends \Phalcon\Mailer\Manager
+class Manager extends ManagerPhalcon
 {
     protected $queue;
 
     /**
-     *  Overwrite this function 
+     *  Overwrite this function.
      *
      *  Create a new Message instance.
      *
@@ -94,14 +89,15 @@ class Manager extends \Phalcon\Mailer\Manager
     public function setRenderView($viewPath, $params)
     {
         //Set volt template engine and specify the cache path
+        $di = $this->getDI();
         $this->setViewEngines([
-            '.volt' => function ($view = null) {
+            '.volt' => function ($view = null) use ($di) {
                 $volt = new Volt($view);
 
                 $volt->setOptions([
-                    'compiledPath' => appPath('/cache/volt/'),
-                    'compiledSeparator' => '_',
-                    'compileAlways' => !$this->getDI()->get('config')->application->production,
+                    'path' => appPath('/cache/volt/'),
+                    'separator' => '_',
+                    'always' => !$di->get('config')->application->production,
                 ]);
 
                 return $volt;
