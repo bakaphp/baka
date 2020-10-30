@@ -23,7 +23,7 @@ class Users extends \Baka\Database\Model
     {
         $this->hasMany(
             'id',
-            subscriptions::class,
+            Subscriptions::class,
             'user_id',
             [
                 'alias' => 'subscriptions',
