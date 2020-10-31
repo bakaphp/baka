@@ -173,20 +173,20 @@ class PhalconUnitTestCase extends PhalconUnit
             $view->setViewsDir(realpath(dirname(__FILE__)) . '/view/');
 
             $view->registerEngines([
-                '.volt' => function ($view, $di) use ($config) {
-                    $volt = new VoltEngine($view, $di);
+                '.volt' => function ($view) use ($config) {
+                    $volt = new VoltEngine($view, $this);
 
                     $volt->setOptions([
-                        'compiledPath' => realpath(dirname(__FILE__)) . '/view/cache/',
-                        'compiledSeparator' => '_',
+                        'path' => realpath(dirname(__FILE__)) . '/view/cache/',
+                        'separator' => '_',
                         //since production is true or false, and we inverse the value to be false in production true in debug
-                        'compileAlways' => true,
+                        'always' => true,
                     ]);
 
                     return $volt;
                 },
-                '.php' => function ($view, $di) {
-                    return new \Phalcon\Mvc\View\Engine\Php($view, $di);
+                '.php' => function ($view) {
+                    return new \Phalcon\Mvc\View\Engine\Php($view, $this);
                 },
             ]);
 

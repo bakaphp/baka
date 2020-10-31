@@ -12,6 +12,24 @@ class Users extends \Baka\Database\Model
 
     public function initialize()
     {
-        $this->hasMany('id', 'Baka\Cashier\Subscription', 'user_id', ['alias' => 'subscriptions']);
+        $this->hasMany('id', 'Baka\Test\Support\Models\Subscriptions', 'user_id', ['alias' => 'subscriptions']);
+    }
+
+    
+    /**
+     * Get all of the subscriptions for the user.
+     */
+    public function subscriptions()
+    {
+        $this->hasMany(
+            'id',
+            Subscriptions::class,
+            'user_id',
+            [
+                'alias' => 'subscriptions',
+                'params' => ['order' => 'id DESC']
+            ]
+        );
+        return $this->getRelated('subscriptions');
     }
 }

@@ -2,21 +2,14 @@
 
 namespace Baka\Mail;
 
-use Phalcon\Mvc\View\Engine\Volt;
+use Exception;
+use Phalcon\Di;
+use Phalcon\Mailer\Manager as ManagerPhalcon;
 
-use function Baka\appPath;
-
-/**
- * Class Manager.
- *
- * @package Phalcon\Manager
- */
-class Manager extends \Phalcon\Mailer\Manager
+class Manager extends ManagerPhalcon
 {
-    protected $queue;
-
     /**
-     *  Overwrite this function 
+     *  Overwrite this function.
      *
      *  Create a new Message instance.
      *
@@ -59,27 +52,16 @@ class Manager extends \Phalcon\Mailer\Manager
 
         $this->registerSwiftTransport();
         $this->registerSwiftMailer();
-        $this->registerQueue();
     }
 
     /**
-     * Register the queue service.
+     * Get the configuration.
      *
-     * @return BeanstalkExtended
+     * @return object
      */
-    public function registerQueue()
+    public function getConfigure() : object
     {
-        $this->queue = $this->getDI()->get('queue');
-    }
-
-    /**
-     * Get the queue service.
-     *
-     * @return BeanstalkExtended
-     */
-    public function getQueue()
-    {
-        return $this->queue;
+        return (object) $this->getConfig();
     }
 
     /**
@@ -91,24 +73,13 @@ class Manager extends \Phalcon\Mailer\Manager
      *
      * @return string
      */
-    public function setRenderView($viewPath, $params)
+    public function setRenderView(string $viewPath, array $params) : string
     {
-        //Set volt template engine and specify the cache path
-        $this->setViewEngines([
-            '.volt' => function ($view = null) {
-                $volt = new Volt($view);
+        if (!Di::getDefault()->has('view')) {
+            throw new Exception('No view service define , please add a view service to your provider');
+        }
 
-                $volt->setOptions([
-                    'compiledPath' => appPath('/cache/volt/'),
-                    'compiledSeparator' => '_',
-                    'compileAlways' => !$this->getDI()->get('config')->application->production,
-                ]);
-
-                return $volt;
-            }
-        ]);
-
-        $view = $this->getView();
+        $view = Di::getDefault()->get('view');
 
         $content = $view->render($viewPath, $params);
         return $content;

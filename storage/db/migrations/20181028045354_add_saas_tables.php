@@ -1,7 +1,7 @@
 <?php
 
-use Phinx\Migration\AbstractMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
+use Phinx\Migration\AbstractMigration;
 
 class AddSaasTables extends AbstractMigration
 {
@@ -73,13 +73,13 @@ class AddSaasTables extends AbstractMigration
             ->save();
 
         $table = $this->table('subscription');
-        
+
         if ($table->hasIndex('company_id')) {
             $table->removeIndexByName('company_id')->save();
         }
 
         $table = $this->table('subscription');
-        $table->addIndex(['company_id'], ['name' => 'company_id', 'unique' => true])->save();
+        $table->addIndex(['company_id'], ['name' => 'company_id', 'unique' => false])->save();
         $table = $this->table('users_associated_company', ['id' => false, 'primary_key' => ['users_id', 'company_id'], 'engine' => 'InnoDB', 'encoding' => 'utf8', 'collation' => 'utf8_general_ci', 'comment' => '', 'row_format' => 'Compact']);
         $table->addColumn('users_id', 'integer', ['null' => false, 'limit' => MysqlAdapter::INT_REGULAR, 'precision' => 10])
             ->addColumn('company_id', 'integer', ['null' => false, 'limit' => MysqlAdapter::INT_REGULAR, 'precision' => 10, 'after' => 'users_id'])

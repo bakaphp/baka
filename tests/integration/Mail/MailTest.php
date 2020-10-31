@@ -14,7 +14,7 @@ class MailTest extends PhalconUnitTestCase
     public function testSimpleEmail()
     {
         //send email
-        $this->_getDI()->get('mail')
+        $this->getDI()->get('mail')
             ->to('bakaphpmail@getnada.com')
             ->subject('Test Normal Email Queue')
             ->content('normal email send via queue')
@@ -29,11 +29,11 @@ class MailTest extends PhalconUnitTestCase
     public function testTemplateMail()
     {
         //send email
-        $this->_getDI()->get('mail')
+        $this->getDI()->get('mail')
             ->to('bakaphpmail@getnada.com')
             ->subject('Test Template Email queue')
             ->params(['name' => 'Max'])
-            ->template() // email.volt
+            ->template('email.volt') // email.volt
             ->send();
     }
 
@@ -45,11 +45,11 @@ class MailTest extends PhalconUnitTestCase
     public function testEmailSmtpConfig()
     {
         //send email
-        $this->_getDI()->get('mail')
+        $this->getDI()->get('mail')
             ->to('bakaphpmail@getnada.com')
             ->subject('Test Template Email queue')
             ->params(['name' => 'dfad'])
-            ->smtp(['username' => 'max@mctekk.com', 'password' => 'nosenose'])
+            ->smtp(['username' => $this->faker->email, 'password' => $this->faker->password])
             ->template() // email.volt
             ->send();
     }
@@ -62,7 +62,7 @@ class MailTest extends PhalconUnitTestCase
     public function testSimpleEmailNow()
     {
         //send email
-        $mailer = $this->_getDI()->get('mail');
+        $mailer = $this->getDI()->get('mail');
 
         $mailer->to('info@mctekk.com')
             ->subject('Test Normal Email')

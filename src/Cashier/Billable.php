@@ -14,6 +14,7 @@ use Stripe\Error\InvalidRequest as StripeErrorInvalidRequest;
 use Stripe\Invoice as StripeInvoice;
 use Stripe\InvoiceItem as StripeInvoiceItem;
 use Stripe\Refund as StripeRefund;
+use Stripe\StripeClient;
 use Stripe\Token as StripeToken;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -323,7 +324,10 @@ trait Billable
     {
         $invoices = [];
         $parameters = array_merge(['limit' => 24], $parameters);
-        $stripeInvoices = $this->asStripeCustomer()->invoices($parameters);
+        $stripe = new StripeClient($this->getStripeKey());
+
+        $parameters['customer'] = $this->asStripeCustomer()->id;
+        $stripeInvoices = $stripe->invoices->all($parameters);
 
         // Here we will loop through the Stripe invoices and create our own custom Invoice
         // instances that have more helper methods and are generally more convenient to

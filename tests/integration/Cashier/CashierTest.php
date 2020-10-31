@@ -2,12 +2,13 @@
 
 namespace Baka\Test\Integration\Cashier;
 
+use Baka\Cashier\Subscription;
 use Baka\Database\Apps;
 use Baka\Test\Support\Models\Companies;
 use Baka\Test\Support\Models\Users;
 use Carbon\Carbon;
-use Baka\Cashier\Subscription;
 use PhalconUnitTestCase;
+use Stripe\Token;
 
 class CashierTest extends PhalconUnitTestCase
 {
@@ -16,8 +17,15 @@ class CashierTest extends PhalconUnitTestCase
      */
     public function testSubscriptionsCanBeCreatedAndUpdated()
     {
-        $user = Users::findFirstOrFail();
-        $company = Companies::findFirstOrFail(1);
+        $user = Users::findFirstOrFail([
+            'conditions' => 'stripe_id is null',
+            'order' => 'RAND()'
+        ]);
+
+        $company = Companies::findFirstOrFail([
+            'order' => 'RAND()',
+        ]);
+
         $apps = Apps::findFirstOrFail(1);
 
         //Create Subscription
@@ -52,8 +60,14 @@ class CashierTest extends PhalconUnitTestCase
 
     public function testCreatingSubscriptionWithTrial()
     {
-        $user = Users::findFirstOrFail();
-        $company = Companies::findFirstOrFail(1);
+        $user = Users::findFirstOrFail([
+            'conditions' => 'stripe_id is null',
+            'order' => 'RAND()'
+        ]);
+
+        $company = Companies::findFirstOrFail([
+            'order' => 'RAND()',
+        ]);
         $apps = Apps::findFirstOrFail(1);
 
         // Create Subscription
@@ -76,7 +90,10 @@ class CashierTest extends PhalconUnitTestCase
 
     public function testCreatingOneOffInvoices()
     {
-        $user = Users::findFirstOrFail();
+        $user = Users::findFirstOrFail([
+            'conditions' => 'stripe_id is not null',
+            'order' => 'RAND()'
+        ]);
 
         // Create Invoice
         $user->createAsStripeCustomer($this->getTestToken());
@@ -90,8 +107,10 @@ class CashierTest extends PhalconUnitTestCase
 
     public function testRefunds()
     {
-        $user = Users::findFirstOrFail();
-
+  $user = Users::findFirstOrFail([
+            'conditions' => 'stripe_id is not null',
+            'order' => 'RAND()'
+        ]);
         // Create Invoice
         $user->createAsStripeCustomer($this->getTestToken());
         $invoice = $user->invoiceFor('Phalcon PHP Cashier', 1000);
@@ -105,7 +124,7 @@ class CashierTest extends PhalconUnitTestCase
 
     protected function getTestToken()
     {
-        return \Stripe\Token::create([
+        return Token::create([
             'card' => [
                 'number' => '4242424242424242',
                 'exp_month' => date('m', strtotime('+1 month')),
