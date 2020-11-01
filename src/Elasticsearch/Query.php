@@ -36,9 +36,8 @@ class Query
     public function getHost() : string
     {
         $config = Di::getDefault()->get('config');
-        $useHttpSecure = (bool) getenv('ELASTIC_HTTP_SECURE', false);
-        $httpPort = !$useHttpSecure ? 'http' : 'https';
-        return $httpPort . '://' . $config->elasticSearch['hosts'][0];
+        $host = 'http://' . $config->elasticSearch['hosts'][0];
+        return filter_var($host, FILTER_VALIDATE_URL) ? $config->elasticSearch['hosts'][0] : $host;
     }
 
     /**
