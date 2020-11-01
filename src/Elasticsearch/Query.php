@@ -37,7 +37,7 @@ class Query
     {
         $config = Di::getDefault()->get('config');
         $host = 'http://' . $config->elasticSearch['hosts'][0];
-        return filter_var($host, FILTER_VALIDATE_URL) ? $config->elasticSearch['hosts'][0] : $host;
+        return filter_var($config->elasticSearch['hosts'][0], FILTER_VALIDATE_URL) ? $config->elasticSearch['hosts'][0] : $host;
     }
 
     /**
