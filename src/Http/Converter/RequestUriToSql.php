@@ -2,11 +2,11 @@
 
 namespace Baka\Http\Converter;
 
+use Baka\Contracts\Http\Converter\ConverterInterface;
+use Baka\Contracts\Http\Converter\CustomQueriesTrait;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
-use Baka\Contracts\Http\Converter\ConverterInterface;
-use Baka\Contracts\Http\Converter\CustomQueriesTrait;
 use Exception;
 use Phalcon\Di;
 use Phalcon\Di\Injectable;
@@ -216,7 +216,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
             foreach ($this->relationSearchFields as $model => $searchFields) {
                 $modelObject = new $model();
                 $model = $modelObject->getSource();
-
+                $metaData = $modelObject->getModelsMetaData();
                 $relatedKey = $metaData->getPrimaryKeyAttributes($modelObject)[0];
                 $relation = $this->model->getModelsManager()->getRelationsBetween(get_class($this->model), get_class($modelObject));
                 $relationKey = (is_array($relation) && !empty($relation)) ? $relation[0]->getFields() : $relatedKey;
