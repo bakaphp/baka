@@ -113,15 +113,22 @@ class Indices
         // Call to get the information from related models.
         IndexBuilder::getRelatedParams($params['body']['mappings']['properties'], $modelClass, $modelClass, 0, $maxDepth);
 
-        /**
-         * Delete the index before creating it again.
-         *
-         * @todo move this to its own function
-         */
-        if (self::exist($modelClassName)) {
-            self::delete($model);
+        return  Client::getInstance()->indices()->create($params);
+    }
+
+    /**
+     * Create if it doesn't exist.
+     *
+     * @param string $model
+     *
+     * @return bool|array
+     */
+    public static function createIfNotExist(string $modelClassName, int $maxDepth = 3, int $nestedLimit = 75)
+    {
+        if (!self::exist($modelClassName)) {
+            return self::create($modelClassName, $maxDepth, $nestedLimit = 75);
         }
 
-        return  Client::getInstance()->indices()->create($params);
+        return false;
     }
 }

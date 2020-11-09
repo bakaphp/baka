@@ -13,7 +13,7 @@ class Indices
      *
      * @param string $model
      *
-     * @return void
+     * @return bool
      */
     public static function exist(string $name) : bool
     {
@@ -79,10 +79,22 @@ class Indices
             }
         }
 
-        if (self::exist($index)) {
-            self::delete($index);
+        return Client::getInstance()->indices()->create($params);
+    }
+
+    /**
+     * Create if it doesn't exist.
+     *
+     * @param string $model
+     *
+     * @return bool|array
+     */
+    public static function createIfNotExist(Documents $document, int $maxDepth = 3, int $nestedLimit = 75)
+    {
+        if (!self::exist($document->getIndices())) {
+            return self::create($document, $maxDepth, $nestedLimit);
         }
 
-        return Client::getInstance()->indices()->create($params);
+        return false;
     }
 }
