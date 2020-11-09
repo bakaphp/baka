@@ -137,6 +137,11 @@ class NestedParenthesesParser
 
         //add additional queries if we didn't overwrite
         if (isset($this->currentScope[0])) {
+            /**
+             * Overwrite the last joiner when combining query and additional params
+             * by leaving it blank we use the default query behavior AND.
+             */
+            $this->currentScope[0][count($this->currentScope[0]) - 1]['joiner'] = '';
             $this->currentScope[0] = (array_values(($this->currentScope[0] + $this->additionalQueryFields)));
         }
     }
