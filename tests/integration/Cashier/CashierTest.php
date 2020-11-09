@@ -107,7 +107,7 @@ class CashierTest extends PhalconUnitTestCase
 
     public function testRefunds()
     {
-  $user = Users::findFirstOrFail([
+        $user = Users::findFirstOrFail([
             'conditions' => 'stripe_id is not null',
             'order' => 'RAND()'
         ]);

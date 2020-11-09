@@ -47,6 +47,23 @@ class QueryParserTest extends PhalconUnitTestCase
         }
     }
 
+    public function testSimpleQueryWithQEmptyAndPagination()
+    {
+        $params = [];
+        $params['q'] = '()';
+        //$params['fields'] = '';
+        $params['page'] = '1';
+        $params['sort'] = 'id|desc';
+
+        $queryParser = new QueryParser(new Leads(), $params);
+        $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
+
+        foreach ($results as $result) {
+            $this->assertTrue(isset($result['id']));
+            $this->assertTrue(isset($result['user']['id']));
+        }
+    }
+
     public function testSimpleQueryWithConditional()
     {
         $limit = 100;
