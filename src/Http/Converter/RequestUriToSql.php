@@ -2,11 +2,11 @@
 
 namespace Baka\Http\Converter;
 
+use Baka\Contracts\Http\Converter\ConverterInterface;
+use Baka\Contracts\Http\Converter\CustomQueriesTrait;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
-use Baka\Contracts\Http\Converter\ConverterInterface;
-use Baka\Contracts\Http\Converter\CustomQueriesTrait;
 use Exception;
 use Phalcon\Di;
 use Phalcon\Di\Injectable;
@@ -200,9 +200,9 @@ class RequestUriToSql extends Injectable implements ConverterInterface
      */
     protected function prepareCustomSearch($hasSubquery = false) : array
     {
-        $metaData = new MetaDataMemory();
         $classReflection = (new ReflectionClass($this->model));
         $classname = $this->model->getSource();
+        $metaData = $this->model->getModelsMetaData();
 
         $primaryKey = $this->model->getPrimaryKey();
 
