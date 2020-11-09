@@ -200,9 +200,9 @@ class RequestUriToSql extends Injectable implements ConverterInterface
      */
     protected function prepareCustomSearch($hasSubquery = false) : array
     {
-        $metaData = new MetaDataMemory();
         $classReflection = (new ReflectionClass($this->model));
         $classname = $this->model->getSource();
+        $metaData = $this->model->getModelsMetaData();
 
         $primaryKey = $this->model->getPrimaryKey();
 
@@ -216,7 +216,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
             foreach ($this->relationSearchFields as $model => $searchFields) {
                 $modelObject = new $model();
                 $model = $modelObject->getSource();
-                $metaData = $modelObject->getModelsMetaData();
+
                 $relatedKey = $metaData->getPrimaryKeyAttributes($modelObject)[0];
                 $relation = $this->model->getModelsManager()->getRelationsBetween(get_class($this->model), get_class($modelObject));
                 $relationKey = (is_array($relation) && !empty($relation)) ? $relation[0]->getFields() : $relatedKey;
