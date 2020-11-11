@@ -110,7 +110,7 @@ class QueryParser
         $params['q'] = str_replace('()', '', $params['q']);
 
         //if empty default search 1 = 1
-        $this->setQuery($params['q'] ?? '(1:1)');
+        $this->setQuery($params['q'] ?: '(1:1)');
     }
 
     /**
