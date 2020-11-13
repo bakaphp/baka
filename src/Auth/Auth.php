@@ -63,18 +63,16 @@ class Auth
     }
 
     /**
-     * Create a new user.
-     *
-     * @return Users
-     */
-    public static function signUp(array $userData) : UserInterface
+    * Create a new user.
+    *
+    * @return Users
+    */
+    public static function signUp(UserInterface $user) : UserInterface
     {
-        $user = UserProvider::get();
-        $user->email = $userData['email'];
         $user->sex = 'U';
-        $user->firstname = $userData['firstname'] ?? ' ';
-        $user->lastname = $userData['lastname'] ?? ' ';
-        $user->displayname = $userData['displayname'] ?? Random::generateDisplayName($userData['email']);
+        $user->firstname = $user->firstname ?? ' ';
+        $user->lastname = $user->lastname ?? ' ';
+        $user->displayname = $user->displayname ?? Random::generateDisplayName($user->email);
         $user->dob = date('Y-m-d');
         $user->lastvisit = date('Y-m-d H:i:s');
         $user->registered = date('Y-m-d H:i:s');
@@ -85,16 +83,16 @@ class Auth
         $user->banned = 'N';
         $user->user_login_tries = 0;
         $user->user_last_login_try = 0;
-        $user->default_company = $userData['default_company'] ?? 0;
+        $user->default_company = $user->default_company ?? 0;
         $user->session_time = time();
         $user->session_page = time();
-        $user->password = Password::make($userData['password']);
-        $user->language = $userData['language'] ?? 'EN';
+        $user->password = Password::make($user->password);
+        $user->language = $user->language ?? 'EN';
         $user->user_activation_key = Keys::make();
 
         //if you need to run any extra feature with the data we get from the request
         if (method_exists($user, 'setCustomFields')) {
-            $user->setCustomFields($userData);
+            $user->setCustomFields((array)$user);
         }
 
         $user->saveOrFail();

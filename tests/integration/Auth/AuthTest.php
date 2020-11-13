@@ -12,23 +12,22 @@ use PhalconUnitTestCase;
 class AuthTest extends PhalconUnitTestCase
 {
     /**
-     * Test user signup.
-     *
-     * @return bool
-     */
+    * Test user signup.
+    *
+    * @return bool
+    */
     public function testSignUp()
     {
         UserProvider::set(new Users());
 
-        $userData = [
-            'email' => 'bakatest@kanvas.dev',
-            'password' => 'nonenone',
-            'name' => $this->faker->name,
-            'defaultCompanyName' => $this->faker->name,
-            'displayname' => $this->faker->firstname,
-        ];
+        $user =  UserProvider::get();
+        $user->email = 'bakatest@kanvas.dev';
+        $user->password = 'nonenone';
+        $user->name = $this->faker->name;
+        $user->defaultCompanyName = $this->faker->name;
+        $user->displayname = $this->faker->firstname;
 
-        $user = Auth::signUp($userData);
+        $user = Auth::signUp($user);
 
         $this->assertTrue($user instanceof UserInterface);
     }
