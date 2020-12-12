@@ -87,7 +87,7 @@ class QueryParserTest extends PhalconUnitTestCase
     {
         $limit = 100;
         $params = [];
-        $params['q'] = '(is_deleted:0,companies_id>0,user.displayname:mc%,user.id>0;user.user_level:3)';
+        $params['q'] = '(is_deleted:0,user.displayname:mc%,user.id>0;user.user_level:3)';
         //$params['fields'] = '';
         $params['limit'] = $limit;
         $params['page'] = '1';
@@ -97,8 +97,10 @@ class QueryParserTest extends PhalconUnitTestCase
         $queryParser->setAdditionalQueryFields([
             ['is_deleted', ':', '0'],
             ['companies_id', ':', 1],
+            ['fadfadfad', ':', 1],
         ]);
-
+        echo $queryParser->getParsedQuery();
+        die();
         $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
 
         foreach ($results as $result) {
