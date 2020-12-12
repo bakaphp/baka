@@ -99,8 +99,7 @@ class QueryParserTest extends PhalconUnitTestCase
             ['companies_id', ':', 1],
             ['fadfadfad', ':', 1],
         ]);
-        echo $queryParser->getParsedQuery();
-        die();
+
         $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
 
         foreach ($results as $result) {

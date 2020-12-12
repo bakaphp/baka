@@ -107,7 +107,7 @@ class QueryParser
         $this->setFields($params['fields'] ?? $this->fields);
 
         //when empty search frontend sends q=() , we remove it so empty search is 1:1
-        $params['q'] = str_replace('()', '', $params['q']);
+        $params['q'] = str_replace('()', '', $params['q'] ?? null);
 
         //if empty default search 1 = 1
         $this->setQuery($params['q'] ?: '(1:1)');

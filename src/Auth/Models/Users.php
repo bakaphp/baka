@@ -2,7 +2,6 @@
 
 namespace Baka\Auth\Models;
 
-use Baka\Contracts\Auth\AuthTokenTrait;
 use Baka\Contracts\Auth\UserInterface;
 use Baka\Contracts\Database\HashTableTrait;
 use Baka\Database\Model;
@@ -21,7 +20,6 @@ use Phalcon\Validation\Validator\Uniqueness;
 
 class Users extends Model implements UserInterface
 {
-    use AuthTokenTrait;
     use HashTableTrait;
 
     /**
@@ -226,7 +224,7 @@ class Users extends Model implements UserInterface
     /**
      * Is Anonymous user.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAnonymous() : bool
     {
