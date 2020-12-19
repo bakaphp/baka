@@ -27,6 +27,7 @@ class IndexBuilder
     {
         return [
             'index.mapping.nested_fields.limit' => $nestedLimit,
+            'index.mapping.total_fields.limit' => $nestedLimit,
             'max_result_window' => 50000,
             'analysis' => [
                 'analyzer' => [
