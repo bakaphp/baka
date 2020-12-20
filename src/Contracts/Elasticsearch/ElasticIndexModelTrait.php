@@ -29,6 +29,11 @@ trait ElasticIndexModelTrait
     public bool $elasticSearchTextFieldData = true;
 
     /**
+     * Specify to the elastic result to use stdClass object instead of the class itself.
+     */
+    public bool $useDocument = false;
+
+    /**
      * Current object save to elastic.
      *
      * @param int $maxDepth

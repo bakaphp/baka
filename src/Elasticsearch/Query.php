@@ -9,6 +9,7 @@ use function Baka\envValue;
 use GuzzleHttp\Client as GuzzleClient;
 use Phalcon\Di;
 use Phalcon\Mvc\Model\Query\Builder;
+use SplFixedArray;
 
 class Query
 {
@@ -53,6 +54,10 @@ class Query
             'base_uri' => $this->getHost()
         ]);
 
+        if (envValue('ELASTIC_SEARCH_QUERY_DEBUG', false)) {
+            Di::getDefault()->get('log')->info('ELASTICSQL', [$this->sql]);
+        }
+
         // since 6.x+ we need to use POST
         $response = $client->post($this->getDriverUrl(), [
             'body' => json_encode([
@@ -71,15 +76,14 @@ class Query
         );
 
         //set total
-        $this->total = isset($results['total']) ? $results['total'] : $results['hits']['total']['value'];
+        $dataset = isset($results['datarows']) ? $results['datarows'] : $results['hits']['hits'];
+        $this->total = count($dataset);
 
-        if ((isset($results['total']) && $results['total'] == 0) ||
-            (isset($results['hits']['total']) && $results['hits']['total']['value'] == 0)
-            ) {
+        if (!$this->total) {
             return [];
         }
 
-        return $this->getResultSet($results);
+        return $this->getResultSet($dataset)->toArray();
     }
 
     /**
@@ -128,17 +132,22 @@ class Query
      *
      * @return array
      */
-    private function getResultSet(array $elasticResults) : array
+    private function getResultSet(array $elasticResults) : SplFixedArray
     {
-        $elasticResults = isset($elasticResults['datarows']) ? $elasticResults['datarows'] : $elasticResults['hits']['hits'];
-        $results = [];
-        foreach ($elasticResults as $result) {
-            $result = isset($result['_source']) ? $result['_source'] : $result;
+        $results = new SplFixedArray($this->total);
+        $i = 0;
 
-            if ($this->model) {
-                $results[] = new $this->model($result);
-            } else {
-                $results[] = $result;
+        if (!empty($elasticResults)) {
+            foreach ($elasticResults as $result) {
+                $result = isset($result['_source']) ? $result['_source'] : $result;
+
+                if ($this->model) {
+                    $results[$i] = !$this->model->useDocument ? new $this->model($result) : (object) $result;
+                } else {
+                    $results[$i] = $result;
+                }
+
+                $i++;
             }
         }
 
