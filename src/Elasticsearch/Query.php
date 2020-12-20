@@ -74,7 +74,10 @@ class Query
         $results = json_decode(curl_exec($ch), true);
 
         if (isset($results['error'])) {
-            throw  Exception::create($results['error']['reason'], $results);
+            throw  Exception::create(
+                str_replace('SQL', '', $results['error']['reason']) . ' : ' . $results['error']['details'],
+                $results
+            );
         }
 
         //set total
