@@ -23,7 +23,7 @@ trait ProcessOutputMapperElasticTrait
     {
         $this->canUseMapper();
 
-        $userElasticStdClass = (bool) (isset($this->model->useDocument) && $this->model->useDocument);
+        $userElasticStdClass = (bool) (isset($this->model->useRawElastic) && $this->model->useRawElastic);
         $mapperModel = !$userElasticStdClass ? get_class($this->model) : get_class(new StdClass);
 
         //Phalcon 4 now returns resultset for empty results

@@ -31,7 +31,7 @@ trait ElasticIndexModelTrait
     /**
      * Specify to the elastic result to use stdClass object instead of the class itself.
      */
-    public bool $useDocument = false;
+    public bool $useRawElastic = false;
 
     /**
      * Current object save to elastic.
