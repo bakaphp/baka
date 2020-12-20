@@ -49,9 +49,11 @@ class QueryParser
 
     /**
      * Joiners to be used with comparisons.
+     * empty joiner means logic breaker
+     *  (first logic set) AND  (new set).
      */
     const JOINERS = [
-        '' => 'AND',
+        '' => ') AND (',
         ',' => 'AND',
         ';' => 'OR',
     ];
@@ -316,6 +318,7 @@ class QueryParser
         $operatorsPattern = '#(' . implode('|', array_keys(self::OPERATORS)) . ')#';
         $sql = '';
         $joiner = '';
+
         foreach ($comparisons as $index => $comparison) {
             if (count($comparison) != count($comparison, COUNT_RECURSIVE)) {
                 $sqlComparison = "{$this->transformNestedComparisons($comparison)}";

@@ -97,7 +97,6 @@ class QueryParserTest extends PhalconUnitTestCase
         $queryParser->setAdditionalQueryFields([
             ['is_deleted', ':', '0'],
             ['companies_id', ':', 1],
-            ['fadfadfad', ':', 1],
         ]);
 
         $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
