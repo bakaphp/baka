@@ -294,6 +294,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
                 unset($result[$key]);
             }
 
+            //avoid issue with elastic
             if ($value === '0000-00-00 00:00:00') {
                 $result[$key] = null;
             }

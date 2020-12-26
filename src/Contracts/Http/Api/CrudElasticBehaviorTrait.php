@@ -122,7 +122,7 @@ trait CrudElasticBehaviorTrait
          * we cant allow a edit to use a stdClass so we disable
          * elastic Raw Data.
          */
-        $this->model->useRawElastic = false;
+        $this->model->setElasticPhalconData();
         $record = $this->getRecordById($id);
 
         //process the input

@@ -147,7 +147,7 @@ class Query
                 $result = isset($result['_source']) ? $result['_source'] : $result;
 
                 if ($this->model) {
-                    $results[$i] = !$this->model->useRawElastic ? new $this->model($result) : (object) $result;
+                    $results[$i] = !$this->model->useRawElasticRawData() ? new $this->model($result) : (object) $result;
                 } else {
                     $results[$i] = $result;
                 }

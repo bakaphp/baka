@@ -51,6 +51,36 @@ trait ElasticIndexModelTrait
     }
 
     /**
+     * Set the use of elastic raw data.
+     *
+     * @return void
+     */
+    public function setElasticRawData() : void
+    {
+        $this->useRawElastic = true;
+    }
+
+    /**
+     * Set the use of phalcon model in elastic.
+     *
+     * @return void
+     */
+    public function setElasticPhalconData() : void
+    {
+        $this->useRawElastic = false;
+    }
+
+    /**
+     * Determine if we are using elastic raw data.
+     *
+     * @return bool
+     */
+    public function useRawElasticRawData() : bool
+    {
+        return $this->useRawElastic;
+    }
+
+    /**
      * Delete from elastic.
      *
      * @return array
