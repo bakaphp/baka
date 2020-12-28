@@ -49,8 +49,7 @@ class RateLimit
         int $hitsPerPeriod,
         bool $limited,
         bool $warning
-    )
-    {
+    ) {
         $this->hits = $hits;
 
         $this->remaining = $remaining;

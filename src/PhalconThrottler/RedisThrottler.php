@@ -31,9 +31,9 @@ class RedisThrottler implements ThrottlerInterface
     public function __construct(\Redis $redis, array $config = [])
     {
         $this->config = array_merge([
-            'bucket_size'  => 20,
-            'refill_time'  => 600, // 10m
-            'refill_amount'  => 10,
+            'bucket_size' => 20,
+            'refill_time' => 600, // 10m
+            'refill_amount' => 10,
             'warning_limit' => 1
         ], $config);
 
@@ -43,7 +43,7 @@ class RedisThrottler implements ThrottlerInterface
     /**
      * @return bool
      */
-    public function isLimitWarning(): bool
+    public function isLimitWarning() : bool
     {
         return $this->limitWarning;
     }
@@ -51,7 +51,7 @@ class RedisThrottler implements ThrottlerInterface
     /**
      * @return bool
      */
-    public function isLimitExceeded(): bool
+    public function isLimitExceeded() : bool
     {
         return $this->limitExceeded;
     }
@@ -64,7 +64,7 @@ class RedisThrottler implements ThrottlerInterface
      *
      * @return RateLimit
      */
-    public function consume(string $meterId, int $warnThreshold = 0, int $numTokens = 1, int $time = null): RateLimit
+    public function consume(string $meterId, int $warnThreshold = 0, int $numTokens = 1, int $time = null) : RateLimit
     {
         $this->limitWarning = false;
 
@@ -118,12 +118,13 @@ class RedisThrottler implements ThrottlerInterface
     }
 
     /**
-     * If the bucket does not exist, it is created
+     * If the bucket does not exist, it is created.
      *
      * @param string $key
+     *
      * @return array
      */
-    protected function retrieveBucket(string $key): array
+    protected function retrieveBucket(string $key) : array
     {
         if (!$this->redis->hExists($key, 'value')) {
             $bucket = ['value' => $this->config['bucket_size'], 'last_update' => time()];
@@ -139,9 +140,10 @@ class RedisThrottler implements ThrottlerInterface
      * Refull the bucket and return the new value.
      *
      * @param array $bucket
+     *
      * @return array
      */
-    protected function refillBucket(array $bucket): array
+    protected function refillBucket(array $bucket) : array
     {
         // Check the refill count
         $refillCount = (int)floor((time() - $bucket['last_update']) / $this->config['refill_time']);
@@ -158,9 +160,10 @@ class RedisThrottler implements ThrottlerInterface
 
     /**
      * @param string $key
+     *
      * @return bool
      */
-    protected function updateExpiryTime(string $key): bool
+    protected function updateExpiryTime(string $key) : bool
     {
         return $this->redis->expireAt($key, time() +
             ((1 + (int)ceil($this->config['bucket_size'] / $this->config['refill_amount']))
