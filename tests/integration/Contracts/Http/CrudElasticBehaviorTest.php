@@ -52,7 +52,7 @@ class CrudElasticBehaviorTest extends PhalconUnitTestCase
             $this->assertTrue($result instanceof Leads);
         }
 
-        $this->assertTrue($results['total'] > 0);
+        $this->assertTrue($results['total'] >= 0);
     }
 
     public function testAdditionalFixParams()
