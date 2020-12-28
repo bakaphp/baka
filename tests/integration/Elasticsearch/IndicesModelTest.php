@@ -125,7 +125,7 @@ class IndicesModelTest extends PhalconUnitTestCase
         $lead->saveOrFail();
 
         //need to wait 1 sec for it to showup on results (will need to review this later on)
-        sleep(1);
+        sleep(3);
 
         $this->assertTrue(
             ElasticModelLeads::findFirstInElastic(['conditions' => 'id = ' . $lead->getId()]) instanceof ElasticModelLeads
