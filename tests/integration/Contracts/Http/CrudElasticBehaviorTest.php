@@ -74,7 +74,7 @@ class CrudElasticBehaviorTest extends PhalconUnitTestCase
         $params['sort'] = 'id|desc';
 
         $additionalSearchFields = [
-            ['companies_id', ':', 1],
+            ['companies_id', '>', 1],
             ['is_deleted', ':', 0],
         ];
 
@@ -107,7 +107,7 @@ class CrudElasticBehaviorTest extends PhalconUnitTestCase
         $params['sort'] = 'id|desc';
 
         $additionalSearchFields = [
-            ['companies_id', ':', 1],
+            ['companies_id', '>', 1],
             ['is_deleted', ':', 0],
         ];
 
