@@ -15,7 +15,7 @@ class File
      *
      * @param FileInterface $file
      *
-     * @return boolean
+     * @return bool
      */
     public static function validate(FileInterface $file) : bool
     {

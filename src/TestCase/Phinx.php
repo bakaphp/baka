@@ -47,7 +47,7 @@ class Phinx
 
     /**
      * Drop all tables.
-     * 
+     *
      * CAUTION ONLY RUN ON BAKA TEST
      *
      * @return bool

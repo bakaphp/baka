@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Baka\Validations;
 
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Confirmation;
-use Phalcon\Validation\Validator\StringLength;
 use Baka\Validation as CanvasValidation;
+use Phalcon\Validation\Validator\Confirmation;
+use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\StringLength;
 
 class PasswordValidation
 {
@@ -15,9 +15,10 @@ class PasswordValidation
      *
      * @param string $newPassword
      * @param string $verifyPassword
-     * @return boolean
+     *
+     * @return bool
      */
-    public static function validate(string $newPassword, string $verifyPassword): bool
+    public static function validate(string $newPassword, string $verifyPassword) : bool
     {
         $data = [
             'new_password' => $newPassword,

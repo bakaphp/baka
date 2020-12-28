@@ -2,8 +2,8 @@
 
 namespace Baka\Router;
 
-use Baka\Router\Utils\Helper;
 use function array_push;
+use Baka\Router\Utils\Helper;
 
 class RouteGroup
 {
@@ -29,9 +29,10 @@ class RouteGroup
      * Set from to the group.
      *
      * @param array $routes
+     *
      * @return self
      */
-    public static function from(array $routes): self
+    public static function from(array $routes) : self
     {
         return new self($routes);
     }
@@ -40,9 +41,10 @@ class RouteGroup
      * Add the routes to the group.
      *
      * @param Route $route
+     *
      * @return self
      */
-    public function addRoute(Route $route): self
+    public function addRoute(Route $route) : self
     {
         $this->routes[] = $route;
 
@@ -53,9 +55,10 @@ class RouteGroup
      * Add the middleware to this group.
      *
      * @param array ...$middlewares
+     *
      * @return self
      */
-    public function addMiddlewares(...$middlewares): self
+    public function addMiddlewares(...$middlewares) : self
     {
         array_push($this->middlewares, ...$middlewares);
 
@@ -66,9 +69,10 @@ class RouteGroup
      * Set default namespace for this group.
      *
      * @param string $defaultNamespace
+     *
      * @return self
      */
-    public function defaultNamespace(string $defaultNamespace): self
+    public function defaultNamespace(string $defaultNamespace) : self
     {
         $this->defaultNamespace = Helper::trimSlahes($defaultNamespace);
 
@@ -79,9 +83,10 @@ class RouteGroup
      * Default prefix.
      *
      * @param string $defaultPrefix
+     *
      * @return self
      */
-    public function defaultPrefix(string $defaultPrefix): self
+    public function defaultPrefix(string $defaultPrefix) : self
     {
         $this->defaultPrefix = Helper::trimSlahes($defaultPrefix);
 
@@ -92,9 +97,10 @@ class RouteGroup
      * Default action.
      *
      * @param string $defaultAction
+     *
      * @return self
      */
-    public function defaultAction(string $defaultAction): self
+    public function defaultAction(string $defaultAction) : self
     {
         $this->defaultAction = Helper::trimSlahes($defaultAction);
 
@@ -106,7 +112,7 @@ class RouteGroup
      *
      * @return string|null
      */
-    public function getDefaultPrefix(): ?string
+    public function getDefaultPrefix() : ?string
     {
         return $this->defaultPrefix;
     }
@@ -116,7 +122,7 @@ class RouteGroup
      *
      * @return string|null
      */
-    public function getDefaultNamespace(): ?string
+    public function getDefaultNamespace() : ?string
     {
         return $this->defaultNamespace;
     }
@@ -126,7 +132,7 @@ class RouteGroup
      *
      * @return string|null
      */
-    public function getDefaultAction(): ?string
+    public function getDefaultAction() : ?string
     {
         return $this->defaultAction;
     }
@@ -136,7 +142,7 @@ class RouteGroup
      *
      * @return array
      */
-    public function getRoutes(): array
+    public function getRoutes() : array
     {
         return $this->routes;
     }
@@ -146,7 +152,7 @@ class RouteGroup
      *
      * @return array
      */
-    public function getMiddlewares(): array
+    public function getMiddlewares() : array
     {
         return $this->middlewares;
     }
@@ -155,9 +161,10 @@ class RouteGroup
      * Add routes.
      *
      * @param array $routes
+     *
      * @return self
      */
-    public function withRoutes(array $routes): self
+    public function withRoutes(array $routes) : self
     {
         $new = clone $this;
 
@@ -172,9 +179,10 @@ class RouteGroup
      * Add namespace.
      *
      * @param string $defaultNamespace
+     *
      * @return self
      */
-    public function withNamespace(string $defaultNamespace): self
+    public function withNamespace(string $defaultNamespace) : self
     {
         $new = clone $this;
         $new->defaultNamespace($defaultNamespace);
@@ -186,9 +194,10 @@ class RouteGroup
      * Add prefix.
      *
      * @param string $defaultPrefix
+     *
      * @return self
      */
-    public function withPrefix(string $defaultPrefix): self
+    public function withPrefix(string $defaultPrefix) : self
     {
         $new = clone $this;
         $new->defaultPrefix($defaultPrefix);
@@ -200,9 +209,10 @@ class RouteGroup
      * Add action.
      *
      * @param string $defaultAction
+     *
      * @return self
      */
-    public function withAction(string $defaultAction): self
+    public function withAction(string $defaultAction) : self
     {
         $new = clone $this;
         $new->defaultAction($defaultAction);
@@ -214,9 +224,10 @@ class RouteGroup
      * Set Options.
      *
      * @param Route $route
+     *
      * @return Route
      */
-    protected function setOptions(Route $route): Route
+    protected function setOptions(Route $route) : Route
     {
         $route = $this->setDefaultOptions($route);
         if ($this->getMiddlewares()) {
@@ -229,9 +240,10 @@ class RouteGroup
      * Set default options.
      *
      * @param Route $route
+     *
      * @return Route
      */
-    protected function setDefaultOptions(Route $route): Route
+    protected function setDefaultOptions(Route $route) : Route
     {
         if (!$route->getPrefix() && $this->getDefaultPrefix()) {
             $route->prefix($this->getDefaultPrefix());
@@ -253,7 +265,7 @@ class RouteGroup
      *
      * @return array
      */
-    public function toCollections(): array
+    public function toCollections() : array
     {
         $collections = [];
 

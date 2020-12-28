@@ -16,7 +16,7 @@ class Mail extends Job implements QueueableJobInterface
     protected Message $message;
 
     /**
-     * Setup the mail job construct
+     * Setup the mail job construct.
      *
      * @param Message $message
      * @param array $options
@@ -24,12 +24,12 @@ class Mail extends Job implements QueueableJobInterface
     public function __construct(Message $message, array $options = [])
     {
         $this->message = $message;
-        $this->config =  $message->getManager()->getConfigure();
+        $this->config = $message->getManager()->getConfigure();
         $this->options = $options;
     }
 
     /**
-     * Handle sending the email
+     * Handle sending the email.
      *
      * @return bool
      */

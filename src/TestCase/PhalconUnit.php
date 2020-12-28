@@ -3,8 +3,8 @@
 namespace Baka\TestCase;
 
 use Codeception\Test\Unit;
-use Phalcon\Di;
 use Faker\Factory;
+use Phalcon\Di;
 
 abstract class PhalconUnit extends Unit
 {
@@ -21,15 +21,16 @@ abstract class PhalconUnit extends Unit
     protected $di;
 
     /**
-     * Setup your Phalcon DI configuration
+     * Setup your Phalcon DI configuration.
      *
      * @return void
      */
     abstract protected function configureDI() : void;
+
     abstract protected function setConfiguration() : void;
 
     /**
-     * Load the PhalconPHP Di
+     * Load the PhalconPHP Di.
      *
      * @return Phalcon\DI
      */
@@ -41,22 +42,23 @@ abstract class PhalconUnit extends Unit
     }
 
     /**
-     * Get the PhalconDI
+     * Get the PhalconDI.
      *
      * @return DI
      */
-    protected function getDI() : DI 
+    protected function getDI() : DI
     {
         return $this->di;
     }
 
     /**
-     * Deprecated
+     * Deprecated.
      *
      * @deprecated v1
+     *
      * @return DI
      */
-    protected function _getDI(): DI 
+    protected function _getDI() : DI
     {
         return $this->getDI();
     }
