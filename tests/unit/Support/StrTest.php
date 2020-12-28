@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Baka\Test\Unit\Support;
 
-use PhalconUnitTestCase;
-
 use Baka\Support\Str;
+use PhalconUnitTestCase;
 
 class StrTest extends PhalconUnitTestCase
 {

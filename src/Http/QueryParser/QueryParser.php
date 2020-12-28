@@ -49,9 +49,11 @@ class QueryParser
 
     /**
      * Joiners to be used with comparisons.
+     * empty joiner means logic breaker
+     *  (first logic set) AND  (new set).
      */
     const JOINERS = [
-        '' => 'AND',
+        '' => ') AND (',
         ',' => 'AND',
         ';' => 'OR',
     ];
@@ -102,12 +104,12 @@ class QueryParser
         $this->model = $model;
         $this->setSource($model->getSource());
         $this->setSort($params['sort'] ?? $this->sort);
-        $this->setLimit($params['limit'] ?? $this->limit);
-        $this->setPage($params['page'] ?? $this->page);
+        $this->setLimit(isset($params['limit']) && (int) $params['limit'] > 0 ? (int) $params['limit'] : $this->limit);
+        $this->setPage(isset($params['page']) && (int) $params['page'] ? (int) $params['page'] : $this->page);
         $this->setFields($params['fields'] ?? $this->fields);
 
         //when empty search frontend sends q=() , we remove it so empty search is 1:1
-        $params['q'] = str_replace('()', '', $params['q']);
+        $params['q'] = str_replace('()', '', $params['q'] ?? null);
 
         //if empty default search 1 = 1
         $this->setQuery($params['q'] ?: '(1:1)');
@@ -155,7 +157,8 @@ class QueryParser
      */
     public function setFields(string $fields) : void
     {
-        $this->fields = $fields;
+        //remove ()
+        $this->fields = str_replace([')', '('], '', $fields);
     }
 
     /**
@@ -315,6 +318,7 @@ class QueryParser
         $operatorsPattern = '#(' . implode('|', array_keys(self::OPERATORS)) . ')#';
         $sql = '';
         $joiner = '';
+
         foreach ($comparisons as $index => $comparison) {
             if (count($comparison) != count($comparison, COUNT_RECURSIVE)) {
                 $sqlComparison = "{$this->transformNestedComparisons($comparison)}";

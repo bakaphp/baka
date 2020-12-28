@@ -23,7 +23,8 @@ trait ProcessOutputMapperElasticTrait
     {
         $this->canUseMapper();
 
-        $mapperModel = get_class($this->model);
+        $userElasticStdClass = (bool) (isset($this->model->useRawElastic) && $this->model->useRawElastic);
+        $mapperModel = !$userElasticStdClass ? get_class($this->model) : get_class(new StdClass());
 
         //Phalcon 4 now returns resultset for empty results
         $isSimpleResponse = function ($results) {
@@ -38,6 +39,7 @@ trait ProcessOutputMapperElasticTrait
             $mapperModel = DataType::ARRAY;
             $this->dto = StdClass::class;
         }
+
         $this->dtoConfig->registerMapping($mapperModel, $this->dto)
             ->useCustomMapper($this->dtoMapper);
 

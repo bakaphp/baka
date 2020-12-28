@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Baka\Router\Providers;
 
-use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\Di\DiInterface;
+use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\Mvc\Micro;
 
 class RouterProvider implements ServiceProviderInterface
@@ -67,7 +67,7 @@ class RouterProvider implements ServiceProviderInterface
      *
      * @return array
      */
-    protected function getCollections(): array
+    protected function getCollections() : array
     {
         return [];
     }

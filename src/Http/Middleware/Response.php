@@ -8,15 +8,14 @@ use Phalcon\Mvc\Micro;
 use Phalcon\Mvc\Micro\MiddlewareInterface;
 
 /**
- * Class ResponseMiddleware
+ * Class ResponseMiddleware.
  * *
  * @property Response $response
  */
 class Response implements MiddlewareInterface
 {
-
     /**
-     * Call me
+     * Call me.
      *
      * @param Micro $api
      *

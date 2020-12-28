@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Baka\Router\Middlewares;
 
+use Baka\Router\Middleware;
 use Phalcon\Mvc\Micro;
 use Phalcon\Mvc\Micro\MiddlewareInterface;
-use Baka\Router\Middleware;
 
 class RouteMiddleware implements MiddlewareInterface
 {
@@ -29,6 +29,7 @@ class RouteMiddleware implements MiddlewareInterface
      * @param mixed $event
      * @param mixed $api
      * @param mixed $context
+     *
      * @return bool
      */
     public function beforeExecuteRoute($event, $api, $context)
@@ -48,6 +49,7 @@ class RouteMiddleware implements MiddlewareInterface
      * @param mixed $event
      * @param mixed $api
      * @param mixed $context
+     *
      * @return void
      */
     public function afterExecuteRoute($event, $api, $context)
@@ -78,6 +80,7 @@ class RouteMiddleware implements MiddlewareInterface
      *
      * @param Middleware $middleware
      * @param Micro $api
+     *
      * @return void
      */
     protected function executeMiddleware(Middleware $middleware, Micro $api)

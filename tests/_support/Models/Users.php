@@ -2,12 +2,8 @@
 
 namespace Baka\Test\Support\Models;
 
-use Baka\Cashier\Billable;
-
 class Users extends \Baka\Database\Model
 {
-    use Billable;
-
     public $stripe_id;
 
     public function initialize()
@@ -15,7 +11,6 @@ class Users extends \Baka\Database\Model
         $this->hasMany('id', 'Baka\Test\Support\Models\Subscriptions', 'user_id', ['alias' => 'subscriptions']);
     }
 
-    
     /**
      * Get all of the subscriptions for the user.
      */

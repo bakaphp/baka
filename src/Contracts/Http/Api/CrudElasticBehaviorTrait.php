@@ -8,13 +8,14 @@ use Baka\Elasticsearch\Models\Documents;
 use function Baka\getShortClassName;
 use Baka\Http\QueryParser\QueryParser;
 use Phalcon\Http\RequestInterface;
+use Phalcon\Http\Response;
 
 trait CrudElasticBehaviorTrait
 {
     use CrudCustomFieldsBehaviorTrait;
 
     /**
-     * We dont need you in elastic.
+     * We don't need you in elastic.
      *
      * @param RequestInterface $request
      * @param array|object $results
@@ -106,5 +107,27 @@ trait CrudElasticBehaviorTrait
         }
 
         return $results['results'][0];
+    }
+
+    /**
+     * Update a record.
+     *
+     * @param mixed $id
+     *
+     * @return Response
+     */
+    public function edit($id) : Response
+    {
+        /**
+         * we cant allow a edit to use a stdClass so we disable
+         * elastic Raw Data.
+         */
+        $this->model->setElasticPhalconData();
+        $record = $this->getRecordById($id);
+
+        //process the input
+        $result = $this->processEdit($this->request, $record);
+
+        return $this->response($this->processOutput($result));
     }
 }
