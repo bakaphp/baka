@@ -26,7 +26,11 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
-            $this->assertTrue(isset($result['user']['id']));
+
+            //some records dont have users
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
         }
     }
 
@@ -43,7 +47,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
-            $this->assertTrue(isset($result['user']['id']));
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
         }
     }
 
@@ -60,7 +66,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
-            $this->assertTrue(isset($result['user']['id']));
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
         }
     }
 
@@ -79,7 +87,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
-            $this->assertTrue(isset($result['user']['id']));
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
         }
     }
 
@@ -103,7 +113,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
-            $this->assertTrue(isset($result['user']['id']));
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
         }
     }
 
@@ -238,7 +250,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue($result['id'] > 0);
-            $this->assertIsArray($result['user']);
+            if (isset($result['user'])) {
+                $this->assertIsArray($result['user']);
+            }
             $this->assertIsArray($result);
         }
     }
