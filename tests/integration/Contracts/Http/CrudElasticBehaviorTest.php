@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Baka\Test\Integration\Contracts\Http;
 
-use Baka\Contracts\Elasticsearch\IndexBuilderTaskTrait;
 use Baka\Contracts\Http\Api\CrudElasticBehaviorTrait;
 use Baka\Contracts\Http\Api\ResponseTrait;
 use Baka\Http\QueryParser\QueryParser;
@@ -17,15 +16,11 @@ class CrudElasticBehaviorTest extends PhalconUnitTestCase
 {
     use ResponseTrait;
     use CrudElasticBehaviorTrait;
-    use IndexBuilderTaskTrait;
 
     protected ?RequestInterface $request = null;
 
     public function testIndex()
     {
-        $this->createIndexAction(Leads::class, 2);
-        $this->createDocumentsAction(Leads::class, 2);
-
         $leads = new Leads();
         $this->model = $leads;
 

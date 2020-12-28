@@ -91,24 +91,24 @@ class IndicesModelTest extends PhalconUnitTestCase
         $this->assertTrue(Indices::getName($lead) == $lead->getSource());
     }
 
-    public function testCreateIndices()
-    {
-        $indices = Indices::create(Leads::class);
+    /*     public function testCreateIndices()
+        {
+            $indices = Indices::create(Leads::class);
 
-        $this->assertArrayHasKey('index', $indices);
-        $this->assertTrue((int) $indices['acknowledged'] == 1);
-    }
+            $this->assertArrayHasKey('index', $indices);
+            $this->assertTrue((int) $indices['acknowledged'] == 1);
+        }
 
-    public function testCreateWithOptionsIndices()
-    {
-        //delete and create again
-        Indices::delete(Leads::findFirst());
+        public function testCreateWithOptionsIndices()
+        {
+            //delete and create again
+            Indices::delete(Leads::findFirst());
 
-        $indices = Indices::create(Leads::class, 3, 300);
+            $indices = Indices::create(Leads::class, 3, 300);
 
-        $this->assertArrayHasKey('index', $indices);
-        $this->assertTrue((int) $indices['acknowledged'] == 1);
-    }
+            $this->assertArrayHasKey('index', $indices);
+            $this->assertTrue((int) $indices['acknowledged'] == 1);
+        } */
 
     public function testAfterSave()
     {
@@ -132,10 +132,10 @@ class IndicesModelTest extends PhalconUnitTestCase
         );
     }
 
-    public function testCreateDeleteIndices()
-    {
-        $lead = Leads::findFirst();
-        $indices = Indices::delete($lead);
-        $this->assertTrue((int) $indices['acknowledged'] == 1);
-    }
+    /*   public function testCreateDeleteIndices()
+      {
+          $lead = Leads::findFirst();
+          $indices = Indices::delete($lead);
+          $this->assertTrue((int) $indices['acknowledged'] == 1);
+      } */
 }
