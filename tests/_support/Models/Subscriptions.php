@@ -2,9 +2,9 @@
 
 namespace Baka\Test\Support\Models;
 
-use Baka\Cashier\Subscription;
+use Baka\Database\Model;
 
-class Subscriptions extends Subscription
+class Subscriptions extends Model
 {
     public function initialize()
     {

@@ -48,8 +48,8 @@ class RateLimit
         int $period,
         int $hitsPerPeriod,
         bool $limited,
-        bool $warning)
-    {
+        bool $warning
+    ) {
         $this->hits = $hits;
 
         $this->remaining = $remaining;
@@ -66,7 +66,7 @@ class RateLimit
     /**
      * @return int
      */
-    public function getHits(): int
+    public function getHits() : int
     {
         return $this->hits;
     }
@@ -74,7 +74,7 @@ class RateLimit
     /**
      * @return int
      */
-    public function getRemaining(): int
+    public function getRemaining() : int
     {
         return $this->remaining;
     }
@@ -82,7 +82,7 @@ class RateLimit
     /**
      * @return int
      */
-    public function getPeriod(): int
+    public function getPeriod() : int
     {
         return $this->period;
     }
@@ -90,7 +90,7 @@ class RateLimit
     /**
      * @return int
      */
-    public function getHitsPerPeriod(): int
+    public function getHitsPerPeriod() : int
     {
         return $this->hitsPerPeriod;
     }
@@ -98,7 +98,7 @@ class RateLimit
     /**
      * @return bool
      */
-    public function isLimited(): bool
+    public function isLimited() : bool
     {
         return $this->limited;
     }
@@ -106,7 +106,7 @@ class RateLimit
     /**
      * @return bool
      */
-    public function isWarning(): bool
+    public function isWarning() : bool
     {
         return $this->warning;
     }
@@ -114,7 +114,7 @@ class RateLimit
     /**
      * @return array
      */
-    public function toArray(): array
+    public function toArray() : array
     {
         return [
             'hits' => $this->getHits(),

@@ -3,12 +3,11 @@
 namespace Baka\Database\CustomFilters;
 
 use Baka\Database\Model;
-use Baka\Database\Contracts\HashTableTrait;
 
 class Conditions extends Model
 {
     /**
-     * @var integer
+     * @var int
      */
     public $custom_filter_id;
 
@@ -32,7 +31,7 @@ class Conditions extends Model
      *
      * @return void
      */
-    public function initialize(): void
+    public function initialize() : void
     {
         $this->setSource('custom_filters_conditions');
         $this->belongsTo('custom_filter_id', '\Baka\Database\CustomFilters\CustomFilters', 'id', ['alias' => 'filter']);

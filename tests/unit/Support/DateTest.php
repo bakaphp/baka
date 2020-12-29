@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Baka\Test\Unit\Support;
 
-use PhalconUnitTestCase;
-
 use Baka\Support\Date;
 use Baka\Support\Str;
+use PhalconUnitTestCase;
 
 class DateTest extends PhalconUnitTestCase
 {

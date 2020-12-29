@@ -45,7 +45,7 @@ class Route
      *
      * @return self
      */
-    public static function crud(string $path): self
+    public static function crud(string $path) : self
     {
         $route = new self($path);
         $route->via(...static::DEFAULT_HTTP_METHODS);
@@ -64,7 +64,7 @@ class Route
      *
      * @return self
      */
-    public static function add(string $path): self
+    public static function add(string $path) : self
     {
         return static::crud($path);
     }
@@ -76,7 +76,7 @@ class Route
      *
      * @return self
      */
-    public static function get(string $path): self
+    public static function get(string $path) : self
     {
         $route = new self($path);
         $route->via(Http::GET);
@@ -91,7 +91,7 @@ class Route
      *
      * @return self
      */
-    public static function post(string $path): self
+    public static function post(string $path) : self
     {
         $route = new self($path);
         $route->via(Http::POST);
@@ -106,7 +106,7 @@ class Route
      *
      * @return self
      */
-    public static function put(string $path): self
+    public static function put(string $path) : self
     {
         $route = new self($path);
         $route->via(Http::PUT);
@@ -121,7 +121,7 @@ class Route
      *
      * @return self
      */
-    public static function patch(string $path): self
+    public static function patch(string $path) : self
     {
         $route = new self($path);
         $route->via(Http::PATCH);
@@ -136,7 +136,7 @@ class Route
      *
      * @return self
      */
-    public static function delete(string $path): self
+    public static function delete(string $path) : self
     {
         $route = new self($path);
         $route->via(Http::DELETE);
@@ -149,7 +149,7 @@ class Route
      *
      * @return array
      */
-    public function toCollections(): array
+    public function toCollections() : array
     {
         $this->setDefaultOptions();
         $parser = new RouteParser($this);
@@ -164,7 +164,7 @@ class Route
      *
      * @return self
      */
-    public function prefix(string $prefix): self
+    public function prefix(string $prefix) : self
     {
         $this->prefix = Helper::trimSlahes($prefix);
 
@@ -178,7 +178,7 @@ class Route
      *
      * @return self
      */
-    public function namespace(string $namespace): self
+    public function namespace(string $namespace) : self
     {
         $this->namespace = Helper::trimSlahes($namespace);
 
@@ -192,7 +192,7 @@ class Route
      *
      * @return self
      */
-    public function controller(string $controller): self
+    public function controller(string $controller) : self
     {
         $this->controller = Helper::trimSlahes($controller);
 
@@ -207,7 +207,7 @@ class Route
      *
      * @return self
      */
-    public function via(...$methods): self
+    public function via(...$methods) : self
     {
         $this->via = array_intersect(
             $methods,
@@ -225,12 +225,12 @@ class Route
      *
      * @return self
      */
-    public function notVia(...$methods): self
+    public function notVia(...$methods) : self
     {
         $this->notVia = array_intersect(
             $methods,
             Http::METHODS
-         );
+        );
 
         return $this;
     }
@@ -242,7 +242,7 @@ class Route
      *
      * @return self
      */
-    public function path(string $path): self
+    public function path(string $path) : self
     {
         $this->path = Helper::trimSlahes($path);
 
@@ -256,7 +256,7 @@ class Route
      *
      * @return self
      */
-    public function action(string $action): self
+    public function action(string $action) : self
     {
         $this->action = Helper::trimSlahes($action);
 
@@ -270,7 +270,7 @@ class Route
      *
      * @return self
      */
-    public function middlewares(...$middlewares): self
+    public function middlewares(...$middlewares) : self
     {
         $this->middlewares = $middlewares;
 
@@ -282,7 +282,7 @@ class Route
      *
      * @return string
      */
-    public function getPrefix(): ?string
+    public function getPrefix() : ?string
     {
         return $this->prefix;
     }
@@ -292,7 +292,7 @@ class Route
      *
      * @return string
      */
-    public function getNamespace(): ?string
+    public function getNamespace() : ?string
     {
         return $this->namespace;
     }
@@ -302,7 +302,7 @@ class Route
      *
      * @return string
      */
-    public function getController(): ?string
+    public function getController() : ?string
     {
         return $this->controller;
     }
@@ -313,7 +313,7 @@ class Route
      *
      * @return array
      */
-    public function getVia(): array
+    public function getVia() : array
     {
         return array_diff($this->via, $this->getNotVia());
     }
@@ -323,7 +323,7 @@ class Route
      *
      * @return array
      */
-    public function getNotVia(): array
+    public function getNotVia() : array
     {
         return $this->notVia;
     }
@@ -333,7 +333,7 @@ class Route
      *
      * @return array
      */
-    public function getMiddlewares(): array
+    public function getMiddlewares() : array
     {
         return $this->middlewares;
     }
@@ -343,7 +343,7 @@ class Route
      *
      * @return string
      */
-    public function getPath(): string
+    public function getPath() : string
     {
         return $this->path;
     }
@@ -353,7 +353,7 @@ class Route
      *
      * @return string|null
      */
-    public function getAction(): ?string
+    public function getAction() : ?string
     {
         return $this->action;
     }
@@ -363,7 +363,7 @@ class Route
      *
      * @return string
      */
-    public function getPattern(): string
+    public function getPattern() : string
     {
         $path = (string) $this->getPath();
 
@@ -379,7 +379,7 @@ class Route
      *
      * @return string
      */
-    public function getHandler(): string
+    public function getHandler() : string
     {
         $controller = (string) $this->getController();
 
@@ -397,7 +397,7 @@ class Route
      *
      * @return self
      */
-    public function withPrefix(string $prefix): self
+    public function withPrefix(string $prefix) : self
     {
         $new = clone $this;
         $new->prefix($prefix);
@@ -412,7 +412,7 @@ class Route
      *
      * @return self
      */
-    public function withNamespace(string $namespace): self
+    public function withNamespace(string $namespace) : self
     {
         $new = clone $this;
         $new->namespace($namespace);
@@ -427,7 +427,7 @@ class Route
      *
      * @return self
      */
-    public function withController(string $controller): self
+    public function withController(string $controller) : self
     {
         $new = clone $this;
         $new->controller($controller);
@@ -442,7 +442,7 @@ class Route
      *
      * @return self
      */
-    public function withVia(...$methods): self
+    public function withVia(...$methods) : self
     {
         $new = clone $this;
         $new->via(...$methods);
@@ -457,7 +457,7 @@ class Route
      *
      * @return self
      */
-    public function withPath(string $path): self
+    public function withPath(string $path) : self
     {
         $new = clone $this;
         $new->path($path);
@@ -472,7 +472,7 @@ class Route
      *
      * @return self
      */
-    public function withAction(string $action): self
+    public function withAction(string $action) : self
     {
         $new = clone $this;
         $new->action($action);
@@ -485,7 +485,7 @@ class Route
      *
      * @return void
      */
-    protected function setDefaultOptions(): void
+    protected function setDefaultOptions() : void
     {
         if (!$this->getVia()) {
             $this->setDefaultVia();
@@ -501,7 +501,7 @@ class Route
      *
      * @return void
      */
-    protected function setDefaultVia(): void
+    protected function setDefaultVia() : void
     {
         $this->via(...static::DEFAULT_HTTP_METHODS);
     }
@@ -511,7 +511,7 @@ class Route
      *
      * @return void
      */
-    protected function setDefaultController(): void
+    protected function setDefaultController() : void
     {
         $path = preg_replace('/[^a-zA-Z]/', '', $this->getPath());
 
@@ -527,7 +527,7 @@ class Route
      *
      * @return bool
      */
-    public function useRestConvention($state = null): bool
+    public function useRestConvention($state = null) : bool
     {
         if (null !== $state) {
             $this->restConvention = (bool) $state;

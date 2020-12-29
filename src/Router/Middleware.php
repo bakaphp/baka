@@ -29,9 +29,10 @@ class Middleware
      * Middleware Events.
      *
      * @param string $event
+     *
      * @return void
      */
-    public function event(string $event): void
+    public function event(string $event) : void
     {
         if (!in_array($event, static::EVENTS)) {
             throw new InvalidArgumentException('Only before and after are accepted events.');
@@ -43,9 +44,10 @@ class Middleware
      * Params.
      *
      * @param array $parameters
+     *
      * @return void
      */
-    public function parameters(array $parameters): void
+    public function parameters(array $parameters) : void
     {
         $this->parameters = $parameters;
     }
@@ -55,7 +57,7 @@ class Middleware
      *
      * @return string
      */
-    public function getMiddlewareKey(): string
+    public function getMiddlewareKey() : string
     {
         return $this->middlewareKey;
     }
@@ -65,7 +67,7 @@ class Middleware
      *
      * @return array
      */
-    public function getParameters(): array
+    public function getParameters() : array
     {
         return $this->parameters;
     }
@@ -75,7 +77,7 @@ class Middleware
      *
      * @return string
      */
-    public function getEvent(): string
+    public function getEvent() : string
     {
         return $this->event;
     }

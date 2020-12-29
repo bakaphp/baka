@@ -25,7 +25,7 @@ class Exception extends PhException
 
         return $e;
     }
-    
+
     /**
      * Get the message DATA from the exception.
      *
@@ -34,5 +34,5 @@ class Exception extends PhException
     public function getData() : ?array
     {
         return is_array($this->data) ? $this->data : [$this->data];
-    }   
+    }
 }

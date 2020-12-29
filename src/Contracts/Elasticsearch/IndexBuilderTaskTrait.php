@@ -59,10 +59,11 @@ trait IndexBuilderTaskTrait
      *
      * @return void
      */
-    public function createDocumentsAction(string $model, int $maxDepth = 3) : void
+    public function createDocumentsAction(string $model, int $maxDepth = 3, int $limit = 0) : void
     {
         // Get model's records
-        $records = $model::find('is_deleted = 0');
+        $limitSql = $limit ? ' LIMIT ' . $limit : null;
+        $records = $model::find('is_deleted = 0' . $limitSql);
         $totalRecords = $records->count();
         // Get elasticsearch class handler instance
         $elasticsearch = new IndexBuilder();

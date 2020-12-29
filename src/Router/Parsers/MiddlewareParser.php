@@ -2,9 +2,9 @@
 
 namespace Baka\Router\Parsers;
 
-use Baka\Support\Str;
-use Baka\Support\Arr;
 use Baka\Router\Middleware;
+use Baka\Support\Arr;
+use Baka\Support\Str;
 
 class MiddlewareParser
 {
@@ -32,7 +32,7 @@ class MiddlewareParser
      *
      * @return Middleware
      */
-    public function parse(): Middleware
+    public function parse() : Middleware
     {
         $middlewareKey = $this->extractMiddlewareKey();
         $event = $this->extractEvent();
@@ -54,7 +54,7 @@ class MiddlewareParser
      *
      * @return string
      */
-    protected function extractMiddlewareKey(): string
+    protected function extractMiddlewareKey() : string
     {
         return current(
             explode(
@@ -70,7 +70,7 @@ class MiddlewareParser
      *
      * @return string
      */
-    protected function extractEvent(): string
+    protected function extractEvent() : string
     {
         if (Str::includes(static::EVENT_DELIMITER, $this->middlewareNotation)) {
             return Str::firstStringBetween(
@@ -90,7 +90,7 @@ class MiddlewareParser
      *
      * @return array
      */
-    protected function extractParameters(): array
+    protected function extractParameters() : array
     {
         if (Str::includes(static::EVENT_DELIMITER, $this->middlewareNotation)) {
             $parameters = Arr::last(

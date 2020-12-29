@@ -26,7 +26,7 @@ class CustomFilterSchemaTest extends PhalconUnitTestCase
      */
     public function testFilterSchema()
     {
-        Indices::create(Leads::class);
+        //Indices::create(Leads::class);
 
         $this->elastic = $this->getDI()->getElastic();
 
@@ -35,6 +35,6 @@ class CustomFilterSchemaTest extends PhalconUnitTestCase
         $this->assertTrue(!empty($mapping));
         $this->assertTrue(array_search('id', $mapping) > 0);
 
-        Indices::delete(Leads::findFirst());
+        //Indices::delete(Leads::findFirst());
     }
 }

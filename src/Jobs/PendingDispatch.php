@@ -7,7 +7,6 @@ namespace Baka\Jobs;
 use Baka\Auth\UserProvider;
 use Baka\Contracts\Queue\QueueableJobInterface;
 use Baka\Queue\Queue;
-use Phalcon\Di;
 
 class PendingDispatch
 {
@@ -22,6 +21,7 @@ class PendingDispatch
      * Create a new pending job dispatch.
      *
      * @param  QueueableJobInterface  $job
+     *
      * @return void
      */
     public function __construct(QueueableJobInterface $job)
@@ -33,6 +33,7 @@ class PendingDispatch
      * Set the desired queue for the job.
      *
      * @param  string  $queue
+     *
      * @return $this
      */
     public function onQueue(string $queue)

@@ -9,7 +9,7 @@ class MailTest extends PhalconUnitTestCase
     /**
      * Test normal email.
      *
-     * @return boolean
+     * @return bool
      */
     public function testSimpleEmail()
     {
@@ -24,7 +24,7 @@ class MailTest extends PhalconUnitTestCase
     /**
      * Test html email.
      *
-     * @return boolean
+     * @return bool
      */
     public function testTemplateMail()
     {
@@ -40,7 +40,7 @@ class MailTest extends PhalconUnitTestCase
     /**
      * test the smtp configuration.
      *
-     * @return boolean
+     * @return bool
      */
     public function testEmailSmtpConfig()
     {
@@ -57,7 +57,7 @@ class MailTest extends PhalconUnitTestCase
     /**
      * Test normal email.
      *
-     * @return boolean
+     * @return bool
      */
     public function testSimpleEmailNow()
     {
@@ -71,6 +71,6 @@ class MailTest extends PhalconUnitTestCase
 
         $this->assertEmpty(
             $mailer->getFailedRecipients()
-            );
+        );
     }
 }

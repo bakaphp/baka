@@ -9,14 +9,13 @@ class LeadsNormal extends Model
 {
     use HashTableTrait;
 
-     /**
+    /**
      * Initialize some stuff.
      *
      * @return void
      */
-    public function initialize(): void
+    public function initialize() : void
     {
         $this->setSource('leads');
     }
-  
 }

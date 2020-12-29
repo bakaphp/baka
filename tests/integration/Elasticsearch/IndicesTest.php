@@ -104,7 +104,7 @@ class IndicesTest extends PhalconUnitTestCase
             $vehicleElastic = $vehicle->add();
 
             $this->assertArrayHasKey('result', $vehicleElastic);
-            $this->assertTrue($vehicleElastic['result'] == 'created');
+            $this->assertTrue($vehicleElastic['result'] == 'created' || $vehicleElastic['result'] == 'updated');
             $this->assertTrue($vehicle->getId() == $vehicleElastic['_id']);
         }
     }
