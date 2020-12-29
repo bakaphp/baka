@@ -58,6 +58,10 @@ class IndexBuilder
         // Iterate the columns
         foreach ($columns as $column) {
             switch ($column->getType()) {
+                case Column::TYPE_MEDIUMINTEGER:
+                case Column::TYPE_BOOLEAN:
+                case Column::TYPE_SMALLINTEGER:
+                case Column::TYPE_TINYINTEGER:
                 case Column::TYPE_INTEGER:
                     $fields[$column->getName()] = 'integer';
                     break;
@@ -65,6 +69,11 @@ class IndexBuilder
                     $fields[$column->getName()] = 'long';
                     break;
                 case Column::TYPE_TEXT:
+                case Column::TYPE_MEDIUMTEXT:
+                case Column::TYPE_MEDIUMBLOB:
+                case Column::TYPE_LONGTEXT:
+                case Column::TYPE_LONGBLOB:
+                case Column::TYPE_TINYTEXT:
                 case Column::TYPE_VARCHAR:
                 case Column::TYPE_CHAR:
                     $fields[$column->getName()] = 'text';
@@ -77,6 +86,7 @@ class IndexBuilder
                     // We define a format for datetime fields.
                     $fields[$column->getName()] = ['date', 'yyyy-MM-dd HH:mm:ss'];
                     break;
+                case Column::TYPE_FLOAT:
                 case Column::TYPE_DECIMAL:
                     $fields[$column->getName()] = 'float';
                     break;
