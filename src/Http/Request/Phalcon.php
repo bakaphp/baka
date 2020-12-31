@@ -42,7 +42,7 @@ class Phalcon extends Request
     /**
      * Is this request paginated?
      *
-     * @return boolean
+     * @return bool
      */
     public function withPagination() : bool
     {
@@ -52,7 +52,7 @@ class Phalcon extends Request
     /**
      * Is this a request requesting relationships.
      *
-     * @return boolean
+     * @return bool
      */
     public function withRelationships() : bool
     {
