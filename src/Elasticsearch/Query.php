@@ -7,7 +7,6 @@ use Baka\Contracts\Database\ModelInterface as BakaModelInterface;
 use Baka\Elasticsearch\Query\FromClause;
 use function Baka\envValue;
 use Baka\Exception\Exception;
-use GuzzleHttp\Client as GuzzleClient;
 use Phalcon\Di;
 use Phalcon\Mvc\Model\Query\Builder;
 use SplFixedArray;
@@ -51,10 +50,6 @@ class Query
      */
     public function find() : array
     {
-        $client = new GuzzleClient([
-            'base_uri' => $this->getHost()
-        ]);
-
         if (envValue('ELASTIC_SEARCH_QUERY_DEBUG', false)) {
             Di::getDefault()->get('log')->info('ELASTICSQL', [$this->sql]);
         }
