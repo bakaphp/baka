@@ -84,6 +84,7 @@ class IndexBuilder
                 case Column::TYPE_DECIMAL:
                     $fields[$column->getName()] = 'float';
                     break;
+            }
         }
 
         return $fields;
