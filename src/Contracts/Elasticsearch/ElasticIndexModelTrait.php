@@ -21,6 +21,11 @@ trait ElasticIndexModelTrait
     public bool $elasticSearchNotAnalyzed = true;
 
     /**
+     * Specify to the elastic result to use stdClass object instead of the class itself.
+     */
+    public bool $useRawElastic = false;
+
+    /**
      * With this variable we tell elasticsearch to enable sorting text fields.
      * https://www.elastic.co/guide/en/elasticsearch/reference/current/fielddata.html.
      *
@@ -43,6 +48,36 @@ trait ElasticIndexModelTrait
 
         //insert into elastic
         return Documents::add($this, $maxDepth);
+    }
+
+    /**
+     * Set the use of elastic raw data.
+     *
+     * @return void
+     */
+    public function setElasticRawData() : void
+    {
+        $this->useRawElastic = true;
+    }
+
+    /**
+     * Set the use of phalcon model in elastic.
+     *
+     * @return void
+     */
+    public function setElasticPhalconData() : void
+    {
+        $this->useRawElastic = false;
+    }
+
+    /**
+     * Determine if we are using elastic raw data.
+     *
+     * @return bool
+     */
+    public function useRawElasticRawData() : bool
+    {
+        return $this->useRawElastic;
     }
 
     /**
