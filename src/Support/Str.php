@@ -208,4 +208,16 @@ class Str
 
         return (string) $letter;
     }
+
+    /**
+     * Given a string remove all any special characters.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function cleanup(string $string) : string
+    {
+        return preg_replace("/[^a-zA-Z0-9\s]/", '', $string);
+    }
 }
