@@ -77,6 +77,12 @@ class IndexBuilder
                 case Column::TYPE_VARCHAR:
                 case Column::TYPE_CHAR:
                     $fields[$column->getName()] = 'text';
+                    break;
+                case Column::TYPE_DATE:
+                    // We define a format for date fields.
+                    $fields[$column->getName()] = ['date', 'yyyy-MM-dd'];
+                    break;
+                case Column::TYPE_DATETIME:
                     // We define a format for datetime fields.
                     $fields[$column->getName()] = ['date', 'yyyy-MM-dd HH:mm:ss'];
                     break;
