@@ -76,7 +76,7 @@ class IndexBuilder
                 case Column::TYPE_TINYTEXT:
                 case Column::TYPE_VARCHAR:
                 case Column::TYPE_CHAR:
-                    $fields[$column->getName()] = 'text';
+                    $fields[$column->getName()] = isset($model->elasticSearchNotAnalyzed) && !$model->elasticSearchNotAnalyzed ? 'text' : 'keyword';
                     break;
                 case Column::TYPE_DATE:
                     // We define a format for date fields.
