@@ -471,7 +471,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
 
                         if ($model['type'] === Relation::HAS_MANY && isset($records[0])) {
                             $records[0]->updateOrFail($data);
-                        } else {
+                        } elseif ($model['type'] !== Relation::HAS_MANY) {
                             $records->updateOrFail($data);
                         }
                     }
