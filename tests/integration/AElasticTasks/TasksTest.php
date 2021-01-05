@@ -24,7 +24,7 @@ class TasksTest extends PhalconUnitTestCase
     {
         $this->elastic = $this->getDI()->getElastic();
 
-        $this->createIndexAction(Leads::class, 2);
+        $this->createIndexAction(Leads::class, 2, 1000);
 
         $mapping = $this->getSchema('leads');
 
