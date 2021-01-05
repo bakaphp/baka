@@ -7,6 +7,7 @@ use Baka\Contracts\Http\Converter\CustomQueriesTrait;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
+use Baka\Support\Str;
 use Exception;
 use Phalcon\Di;
 use Phalcon\Di\Injectable;
@@ -941,6 +942,9 @@ class RequestUriToSql extends Injectable implements ConverterInterface
         if (!is_null($sort)) {
             // Get the model, column and sort order from the sent parameter.
             list($modelColumn, $order) = explode('|', $sort);
+            //limit the sort
+            $order = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+            $modelColumn = Str::cleanup($modelColumn);
             // Check to see whether this is a related sorting by looking for a .
             if (strpos($modelColumn, '.') !== false) {
                 // We are using a related sort.
