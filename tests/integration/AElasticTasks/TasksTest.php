@@ -47,7 +47,7 @@ class TasksTest extends PhalconUnitTestCase
      */
     public function testInsertAllDataFromModel()
     {
-        $this->createIndexAction(Leads::class, 2);
+        $this->createIndexAction(Leads::class, 2, 1000);
 
         //cli need the config
         $this->config = $this->getDI()->getConfig();
