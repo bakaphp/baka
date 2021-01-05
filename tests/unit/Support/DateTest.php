@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Baka\Test\Unit\Support;
 
-use PhalconUnitTestCase;
-
 use Baka\Support\Date;
 use Baka\Support\Str;
+use PhalconUnitTestCase;
 
 class DateTest extends PhalconUnitTestCase
 {
@@ -43,7 +42,7 @@ class DateTest extends PhalconUnitTestCase
         $timeAgo = Date::howLongAgo(date('Y-m-d H:i:s', strtotime('-750 hours')));
 
         $this->assertTrue(
-            Str::contains($timeAgo, date('Y'))
+            Str::contains($timeAgo, date('Y', strtotime('-750 hours')))
         );
     }
 

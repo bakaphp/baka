@@ -7,6 +7,7 @@ use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Database\Exception\ModelNotProcessedException;
 use function Baka\getShortClassName;
 use Phalcon\Mvc\Model as PhalconModel;
+use Phalcon\Mvc\Model\Relation;
 use Phalcon\Mvc\Model\ResultsetInterface;
 use Phalcon\Mvc\ModelInterface as PhalconModelInterface;
 use RuntimeException;
@@ -27,6 +28,19 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     public ?string $created_at = null;
     public ?string $updated_at = null;
     public ?int $is_deleted = 0;
+
+    /**
+     * Do we allow this model to create related entities
+     * if pass with the alias?
+     *
+     */
+    protected bool $canCreateRelationshipsRecords = false;
+
+    /**
+     * If we allow to create related entities
+     * on every update we will delete a create a new one.
+     */
+    protected bool $canOverWriteRelationshipsData = false;
 
     /**
      * Get the primary id of this model.
@@ -180,6 +194,10 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $this->assign($data, $whiteList);
         }
 
+        if ($this->canCreateRelationshipsRecords) {
+            $this->setNewRelationshipsRecords($data);
+        }
+
         if ($savedModel = $this->save()) {
             return $savedModel;
         }
@@ -197,6 +215,10 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     {
         if (is_array($data)) {
             $this->assign($data, $whiteList);
+        }
+
+        if ($this->canCreateRelationshipsRecords) {
+            $this->setExistentRelationshipsRecords($data);
         }
 
         if ($updatedModel = $this->update()) {
@@ -332,5 +354,104 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
         $metadata = $this->getModelsMetaData();
         $attributes = $metadata->getAttributes($this);
         return key_exists($property, $attributes);
+    }
+
+    /**
+     * Get the relationship from has one and has many
+     * so we can create and update records.
+     *
+     * @return array
+     */
+    protected function getDependentRelationships() : array
+    {
+        $hasOne = $this->getModelsManager()->getHasOne($this);
+        $hasMany = $this->getModelsManager()->getHasMany($this);
+        $relationships = [];
+
+        if ($mergeRelationships = array_merge($hasOne, $hasMany)) {
+            foreach ($mergeRelationships as $relationship) {
+                $relationships[$relationship->getOptions()['alias']] = [
+                    'model' => $relationship->getReferencedModel(),
+                    'type' => $relationship->getType()
+                ];
+            }
+        }
+
+        return $relationships;
+    }
+
+    /**
+     * Set the arrays to create new records from relationships.
+     *
+     * @param array $records
+     *
+     * @return void
+     */
+    public function setNewRelationshipsRecords(array $records) : void
+    {
+        $relationships = $this->getDependentRelationships();
+
+        foreach ($relationships as $key => $model) {
+            $$key = [];
+            $relationData = $records[$key];
+            if (!empty($relationData) && is_array($relationData)) {
+                $method = 'get' . ucfirst($key);
+                if ($this->canOverWriteRelationshipsData) {
+                    $this->$method()->delete();
+                }
+                foreach ($relationData as $data) {
+                    if ($model['type'] === Relation::HAS_MANY) {
+                        $$key[] = new $model['model']($data);
+                    } else {
+                        $$key = new $model['model']($data);
+                    }
+                }
+
+                $this->$key = $$key;
+            }
+        }
+    }
+
+    /**
+     * Only update existent related records.
+     *
+     * @param array $records
+     *
+     * @return void
+     */
+    public function setExistentRelationshipsRecords(array $records) : void
+    {
+        if ($this->canOverWriteRelationshipsData) {
+            $this->setNewRelationshipsRecords($records);
+            return ;
+        }
+        $relationships = $this->getDependentRelationships();
+
+        foreach ($relationships as $key => $model) {
+            $$key = [];
+            $relationData = $records[$key];
+            if (!empty($relationData) && is_array($relationData)) {
+                $method = 'get' . ucfirst($key);
+                foreach ($relationData as $data) {
+                    //if we have the id , update its record
+                    //if not? ignore
+                    if (isset($data['id'])) {
+                        $records = $this->$method([
+                            'conditions' => 'id = :id:',
+                            'bind' => [
+                                'id' => (int) $data['id']
+                            ],
+                            'limit' => 1
+                        ]);
+
+                        if ($model['type'] === Relation::HAS_MANY && isset($records[0])) {
+                            $records[0]->updateOrFail($data);
+                        } elseif ($model['type'] !== Relation::HAS_MANY) {
+                            $records->updateOrFail($data);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
