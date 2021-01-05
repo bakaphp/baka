@@ -55,7 +55,7 @@ class Password
      *
      * @param string $password
      *
-     * @return boolean
+     * @return bool
      */
     public static function needsRehash(string $password) : bool
     {
@@ -73,7 +73,7 @@ class Password
      * @param string $password
      * @param object $entity
      *
-     * @return boolean
+     * @return bool
      */
     public static function rehash(string $password, UserInterface $entity) : bool
     {

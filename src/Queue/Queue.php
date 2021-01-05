@@ -15,7 +15,7 @@ class Queue
     const EVENTS = 'events';
     const NOTIFICATIONS = 'notifications';
     const JOBS = 'jobs';
-    
+
     public static bool $passive = false;
     public static bool $durable = true;
     public static bool $exclusive = false;
@@ -103,85 +103,89 @@ class Queue
     }
 
     /**
-     * Set queue $passive config value
+     * Set queue $passive config value.
      *
-     * @param boolean $value
+     * @param bool $value
+     *
      * @return void
      */
-    public static function setPassive(bool $value): void
+    public static function setPassive(bool $value) : void
     {
         self::$passive = $value;
     }
 
     /**
-     * Set queue $auto_delete config value
+     * Set queue $auto_delete config value.
      *
-     * @param boolean $value
+     * @param bool $value
+     *
      * @return void
      */
-    public static function setAutoDelete(bool $value): void
+    public static function setAutoDelete(bool $value) : void
     {
         self::$auto_delete = $value;
     }
 
     /**
-     * Set queue $exclusive config value
+     * Set queue $exclusive config value.
      *
-     * @param boolean $value
+     * @param bool $value
+     *
      * @return void
      */
-    public static function setExclusive(bool $value): void
+    public static function setExclusive(bool $value) : void
     {
         self::$exclusive = $value;
     }
 
     /**
-     * Set queue $durable config value
+     * Set queue $durable config value.
      *
-     * @param boolean $value
+     * @param bool $value
+     *
      * @return void
      */
-    public static function setDurable(bool $value): void
+    public static function setDurable(bool $value) : void
     {
         self::$durable = $value;
     }
 
     /**
-     * Get queue $passive config value
+     * Get queue $passive config value.
      *
      * @return bool
      */
-    public static function getPassive(): bool
+    public static function getPassive() : bool
     {
         return self::$passive;
     }
 
     /**
-     * Get queue $auto_delete config value
+     * Get queue $auto_delete config value.
      *
      * @return bool
      */
-    public static function getAutoDelete(): bool
+    public static function getAutoDelete() : bool
     {
         return self::$auto_delete;
     }
 
     /**
-     * Get queue $exclusive config value
+     * Get queue $exclusive config value.
      *
      * @return bool
      */
-    public static function getExclusive(): bool
+    public static function getExclusive() : bool
     {
         return self::$exclusive;
     }
 
     /**
-     * Get queue $durable config value
+     * Get queue $durable config value.
      *
      * @return bool
      */
-    public static function getDurable(): bool
+    public static function getDurable() : bool
     {
         return self::$durable;
     }

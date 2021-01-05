@@ -57,7 +57,7 @@ abstract class Documents
     /**
      * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId() : int
     {

@@ -6,5 +6,4 @@ namespace Baka\Exception;
 
 class AuthException extends Exception
 {
-
 }

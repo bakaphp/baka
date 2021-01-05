@@ -291,9 +291,35 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
         //convert the obj to array in order to convert to json
         $result = get_object_vars($this);
 
+        $modelPhalconProperties = [
+            'container',
+            'dirtyState',
+            'dirtyRelated',
+            'errorMessages',
+            'modelsManager',
+            'modelsMetaData',
+            'related',
+            'oldSnapshot',
+            'skipped',
+            'snapshot',
+            'transaction',
+            'uniqueKey',
+            'uniqueParams',
+            'uniqueTypes',
+            'auditExcludeFields',
+            'eventsManager',
+            'settingsModel',
+            'operationMade'
+        ];
+
         foreach ($result as $key => $value) {
-            if (preg_match('#^_#', $key) === 1) {
+            if (preg_match('#^_#', $key) === 1 || in_array($key, $modelPhalconProperties)) {
                 unset($result[$key]);
+            }
+
+            //avoid issue with elastic
+            if ($value === '0000-00-00 00:00:00') {
+                $result[$key] = null;
             }
         }
 
