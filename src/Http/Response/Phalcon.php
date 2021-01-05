@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Baka\Http\Response;
 
-use Baka\Constants\Flags;
 use Baka\Http\Exception\InternalServerErrorException;
 use Baka\Http\Request\Phalcon as Request;
 use Error;
@@ -193,7 +192,7 @@ class Phalcon extends Response
                 'identifier' => $identifier,
                 'message' => $e->getMessage(),
                 'trace' => !$config->app->production ? $e->getTraceAsString() : null,
-                'data' => $data,
+                'data' => !$config->app->production ? $data : null,
             ],
         ]);
 

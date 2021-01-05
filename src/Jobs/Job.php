@@ -22,9 +22,10 @@ abstract class Job implements QueueableJobInterface
      * Dispatch the job with the given arguments.
      *
      * @param mixed $mixed
+     *
      * @return void
      */
-    public static function dispatch(): PendingDispatch
+    public static function dispatch() : PendingDispatch
     {
         return new PendingDispatch(new static(...func_get_args()));
     }

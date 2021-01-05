@@ -6,5 +6,4 @@ namespace Baka\Contracts\Auth;
 
 interface UserInterface
 {
-
 }
