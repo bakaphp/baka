@@ -23,8 +23,8 @@ class CrudElasticBehaviorTest extends PhalconUnitTestCase
 
     public function testIndex()
     {
-        $this->createIndexAction(Leads::class, 2);
-        $this->createDocumentsAction(Leads::class, 2);
+        //$this->createIndexAction(Leads::class, 2);
+        //$this->createDocumentsAction(Leads::class, 2);
 
         $leads = new Leads();
         $this->model = $leads;

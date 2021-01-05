@@ -91,13 +91,13 @@ class IndicesModelTest extends PhalconUnitTestCase
         $this->assertTrue(Indices::getName($lead) == $lead->getSource());
     }
 
-    public function testCreateIndices()
-    {
-        $indices = Indices::create(Leads::class);
+    /*    public function testCreateIndices()
+       {
+           $indices = Indices::create(Leads::class);
 
-        $this->assertArrayHasKey('index', $indices);
-        $this->assertTrue((int) $indices['acknowledged'] == 1);
-    }
+           $this->assertArrayHasKey('index', $indices);
+           $this->assertTrue((int) $indices['acknowledged'] == 1);
+       } */
 
     /*     public function testCreateWithOptionsIndices()
         {
