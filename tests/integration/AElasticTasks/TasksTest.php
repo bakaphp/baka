@@ -1,6 +1,6 @@
 <?php
 
-namespace Baka\Test\Integration\Elasticsearch;
+namespace Baka\Test\Integration\AElasticTasks;
 
 use Baka\Contracts\Elasticsearch\CustomFiltersSchemaTrait;
 use Baka\Contracts\Elasticsearch\IndexBuilderTaskTrait;
