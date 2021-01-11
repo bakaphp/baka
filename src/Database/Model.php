@@ -194,7 +194,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $this->assign($data, $whiteList);
         }
 
-        if ($this->canCreateRelationshipsRecords) {
+        if ($this->canCreateRelationshipsRecords && !empty($data)) {
             $this->setNewRelationshipsRecords($data);
         }
 
@@ -217,7 +217,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $this->assign($data, $whiteList);
         }
 
-        if ($this->canCreateRelationshipsRecords) {
+        if ($this->canCreateRelationshipsRecords && !empty($data)) {
             $this->setExistentRelationshipsRecords($data);
         }
 
