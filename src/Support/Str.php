@@ -218,6 +218,6 @@ class Str
      */
     public static function cleanup(string $string) : string
     {
-        return preg_replace("/[^a-zA-Z0-9\s]/", '', $string);
+        return preg_replace("/[^a-zA-Z0-9_\s]/", '', $string);
     }
 }
