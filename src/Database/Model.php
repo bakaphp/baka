@@ -194,7 +194,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $this->assign($data, $whiteList);
         }
 
-        if ($this->canCreateRelationshipsRecords) {
+        if ($this->canCreateRelationshipsRecords && !empty($data)) {
             $this->setNewRelationshipsRecords($data);
         }
 
@@ -217,7 +217,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $this->assign($data, $whiteList);
         }
 
-        if ($this->canCreateRelationshipsRecords) {
+        if ($this->canCreateRelationshipsRecords && !empty($data)) {
             $this->setExistentRelationshipsRecords($data);
         }
 
@@ -397,7 +397,8 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             foreach ($mergeRelationships as $relationship) {
                 $relationships[$relationship->getOptions()['alias']] = [
                     'model' => $relationship->getReferencedModel(),
-                    'type' => $relationship->getType()
+                    'type' => $relationship->getType(),
+                    'referencedFields' => $relationship->getReferencedFields()
                 ];
             }
         }
@@ -456,11 +457,10 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $$key = [];
             $relationData = $records[$key];
             if (!empty($relationData) && is_array($relationData)) {
-                $method = 'get' . ucfirst($key);
                 foreach ($relationData as $data) {
-                    //if we have the id , update its record
-                    //if not? ignore
                     if (isset($data['id'])) {
+                        $method = 'get' . ucfirst($key);
+                        //if we have the id , update its record
                         $records = $this->$method([
                             'conditions' => 'id = :id:',
                             'bind' => [
@@ -469,11 +469,18 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
                             'limit' => 1
                         ]);
 
+                        //never let them overwrite the reference field
+                        unset($data[$model['referencedFields']]);
                         if ($model['type'] === Relation::HAS_MANY && isset($records[0])) {
                             $records[0]->updateOrFail($data);
                         } elseif ($model['type'] !== Relation::HAS_MANY) {
                             $records->updateOrFail($data);
                         }
+                    } else {
+                        //create new record
+                        $new = new $model['model']();
+                        $data[$model['referencedFields']] = $this->getId();
+                        $new->saveOrFail($data);
                     }
                 }
             }
