@@ -333,4 +333,16 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
         $attributes = $metadata->getAttributes($this);
         return key_exists($property, $attributes);
     }
+
+    /**
+     * getRelations.
+     *
+     * @return array
+     */
+    public function getRelations() : array
+    {
+        $class = get_class($this->model);
+
+        return $this->model->getModelsManager()->getRelations($class);
+    }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Baka\Elasticsearch\Models;
 
 use Baka\Contracts\CustomFields\CustomFieldsTrait;
-use Baka\Contracts\Database\ModelInterface;
+use Baka\Contracts\Database\ElasticModelInterface;
 use Baka\Elasticsearch\Client;
 use Baka\Elasticsearch\IndexBuilder;
 use Baka\Elasticsearch\Query;
@@ -21,7 +21,7 @@ class Documents
      *
      * @return array
      */
-    public static function add(ModelInterface $model, int $maxDepth = 3) : array
+    public static function add(ElasticModelInterface $model, int $maxDepth = 3) : array
     {
         // Start the document we are going to insert by converting the object to an array.
         $document = $model->toArray();
@@ -51,7 +51,7 @@ class Documents
      *
      * @return array
      */
-    public static function delete(ModelInterface $model) : array
+    public static function delete(ElasticModelInterface $model) : array
     {
         $params = [
             'index' => Indices::getName($model),
@@ -68,7 +68,7 @@ class Documents
      *
      * @return array
      */
-    public static function findBySql(string $sql, ModelInterface $model) : array
+    public static function findBySql(string $sql, ElasticModelInterface $model) : array
     {
         $elasticQuery = new Query($sql, $model);
 
@@ -81,11 +81,11 @@ class Documents
      * @todo this is shitting we should implement resultset interface
      *
      * @param string $sql
-     * @param ModelInterface $model
+     * @param ElasticModelInterface $model
      *
      * @return array
      */
-    public static function findBySqlPaginated(string $sql, ModelInterface $model) : array
+    public static function findBySqlPaginated(string $sql, ElasticModelInterface $model) : array
     {
         $elasticQuery = new Query($sql, $model);
 

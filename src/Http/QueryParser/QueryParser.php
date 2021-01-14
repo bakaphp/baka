@@ -2,9 +2,9 @@
 
 namespace Baka\Http\QueryParser;
 
+use Baka\Contracts\Database\ElasticModelInterface;
 use Baka\Elasticsearch\Query\FromClause;
 use Baka\Support\Str;
-use Phalcon\Mvc\ModelInterface;
 
 /**
  * QueryParser translates a complex syntax query provided via an url in an string format to a SQL alike syntax.
@@ -69,7 +69,7 @@ class QueryParser
     protected string $source;
     protected string $sourceAlias;
 
-    protected ModelInterface $model;
+    protected ElasticModelInterface $model;
 
     protected string $fields = '*';
 
@@ -97,7 +97,7 @@ class QueryParser
      * @param string $source
      * @param array $params
      */
-    public function __construct(ModelInterface $model, array $params)
+    public function __construct(ElasticModelInterface $model, array $params)
     {
         $this->model = $model;
         $this->setSource($model->getSource());
@@ -264,7 +264,6 @@ class QueryParser
         $this->source .= implode(', ', $fromClauseParsed['nodes']);
 
         $sql = "SELECT {$this->fields} FROM {$this->source} {$this->filters} ORDER BY {$this->sort} {$limit}";
-
         $this->filters = ''; //clean up the filter
         return $sql;
     }
