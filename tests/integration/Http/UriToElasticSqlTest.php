@@ -32,7 +32,7 @@ class UriToElasticSqlTes extends PhalconUnitTestCase
     /**
      * Tes a normal query with no conditional.
      *
-     * @return boolean
+     * @return bool
      */
     public function tesSimpleQuery()
     {
@@ -64,7 +64,7 @@ class UriToElasticSqlTes extends PhalconUnitTestCase
     /**
      * Tes a normal query with no conditional.
      *
-     * @return boolean
+     * @return bool
      */
     public function tesQueryColumns()
     {
@@ -100,7 +100,7 @@ class UriToElasticSqlTes extends PhalconUnitTestCase
     /**
      * Tes a normal query with no conditional.
      *
-     * @return boolean
+     * @return bool
      */
     public function tesQueryConditionals()
     {
@@ -132,7 +132,7 @@ class UriToElasticSqlTes extends PhalconUnitTestCase
     /**
      * Tes a normal query with no conditional.
      *
-     * @return boolean
+     * @return bool
      */
     public function tesQueryConditionalsWithAnd()
     {
@@ -164,7 +164,7 @@ class UriToElasticSqlTes extends PhalconUnitTestCase
     /**
      * Tes normal with Or.
      *
-     * @return boolean
+     * @return bool
      */
     public function tesQueryConditionalsWithOr()
     {
@@ -196,7 +196,7 @@ class UriToElasticSqlTes extends PhalconUnitTestCase
     /**
      * Tes and and Or conditions.
      *
-     * @return boolean
+     * @return bool
      */
     public function tesQueryConditionalsWithAndOr()
     {

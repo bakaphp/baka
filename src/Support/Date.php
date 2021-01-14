@@ -44,7 +44,7 @@ class Date
 
             return sprintf(ngettext('%d min. ago', '%d mins. ago', $mins), $mins);
         } elseif ($diff < $day) {
-            $hrs =  (int) floor($diff / $hour);
+            $hrs = (int) floor($diff / $hour);
             $mins = (int)  floor(($diff - $hrs * $hour) / $minute);
 
             $text = sprintf(ngettext('%d hr.', '%d hrs.', $hrs), $hrs);
@@ -59,7 +59,7 @@ class Date
             return sprintf(_('%s ago'), $text);
         } elseif ($diff < $month) {
             $days = (int) floor($diff / $day);
-           
+
             $text = sprintf(ngettext('%d day', '%d days', $days), $days);
 
             if ($days < 2) {

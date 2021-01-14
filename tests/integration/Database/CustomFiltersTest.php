@@ -2,9 +2,9 @@
 
 namespace Baka\Test\Integration\Database;
 
-use PhalconUnitTestCase;
 use Baka\Contracts\CustomFilters\CustomFilterTrait;
 use Baka\Database\CustomFilters\CustomFilters;
+use PhalconUnitTestCase;
 
 class CustomFiltersTest extends PhalconUnitTestCase
 {

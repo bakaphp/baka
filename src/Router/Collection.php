@@ -2,9 +2,9 @@
 
 namespace Baka\Router;
 
+use Baka\Router\Parsers\MiddlewareParser;
 use Phalcon\Mvc\Micro\Collection as PhCollection;
 use Phalcon\Utils\Slug;
-use Baka\Router\Parsers\MiddlewareParser;
 
 class Collection extends PhCollection
 {
@@ -17,7 +17,7 @@ class Collection extends PhCollection
      *
      * @return self
      */
-    final public static function fromRoute(Route $route): self
+    final public static function fromRoute(Route $route) : self
     {
         $collection = new self();
         $collection->route = $route;
@@ -31,7 +31,7 @@ class Collection extends PhCollection
      *
      * @return array
      */
-    public function getMiddlewares(): array
+    public function getMiddlewares() : array
     {
         $middlewares = [];
 
@@ -48,7 +48,7 @@ class Collection extends PhCollection
      *
      * @return string
      */
-    public function getCollectionIdentifier(): string
+    public function getCollectionIdentifier() : string
     {
         //$this->getHandlers()[0][0] whats the router method? GET , POST, PUT , DELETE
         //$this->getHandlers()[0][1] what the prefix

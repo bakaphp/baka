@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Baka;
@@ -41,7 +42,7 @@ if (!function_exists('Baka\appPath')) {
         $currentDir = basePath() . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 
         /**
-         * since we are calling this file from the diferent path we have to verify if its cli.
+         * since we are calling this file from the different path we have to verify if its cli.
          *
          * @todo look for a better solution , hate this
          */
@@ -103,9 +104,9 @@ if (!function_exists('Baka\appUrl')) {
 
 if (!function_exists('Baka\paymentGatewayIsActive')) {
     /**
-     * Do we have a payment metho actived on the app?
+     * Do we have a payment method actives on the app?
      *
-     * @return boolean
+     * @return bool
      */
     function paymentGatewayIsActive() : bool
     {
@@ -119,7 +120,7 @@ if (!function_exists('Baka\isJson')) {
      *
      * @param string $string
      *
-     * @return boolean
+     * @return bool
      */
     function isJson(string $string) : bool
     {
@@ -150,7 +151,7 @@ if (!function_exists('Baka\isSwooleServer')) {
     /**
      * Are we running a Swoole Server for this app?
      *
-     * @return boolean
+     * @return bool
      */
     function isSwooleServer() : bool
     {
@@ -162,7 +163,7 @@ if (!function_exists('Baka\getShortClassName')) {
     /**
      * Are we running a Swoole Server for this app?
      *
-     * @return boolean
+     * @return string
      */
     function getShortClassName(object $object) : string
     {

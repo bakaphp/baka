@@ -7,8 +7,8 @@ namespace Baka;
 use Baka\Http\Exception\UnprocessableEntityException;
 use Phalcon\Messages\Messages;
 use Phalcon\Validation as PhalconValidation;
-use Phalcon\Validation\ValidatorInterface;
 use Phalcon\Validation\ValidationInterface;
+use Phalcon\Validation\ValidatorInterface;
 
 /**
  * Class Validation.
@@ -27,7 +27,7 @@ class Validation extends PhalconValidation
      * @param array|object data
      * @param object entity
      *
-     * @return \Phalcon\Validation\Message\Group
+     * @return Messages
      */
     public function validate($data = null, $entity = null) : Messages
     {
@@ -46,7 +46,7 @@ class Validation extends PhalconValidation
      * @param mixed $field
      * @param ValidatorInterface $validator
      *
-     * @return ValidatorInterface
+     * @return ValidationInterface
      */
     public function add($field, ValidatorInterface $validator) : ValidationInterface
     {

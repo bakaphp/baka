@@ -60,7 +60,7 @@ class Helper
      *
      * @param File $file
      *
-     * @return boolean
+     * @return bool
      */
     public static function isImage(FileInterface $file) : bool
     {

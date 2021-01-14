@@ -35,6 +35,7 @@ class Documents
         $modelReflection = (new ReflectionClass($model));
 
         IndexBuilder::getRelatedData($document, $model, $modelReflection->name, 0, $maxDepth);
+
         $params = [
             'index' => Indices::getName($model),
             'id' => $model->getId(),

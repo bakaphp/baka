@@ -13,6 +13,6 @@ class Leads extends Model
     public function initialize()
     {
         $this->setSource('leads');
-        $this->belongsTo('users_id', 'Baka\Test\Support\Models\Users', 'id', ['alias' => 'user']);
+        $this->belongsTo('users_id', 'Baka\Test\Support\Models\Users', 'id', ['alias' => 'user', 'elasticAlias' => 'user']);
     }
 }

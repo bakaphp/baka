@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Baka\Router\Middlewares;
 
+use Baka\Router\Middleware;
 use Phalcon\Mvc\Micro;
 use Phalcon\Utils\Slug;
-use Baka\Router\Middleware;
 
 class RouteMiddlewareHelper
 {
@@ -29,6 +29,7 @@ class RouteMiddlewareHelper
      * Get the current middleware for the given route.
      *
      * @param string $event
+     *
      * @return array
      */
     public function getRouteMiddlewares(string $event = null) : array
@@ -55,7 +56,7 @@ class RouteMiddlewareHelper
      *
      * @return string
      */
-    public function getRouteIdentifier(): string
+    public function getRouteIdentifier() : string
     {
         $activeHandler = $this->api->getActiveHandler();
 
@@ -72,9 +73,10 @@ class RouteMiddlewareHelper
      * Get the middleware class.
      *
      * @param Middleware $middleware
+     *
      * @return string
      */
-    public function getClass(Middleware $middleware): string
+    public function getClass(Middleware $middleware) : string
     {
         $key = $middleware->getMiddlewareKey();
 
@@ -85,7 +87,8 @@ class RouteMiddlewareHelper
      * Is the route on this middleware?
      *
      * @param string $key
-     * @return boolean
+     *
+     * @return bool
      */
     protected function isInRouteMiddlewares(string $key) : bool
     {
