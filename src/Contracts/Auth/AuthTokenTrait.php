@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Baka\Contracts\Auth;
 
-use Exception;
+use Baka\Http\Exception\InternalServerErrorException;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\ValidationData;
@@ -79,7 +79,7 @@ trait AuthTokenTrait
         $builder = new Builder();
         $timezone = $timezone ?? date_default_timezone_get();
         if (!date_default_timezone_set($timezone)) {
-            throw new Exception('Timezone is invalid');
+            throw new InternalServerErrorException('Timezone is invalid');
         }
         $token = $builder
             ->setIssuer(getenv('TOKEN_AUDIENCE'))
