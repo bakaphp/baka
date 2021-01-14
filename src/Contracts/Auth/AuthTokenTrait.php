@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Baka\Contracts\Auth;
 
+use Exception;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\ValidationData;
@@ -36,8 +37,8 @@ trait AuthTokenTrait
         $random = new Random();
         $sessionId = $random->uuid();
 
-        $token = self::createJwtToken($sessionId, $this->getEmail());
-        $refreshToken = self::createJwtToken($sessionId, $this->getEmail());
+        $token = self::createJwtToken($sessionId, $this->getEmail(), $this->timezone);
+        $refreshToken = self::createJwtToken($sessionId, $this->getEmail(), $this->timezone);
 
         return [
             'sessionId' => $sessionId,
@@ -72,10 +73,14 @@ trait AuthTokenTrait
      *
      * @return array
      */
-    public static function createJwtToken(string $sessionId, string $email) : array
+    public static function createJwtToken(string $sessionId, string $email, ?string $timezone = null) : array
     {
         $signer = new Sha512();
         $builder = new Builder();
+        $timezone = $timezone ?? date_default_timezone_get();
+        if (!date_default_timezone_set($timezone)) {
+            throw new Exception('Timezone is invalid');
+        }
         $token = $builder
             ->setIssuer(getenv('TOKEN_AUDIENCE'))
             ->setAudience(getenv('TOKEN_AUDIENCE'))
