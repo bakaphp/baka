@@ -14,6 +14,7 @@ class MailTest extends PhalconUnitTestCase
     public function testSimpleEmail()
     {
         //send email
+
         $this->getDI()->get('mail')
             ->to('bakaphpmail@getnada.com')
             ->subject('Test Normal Email Queue')
@@ -29,6 +30,7 @@ class MailTest extends PhalconUnitTestCase
     public function testTemplateMail()
     {
         //send email
+
         $this->getDI()->get('mail')
             ->to('bakaphpmail@getnada.com')
             ->subject('Test Template Email queue')
@@ -45,6 +47,7 @@ class MailTest extends PhalconUnitTestCase
     public function testEmailSmtpConfig()
     {
         //send email
+
         $this->getDI()->get('mail')
             ->to('bakaphpmail@getnada.com')
             ->subject('Test Template Email queue')
@@ -62,6 +65,7 @@ class MailTest extends PhalconUnitTestCase
     public function testSimpleEmailNow()
     {
         //send email
+
         $mailer = $this->getDI()->get('mail');
 
         $mailer->to('info@mctekk.com')
