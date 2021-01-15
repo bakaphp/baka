@@ -105,28 +105,32 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     /**
      * Make a cascade softdelete on before softdelete
      *
+     * @param bool $cascade
+     * 
      * @return void
      */
-    public function beforeSoftDelete()
+    public function beforeSoftDelete(bool $cascade = false)
     {
-        foreach($this->getDependentRelationships() as $relation => $key)
-        {
-            $relationData = $this->{"get".$relation}();
-            if(isset($relationData))
-            {
-                $relationData->softDelete();
-            }
+        if($cascade){
+            foreach($this->getDependentRelationships() as $relation => $key) {
+                $relationData = $this->{"get".$relation}();
+                if(isset($relationData)) {
+                    $relationData->softDelete();
+                }
+            }    
         }
     }
 
     /**
      * Soft Delete.
-     *
+     * 
+     * @param bool $cascade
+     * 
      * @return void
      */
-    public function softDelete()
+    public function softDelete(bool $cascade = false)
     {
-        $this->beforeSoftDelete();
+        $this->beforeSoftDelete($cascade);
         $this->is_deleted = 1;
 
         return $this->save();
