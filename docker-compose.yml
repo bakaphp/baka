@@ -4,7 +4,7 @@ services:
 
   #php server
   baka-database:
-    image: mctekk/phalconphp:latest
+    image: mctekk/phalconphp:7.4
     volumes:
       - .:/app
       - ../../baka:/baka
@@ -73,11 +73,31 @@ services:
       - "5672:5672"
     networks:
       - local-network
+  elasticsearch: # Elasticsearch Instance
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    volumes: # Persist ES data in separate "esdata" volume
+      - elastic-data:/usr/share/elasticsearch/data
+      - elasticvolumes:/usr/share/elasticsearch/plugins
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "ES_JAVA_OPTS=-Xms4000m -Xmx4000m"
+      - "ES_JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XshowSettings:vm"
+      - discovery.type=single-node
+    #command: ./bin/elasticsearch-plugin install https://d3g5vo6xdbdb9a.cloudfront.net/downloads/elasticsearch-plugins/opendistro-sql/opendistro_sql-1.6.0.0.zip #install opendistro sql plugin
+    #command: ./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-sql/releases/download/7.5.1.0/elasticsearch-sql-7.5.1.0.zip #install sql plugin
+    ports: # Expose Elasticsearch ports
+      - "9300:9300"
+      - "9200:9200"
+    networks:
+      - local-network
 
 volumes:
   db-data:
   redis:
   rabbitsvolumns:
+  elasticvolumes:
+  elastic-data:
 
 networks:
   local-network:
