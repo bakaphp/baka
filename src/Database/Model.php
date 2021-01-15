@@ -390,7 +390,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     {
         $class = get_class($this);
 
-        return $this->model->getModelsManager()->getRelations($class);
+        return $this->getModelsManager()->getRelations($class);
     }
 
     /*
