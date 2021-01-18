@@ -337,6 +337,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     /**
      * getRelations.
      *
+     * *
      * @return array
      */
     public function getRelations() : array
