@@ -37,13 +37,6 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     protected bool $canCreateRelationshipsRecords = false;
 
     /**
-     * Allow this model to soft delete on cascade
-     * the related entities
-     * 
-     */
-    protected bool $cascadeSoftDelete = false;
-
-    /**
      * If we allow to create related entities
      * on every update we will delete a create a new one.
      */
@@ -110,22 +103,18 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     }
 
     /**
-     * Make a cascade softdelete on before softdelete
-     *
-     * @param bool $cascade
+     * Make a cascade softdelete
      * 
      * @return void
      */
-    public function beforeSoftDelete()
+    public function cascadeSoftDelete()
     {
-        if($this->cascadeSoftDelete){
-            foreach($this->getDependentRelationships() as $relation => $key) {
-                $relationData = $this->{"get".$relation}();
-                if(isset($relationData)) {
-                    $relationData->softDelete();
-                }
-            }    
-        }
+        foreach($this->getDependentRelationships() as $relation => $key) {
+            $relationData = $this->{"get".$relation}();
+            if(isset($relationData)) {
+                $relationData->softDelete();
+            }
+        }    
     }
 
     /**
@@ -135,7 +124,6 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
      */
     public function softDelete()
     {
-        $this->beforeSoftDelete();
         $this->is_deleted = 1;
 
         return $this->save();
