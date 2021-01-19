@@ -23,16 +23,18 @@ abstract class Documents implements ElasticModelInterface
     protected array $relations = [];
 
     /**
-     * Constructor.
+     * __construct.
      *
-     * @param int $id
-     * @param array $data
+     * @param  array $argv
+     *
+     * @return void
      */
     public function __construct(array $argv = [])
     {
         foreach ($argv as $key => $value) {
             $this->{$key} = $value;
         }
+
         $this->initialize();
     }
 
@@ -91,10 +93,11 @@ abstract class Documents implements ElasticModelInterface
      *
      * @return void
      */
-    public function setData(int $id, array $data)
+    public function setData(int $id, array $data) : self
     {
         $this->id = $id;
         $this->data = $data;
+        return $this;
     }
 
     /**
@@ -197,16 +200,13 @@ abstract class Documents implements ElasticModelInterface
     public static function getById(int $id) : self
     {
         $params = [
-            'index' => (new static($id, []))->getIndices(),
+            'index' => (new static())->setData($id, [])->getIndices(),
             'id' => $id
         ];
 
         $response = Client::getInstance()->get($params);
 
-        return new static(
-            $id,
-            $response['_source']
-        );
+        return (new static())->setData($id, $response['_source']);
     }
 
     /**

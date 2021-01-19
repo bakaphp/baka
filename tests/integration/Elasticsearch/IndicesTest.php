@@ -47,7 +47,8 @@ class IndicesTest extends PhalconUnitTestCase
             ]
         ];
 
-        $vehicle = new Vehicle(1, $data);
+        $vehicle = new Vehicle();
+        $vehicle->setData(1, $data);
         $indices = Indices::create($vehicle);
 
         $this->assertArrayHasKey('index', $indices);
@@ -100,7 +101,8 @@ class IndicesTest extends PhalconUnitTestCase
                 ]
             ];
 
-            $vehicle = new Vehicle($i, $data);
+            $vehicle = new Vehicle();
+            $vehicle->setData($i, $data);
             $vehicleElastic = $vehicle->add();
 
             $this->assertArrayHasKey('result', $vehicleElastic);
