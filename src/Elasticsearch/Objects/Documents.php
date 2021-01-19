@@ -25,21 +25,40 @@ abstract class Documents implements ElasticModelInterface
     /**
      * __construct.
      *
-     * @param  array $argv
+     * @param $argv
      *
      * @return void
      */
-    public function __construct(array $argv = [])
+    public function __construct($argv = null)
     {
-        foreach ($argv as $key => $value) {
-            $this->{$key} = $value;
+        if (is_array($argv)) {
+            $this->assign($argv);
         }
-
         $this->initialize();
     }
 
+    /**
+     * initialize.
+     *
+     * @return void
+     */
     public function initialize() : void
     {
+    }
+
+    /**
+     * assign.
+     *
+     * @param  array $data
+     *
+     * @return self
+     */
+    public function assign(array $data) : self
+    {
+        foreach ($data as $key => $value) {
+            $this->{$key} = $value;
+        }
+        return $this;
     }
 
     /**
@@ -50,7 +69,7 @@ abstract class Documents implements ElasticModelInterface
      *
      * @return void
      */
-    protected function addRelation(string $index, array $options)
+    protected function addRelation(string $index, array $options) : void
     {
         $this->relations[] = new Relation($index, $options);
     }
