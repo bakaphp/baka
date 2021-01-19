@@ -113,10 +113,10 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $relationData = $this->{'get'.$relation}();
 
             if ($data['type'] === Relation::HAS_ONE) {
-                if(isset($relationData)) {
+                if (isset($relationData)) {
                     $relationData->softDelete();
                 }    
-            } elseif($data['type'] === Relation::HAS_MANY && isset($relationData[0])) {
+            } elseif ($data['type'] === Relation::HAS_MANY && isset($relationData[0])) {
                 
                 foreach ($relationData as $singleData) {
                     $singleData->softDelete();
@@ -127,7 +127,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
 
     /**
      * Soft Delete.
-     * 
+     *
      * @return void
      */
     public function softDelete()
