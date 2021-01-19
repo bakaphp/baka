@@ -107,7 +107,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
      *
      * @return void
      */
-    public function cascadeSoftDelete()
+    public function cascadeSoftDelete(): void
     {
         foreach ($this->getDependentRelationships() as $relation => $data) {
             $relationData = $this->{'get'.$relation}();
