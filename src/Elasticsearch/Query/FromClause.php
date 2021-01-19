@@ -63,7 +63,6 @@ class FromClause
         $queryNodes = [null]; //add 1 element to force , at the start
         $searchNodes = [];
         $replaceNodes = [];
-
         /**
          * @todo cache the relationships
          */

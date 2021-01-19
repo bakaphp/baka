@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Baka\Elasticsearch\Objects;
 
+use Baka\Contracts\Database\ElasticModelInterface;
 use Baka\Elasticsearch\Client;
 use Baka\Elasticsearch\Query;
 use function Baka\getShortClassName;
 
-abstract class Documents
+abstract class Documents implements ElasticModelInterface
 {
     public int $id;
     public array $data;
@@ -19,6 +20,7 @@ abstract class Documents
     protected array $dateNormal = ['date', 'yyyy-MM-dd'];
     protected array $dateTime = ['date', 'yyyy-MM-dd HH:mm:ss'];
     protected string $decimal = 'float';
+    protected array $relations = [];
 
     /**
      * Constructor.
@@ -26,7 +28,70 @@ abstract class Documents
      * @param int $id
      * @param array $data
      */
-    public function __construct(int $id, array $data)
+    public function __construct(array $argv = [])
+    {
+        foreach ($argv as $key => $value) {
+            $this->{$key} = $value;
+        }
+        $this->initialize();
+    }
+
+    public function initialize() : void
+    {
+    }
+
+    /**
+     * addRelation.
+     *
+     * @param  string $index
+     * @param  array $options
+     *
+     * @return void
+     */
+    protected function addRelation(string $index, array $options)
+    {
+        $this->relations[] = new Relation($index, $options);
+    }
+
+    /**
+     * useRawElasticRawData.
+     *
+     * @return bool
+     */
+    public function useRawElasticRawData() : bool
+    {
+        return false;
+    }
+
+    /**
+     * getSource.
+     *
+     * @return string
+     */
+    public function getSource() : string
+    {
+        return $this->getIndices();
+    }
+
+    /**
+     * getRelations.
+     *
+     * @return array
+     */
+    public function getRelations() : array
+    {
+        return $this->relations;
+    }
+
+    /**
+     * setData.
+     *
+     * @param  int $id
+     * @param  array $data
+     *
+     * @return void
+     */
+    public function setData(int $id, array $data)
     {
         $this->id = $id;
         $this->data = $data;
