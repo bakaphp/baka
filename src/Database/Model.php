@@ -109,10 +109,19 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
      */
     public function cascadeSoftDelete()
     {
-        foreach($this->getDependentRelationships() as $relation => $key) {
+        foreach($this->getDependentRelationships() as $relation => $data) {
             $relationData = $this->{"get".$relation}();
-            if(isset($relationData)) {
-                $relationData->softDelete();
+
+            if($data['type'] === Relation::HAS_ONE) {
+                if(isset($relationData)) {
+                    $relationData->softDelete();
+                }    
+            } elseif($data['type'] === Relation::HAS_MANY && isset($relationData[0])) {
+                
+                foreach($relationData as $singleData)
+                {
+                    $singleData->softDelete();
+                }
             }
         }    
     }
