@@ -14,6 +14,12 @@ class DocumentsModelTest extends PhalconUnitTestCase
     use CrudElasticBehaviorTrait;
     use ResponseTrait;
 
+    /**
+     * testCreateIndexByDocument.
+     * test for create vehicle index and add a new vehicle document.
+     *
+     * @return void
+     */
     public function testCreateIndexByDocument()
     {
         $data = [
@@ -65,6 +71,12 @@ class DocumentsModelTest extends PhalconUnitTestCase
         $vehicle->add();
     }
 
+    /**
+     * testIndexWithAdditional.
+     * test for search on document model for nested value.
+     *
+     * @return void
+     */
     public function testIndexWithAdditional()
     {
         sleep(3);
