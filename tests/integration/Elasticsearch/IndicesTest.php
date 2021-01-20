@@ -47,11 +47,13 @@ class IndicesTest extends PhalconUnitTestCase
             ]
         ];
 
-        $vehicle = new Vehicle(1, $data);
-        $indices = Indices::create($vehicle);
-
-        $this->assertArrayHasKey('index', $indices);
-        $this->assertTrue((int) $indices['acknowledged'] == 1);
+        $vehicle = new Vehicle();
+        $vehicle->setData(1, $data);
+        if (!Indices::exist($vehicle->getIndices())) {
+            $indices = Indices::create($vehicle);
+            $this->assertArrayHasKey('index', $indices);
+            $this->assertTrue((int) $indices['acknowledged'] == 1);
+        }
     }
 
     /**
@@ -100,7 +102,8 @@ class IndicesTest extends PhalconUnitTestCase
                 ]
             ];
 
-            $vehicle = new Vehicle($i, $data);
+            $vehicle = new Vehicle();
+            $vehicle->setData($i, $data);
             $vehicleElastic = $vehicle->add();
 
             $this->assertArrayHasKey('result', $vehicleElastic);

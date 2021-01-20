@@ -404,6 +404,16 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     }
 
     /**
+     * getRelations.
+     *
+     * @return array
+     */
+    public function getRelations() : array
+    {
+        return $this->getModelsManager()->getRelations(get_class($this));
+    }
+
+    /*
      * Get the relationship from has one and has many
      * so we can create and update records.
      *

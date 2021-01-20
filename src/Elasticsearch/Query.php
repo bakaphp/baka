@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Baka\Elasticsearch;
 
-use Baka\Contracts\Database\ModelInterface as BakaModelInterface;
+use Baka\Contracts\Database\ElasticModelInterface;
 use Baka\Elasticsearch\Query\FromClause;
 use function Baka\envValue;
 use Baka\Exception\Exception;
@@ -13,7 +13,7 @@ use SplFixedArray;
 
 class Query
 {
-    public ?BakaModelInterface $model = null;
+    public ?ElasticModelInterface $model = null;
     protected string $sql;
     protected int $total = 0;
 
@@ -21,9 +21,9 @@ class Query
      * Constructor.
      *
      * @param string $sql
-     * @param BakaModelInterface|null $model
+     * @param ElasticModelInterface|null $model
      */
-    public function __construct(string $sql, ?BakaModelInterface $model = null)
+    public function __construct(string $sql, ?ElasticModelInterface $model = null)
     {
         $this->sql = $sql;
         $this->model = $model;
@@ -58,6 +58,7 @@ class Query
         $payload = [
             $this->getPostKey() => trim($this->sql)
         ];
+
         curl_setopt($ch, CURLOPT_URL, $this->getHost() . $this->getDriverUrl());
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
@@ -150,7 +151,6 @@ class Query
                 $i++;
             }
         }
-
         return $results;
     }
 
@@ -168,11 +168,11 @@ class Query
      * Convert Phalcon SQL To Elastic SQL.
      *
      * @param Builder $builder
-     * @param BakaModelInterface $model
+     * @param ElasticModelInterface $model
      *
      * @return string
      */
-    public static function convertPhlToSql(Builder $builder, BakaModelInterface $model) : string
+    public static function convertPhlToSql(Builder $builder, ElasticModelInterface $model) : string
     {
         $fromClause = new FromClause($model, $builder->getPhql());
         $fromClauseParser = $fromClause->get();

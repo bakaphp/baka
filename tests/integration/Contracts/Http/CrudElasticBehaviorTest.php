@@ -18,6 +18,7 @@ class CrudElasticBehaviorTest extends PhalconUnitTestCase
     use CrudElasticBehaviorTrait;
 
     protected ?RequestInterface $request = null;
+    public $model;
 
     public function testIndex()
     {

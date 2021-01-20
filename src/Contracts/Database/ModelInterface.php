@@ -6,7 +6,7 @@ namespace Baka\Contracts\Database;
 use Phalcon\Mvc\Model\ResultsetInterface;
 use Phalcon\Mvc\ModelInterface as PhalconModelInterface;
 
-interface ModelInterface extends PhalconModelInterface
+interface ModelInterface extends PhalconModelInterface, ElasticModelInterface
 {
     public function getId();
 

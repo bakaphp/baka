@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Baka\Elasticsearch\Query;
 
+use Baka\Contracts\Database\ElasticModelInterface;
 use Baka\Contracts\Database\ModelInterface;
 use Baka\Support\Str;
 
 class FromClause
 {
-    protected ModelInterface $model;
+    protected ElasticModelInterface $model;
     protected string $source;
     protected ?string $whereClause;
     protected array $whereClauseCleanup = ['AND', 'OR', 'WHERE'];
@@ -18,7 +19,7 @@ class FromClause
      *
      * @param ModelInterface $model
      */
-    public function __construct(ModelInterface $model, ?string $whereClause = null)
+    public function __construct(ElasticModelInterface $model, ?string $whereClause = null)
     {
         $this->model = $model;
         $this->source = $this->model->getSource();
@@ -58,13 +59,10 @@ class FromClause
      */
     public function get() : array
     {
-        $class = get_class($this->model);
-
-        $relationShips = $this->model->getModelsManager()->getRelations($class);
+        $relationShips = $this->model->getRelations();
         $queryNodes = [null]; //add 1 element to force , at the start
         $searchNodes = [];
         $replaceNodes = [];
-
         /**
          * @todo cache the relationships
          */
