@@ -58,6 +58,7 @@ class DocumentsModelTest extends PhalconUnitTestCase
         $vehicle->setData(rand(100, 1000), $data);
         if (!Indices::exist($vehicle->getIndices())) {
             $indices = Indices::create($vehicle);
+            $vehicle->add();
             $this->assertArrayHasKey('index', $indices);
             $this->assertTrue((int) $indices['acknowledged'] == 1);
         }
@@ -66,13 +67,13 @@ class DocumentsModelTest extends PhalconUnitTestCase
 
     public function testIndexWithAdditional()
     {
+        sleep(3);
         $vehicle = new Vehicle();
         $this->model = $vehicle;
 
         $limit = 100;
         $params = [];
         $params['q'] = '(issues.key:not_vin_decode)';
-        //$params['fields'] = '';
         $params['limit'] = $limit;
         $params['page'] = '1';
 
