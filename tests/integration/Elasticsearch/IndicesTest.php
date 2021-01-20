@@ -49,10 +49,11 @@ class IndicesTest extends PhalconUnitTestCase
 
         $vehicle = new Vehicle();
         $vehicle->setData(1, $data);
-        $indices = Indices::create($vehicle);
-
-        $this->assertArrayHasKey('index', $indices);
-        $this->assertTrue((int) $indices['acknowledged'] == 1);
+        if (!Indices::exist($vehicle->getIndices())) {
+            $indices = Indices::create($vehicle);
+            $this->assertArrayHasKey('index', $indices);
+            $this->assertTrue((int) $indices['acknowledged'] == 1);
+        }
     }
 
     /**
