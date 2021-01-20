@@ -219,7 +219,7 @@ abstract class Documents implements ElasticModelInterface
     public static function getById(int $id) : self
     {
         $params = [
-            'index' => (new static())->setData($id, [])->getIndices(),
+            'index' => (new static())->getIndices(),
             'id' => $id
         ];
 
