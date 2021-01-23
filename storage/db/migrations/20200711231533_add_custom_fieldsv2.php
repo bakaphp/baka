@@ -7,14 +7,14 @@ class AddCustomFieldsv2 extends Phinx\Migration\AbstractMigration
     public function change()
     {
         $this->table('audits_details', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8mb4',
-                'collation' => 'utf8mb4_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8mb4',
+            'collation' => 'utf8mb4_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->changeColumn('old_value', 'text', [
                 'null' => true,
                 'limit' => 65535,
@@ -46,14 +46,14 @@ class AddCustomFieldsv2 extends Phinx\Migration\AbstractMigration
             ->save();
 
         $this->table('leads', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->changeColumn('email', 'string', [
                 'null' => true,
                 'limit' => 255,
@@ -64,18 +64,19 @@ class AddCustomFieldsv2 extends Phinx\Migration\AbstractMigration
             ->save();
 
         $this->table('apps_custom_fields', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'biginteger', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_BIG,
                 'identity' => 'enable',
+                'precision' => '20',
             ])
             ->addColumn('companies_id', 'integer', [
                 'null' => false,
@@ -99,6 +100,7 @@ class AddCustomFieldsv2 extends Phinx\Migration\AbstractMigration
                 'default' => '0',
                 'limit' => MysqlAdapter::INT_BIG,
                 'after' => 'model_name',
+                'precision' => '20',
             ])
             ->addColumn('name', 'string', [
                 'null' => false,
