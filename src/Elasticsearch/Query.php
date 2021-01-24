@@ -58,6 +58,7 @@ class Query
         $payload = [
             $this->getPostKey() => trim($this->sql)
         ];
+
         curl_setopt($ch, CURLOPT_URL, $this->getHost() . $this->getDriverUrl());
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));

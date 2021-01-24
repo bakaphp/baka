@@ -3,54 +3,22 @@
 namespace Baka\Test\Support\ElasticModel;
 
 use Baka\Elasticsearch\Objects\Documents;
-use stdClass;
 
 class Vehicle extends Documents
 {
     /**
-     * Index data.
+     * initialize.
      *
-     * @return stdClass
+     * @return void
      */
-    /* public function data() : stdClass
+    public function initialize() : void
     {
-        $object = new stdClass();
-        $object->id = 1;
-        $this->setId($object->id);
-
-        $object->description = 'tetada';
-        $object->date = '2018-01-01';
-        $object->money = 10.1;
-        $object->anotherMoney = 10.1;
-
-        $photos[] = [
-            'name' => 'test',
-            'url' => 'http://mctekk.com',
-            'vehicles' => [
-                'id' => 2,
-                'date' => '2018-01-02',
-                'name' => 'wtf',
-            ]
-        ];
-
-        $photos[] = [
-            'name' => 'test',
-            'url' => 'http://mctekk.com',
-            'vehicles' => [[
-                'id' => 2,
-                'date' => '2018-01-02',
-                'name' => 'wtf', ], [
-                    'id' => 2,
-                    'date' => '2018-01-02',
-                    'name' => 'wtf',
-                ]
-            ]
-        ];
-
-        $object->photo = $photos;
-
-        return $object;
-    } */
+        $this->setIndices('vehicles');
+        $this->addRelation('photos', ['alias' => 'photos', 'elasticAlias' => 'ph', 'elasticIndex' => 1]);
+        $this->addRelation('rooftop', ['alias' => 'rooftop', 'elasticAlias' => 'rp', 'elasticIndex' => 1]);
+        $this->addRelation('selling_price', ['alias' => 'selling_price', 'elasticAlias' => 'sp', 'elasticIndex' => 1]);
+        $this->addRelation('issues', ['alias' => 'issues', 'elasticAlias' => 'iss', 'elasticIndex' => 1]);
+    }
 
     /**
      * Define the structure of this index.
@@ -91,6 +59,14 @@ class Vehicle extends Documents
                         'name' => $this->text
                     ]
                 ]
+            ],
+            'selling_price' => [
+                'price' => [
+                    'value' => $this->integer,
+                ],
+            ],
+            'issues' => [
+                'key' => $this->text
             ]
         ];
     }

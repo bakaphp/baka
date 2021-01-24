@@ -3,6 +3,7 @@
 namespace Baka\Test\Integration\Database;
 
 use Baka\Test\Support\Models\LeadsNormal as Leads;
+use Baka\Test\Support\Models\Users;
 use PhalconUnitTestCase;
 
 class ModelTest extends PhalconUnitTestCase
@@ -109,5 +110,13 @@ class ModelTest extends PhalconUnitTestCase
 
         $this->assertTrue($lead->email == $email);
         $this->assertTrue(get_class($lead) == Leads::class);
+    }
+
+    public function testCascadeSoftDelete()
+    {
+        $user = Users::findFirst();
+        $user->cascadeSoftDelete();
+
+        $this->assertEmpty($user->getSubscriptions());
     }
 }
