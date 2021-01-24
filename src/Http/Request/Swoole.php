@@ -6,9 +6,8 @@
 
 namespace Baka\Http\Request;
 
-use function Baka\isJson;
-
 use Baka\Contracts\Request\RequestJwtTrait;
+use function Baka\isJson;
 use Exception;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\FactoryDefault;
@@ -246,7 +245,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function has($name) : bool
     {
@@ -259,7 +258,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPost($name) : bool
     {
@@ -271,7 +270,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPut($name) : bool
     {
@@ -285,7 +284,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function hasQuery($name) : bool
     {
@@ -297,7 +296,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function hasServer($name) : bool
     {
@@ -311,7 +310,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function hasHeader($header) : bool
     {
@@ -364,7 +363,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is ajax.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAjax() : bool
     {
@@ -374,7 +373,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * is Soap.
      *
-     * @return boolean
+     * @return bool
      */
     public function isSoap() : bool
     {
@@ -393,7 +392,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * is Soap.
      *
-     * @return boolean
+     * @return bool
      */
     public function isSoapRequested() : bool
     {
@@ -403,7 +402,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * is HTTPS.
      *
-     * @return boolean
+     * @return bool
      */
     public function isSecure() : bool
     {
@@ -413,7 +412,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * is HTTPS.
      *
-     * @return boolean
+     * @return bool
      */
     public function isSecureRequest() : bool
     {
@@ -585,7 +584,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
      *
      * @param bool $trustForwardedHeader
      *
-     * @return string|boolean
+     * @return string|bool
      */
     public function getClientAddress($trustForwardedHeader = true)
     {
@@ -669,7 +668,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
      * @param string $methods
      * @param bool $strict
      *
-     * @return boolean
+     * @return bool
      */
     public function isMethod($methods, $strict = false) : bool
     {
@@ -702,7 +701,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is post.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPost() : bool
     {
@@ -712,7 +711,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is GET.
      *
-     * @return boolean
+     * @return bool
      */
     public function isGet() : bool
     {
@@ -722,7 +721,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is Put.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPut() : bool
     {
@@ -732,7 +731,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is patch.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPatch() : bool
     {
@@ -742,7 +741,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is head.
      *
-     * @return boolean
+     * @return bool
      */
     public function isHead() : bool
     {
@@ -752,7 +751,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is dealete.
      *
-     * @return boolean
+     * @return bool
      */
     public function isDelete() : bool
     {
@@ -762,7 +761,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is Options.
      *
-     * @return boolean
+     * @return bool
      */
     public function isOptions() : bool
     {
@@ -772,7 +771,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is Purge.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPurge() : bool
     {
@@ -782,7 +781,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is trace.
      *
-     * @return boolean
+     * @return bool
      */
     public function isTrace() : bool
     {
@@ -792,7 +791,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     /**
      * Is connect.
      *
-     * @return boolean
+     * @return bool
      */
     public function isConnect() : bool
     {
@@ -1407,7 +1406,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     }
 
     /**
-     * Get number of files
+     * Get number of files.
      */
     public function numFiles(bool $onlySuccessful = bool) : int
     {
