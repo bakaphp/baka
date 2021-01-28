@@ -110,7 +110,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     public function beforeSoftDelete()
     {
     }
-    
+
     /**
      * Get by Id or thrown an exception.
      *
