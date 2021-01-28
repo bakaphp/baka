@@ -132,20 +132,19 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     public function softDelete()
     {
         $this->beforeSoftDelete();
-        
+
         $this->is_deleted = 1;
 
         return $this->save();
     }
 
     /**
-     * Execute actions before the softDelete method
+     * Execute actions before the softDelete method.
      *
      * @return void
      */
     public function beforeSoftDelete()
     {
-
     }
 
     /**
