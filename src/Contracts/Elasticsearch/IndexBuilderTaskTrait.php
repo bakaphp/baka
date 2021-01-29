@@ -7,6 +7,8 @@ namespace Baka\Contracts\Elasticsearch;
 use Baka\Elasticsearch\IndexBuilder;
 use Baka\Elasticsearch\Models\Documents;
 use Baka\Elasticsearch\Models\Indices;
+use Baka\Elasticsearch\Objects\Documents as ModelDocuments;
+use Baka\Elasticsearch\Objects\Indices as ObjectIndices;
 
 trait IndexBuilderTaskTrait
 {
@@ -26,8 +28,11 @@ trait IndexBuilderTaskTrait
      */
     public function createIndexAction(string $model, int $maxDepth = 3, int $nestedLimit = 75) : void
     {
-        $indices = Indices::create($model, $maxDepth, $nestedLimit);
-
+        if (new $model instanceof ModelDocuments) {
+            $indices = ObjectIndices::create(new $model(), $maxDepth, $nestedLimit);
+        } else {
+            $indices = Indices::create($model, $maxDepth, $nestedLimit);
+        }
         echo "Indices {$model} created " . json_encode($indices);
     }
 
@@ -70,6 +75,35 @@ trait IndexBuilderTaskTrait
 
         foreach ($records as $record) {
             Documents::add($record, $maxDepth);
+        }
+
+        echo "Total records inserted for {$model} " . $totalRecords;
+    }
+
+    /**
+     * createDocumentsElasticAction.
+     *
+     * @param  string $model
+     * @param  string $modelDocument
+     * @param  int $maxDepth
+     * @param  int $limit
+     *
+     * @return void
+     */
+    public function createDocumentsElasticAction(string $model, string $modelDocument, int $maxDepth = 3, int $limit = 0) : void
+    {
+        // Get model's records
+        $limitSql = $limit ? ' LIMIT ' . $limit : null;
+        $records = $model::find('is_deleted = 0' . $limitSql);
+        $totalRecords = $records->count();
+        // Get elasticsearch class handler instance
+        $elasticsearch = new IndexBuilder();
+
+        foreach ($records as $record) {
+            $row = new $modelDocument();
+            $row->setData((int)$record->id, $record->toArray());
+            $row->add();
+            echo "Add record {$row->id} \n";
         }
 
         echo "Total records inserted for {$model} " . $totalRecords;
