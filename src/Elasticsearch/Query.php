@@ -66,8 +66,12 @@ class Query
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
+        $results = curl_exec($ch);
+        if (!$result) {
+            throw new Exception('We have a error with elasticsearch');
+        }
         // Send request.
-        $results = json_decode(curl_exec($ch), true);
+        $results = json_decode($results, true);
 
         if (isset($results['error'])) {
             throw  Exception::create(
