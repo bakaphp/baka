@@ -68,7 +68,7 @@ class Query
 
         $results = curl_exec($ch);
         if (!$results) {
-            throw new Exception('Error connecting to ElasticSearch Node');
+            throw new Exception('Error connecting to ElasticSearch Node - Please your connection host');
         }
         // Send request.
         $results = json_decode($results, true);
