@@ -10,7 +10,7 @@ use function Baka\getShortClassName;
 
 abstract class Documents implements ElasticModelInterface
 {
-    public int $id;
+    public $id;
     public array $data;
     public ?string $indices = null;
 
@@ -107,12 +107,12 @@ abstract class Documents implements ElasticModelInterface
     /**
      * setData.
      *
-     * @param  int $id
+     * @param $id
      * @param  array $data
      *
      * @return void
      */
-    public function setData(int $id, array $data) : self
+    public function setData($id, array $data) : self
     {
         $this->id = $id;
         $this->data = $data;
@@ -212,11 +212,11 @@ abstract class Documents implements ElasticModelInterface
     /**
      * Get a document by Id.
      *
-     * @param int $id
+     * @param mixed $id
      *
      * @return self
      */
-    public static function getById(int $id) : self
+    public static function getById($id) : self
     {
         $params = [
             'index' => (new static())->getIndices(),
