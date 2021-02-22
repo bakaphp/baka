@@ -21,6 +21,12 @@ trait ElasticIndexModelTrait
     public bool $elasticSearchNotAnalyzed = true;
 
     /**
+     * Allow use to overwrite the behavior for a specific field.
+     * in order use wildcard search.
+     */
+    public array $elasticSearchAnalyzedFields = [];
+
+    /**
      * With this variable we tell elasticsearch to enable sorting text fields.
      * https://www.elastic.co/guide/en/elasticsearch/reference/current/fielddata.html.
      *
