@@ -82,8 +82,8 @@ class IndexBuilder
                     $elasticSearchNotAnalyzed = true;
                     if (isset($model->elasticSearchAnalyzedFields[$column->getName()])) {
                         $elasticSearchNotAnalyzed = false;
-                    } elseif (isset($model->elasticSearchNotAnalyzed) && !isset($model->elasticSearchAnalyzedFields[$column->getName()])) {
-                        $elasticSearchNotAnalyzed = (bool) $model->elasticSearchNotAnalyzed;
+                    } else {
+                        $elasticSearchNotAnalyzed = (bool) ($model->elasticSearchNotAnalyzed ?? true);
                     }
                     $fields[$column->getName()] = !$elasticSearchNotAnalyzed ? 'text' : 'keyword';
                     break;
