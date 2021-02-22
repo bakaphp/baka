@@ -19,6 +19,12 @@ trait ElasticIndexModelTrait
      * @var bool
      */
     public bool $elasticSearchNotAnalyzed = true;
+    
+    /**
+     * Allow use to overwrite the behavior for a specific field.
+     * in order use wildcard search.
+     */
+    public array $elasticSearchAnalyzedFields = [];
 
     /**
      * Specify to the elastic result to use stdClass object instead of the class itself.
