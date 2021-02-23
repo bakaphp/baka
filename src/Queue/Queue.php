@@ -81,7 +81,14 @@ class Queue
             $channel = $queue->channel();
 
             $channel->queue_declare($queueName, false, true, false, false);
+            
+            //Fair dispatch https://lukasmestan.com/rabbitmq-broken-pipe-or-closed-connection/
+            $prefetchSize = null;    // message size in bytes or null, otherwise error
+            $prefetchCount = 1;      // prefetch count value
+            $applyPerChannel = null; // can be false or null, otherwise error
 
+            $channel->basic_qos($prefetchSize, $prefetchCount, $applyPerChannel);
+            
             /*
                 queueName: Queue from where to get the messages
                 consumer_tag: Consumer identifier
