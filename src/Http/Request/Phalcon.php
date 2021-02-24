@@ -71,7 +71,7 @@ class Phalcon extends Request
     protected function filterSanitize(array $data) : array
     {
         return $this->inputSanitize ?
-            filter_var($data, FILTER_CALLBACK, ['options' => 'self::cleanUp']) :
+            filter_var($data, FILTER_CALLBACK, ['options' => [$this, 'cleanUp']]) :
             $data;
     }
 
