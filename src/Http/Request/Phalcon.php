@@ -82,7 +82,7 @@ class Phalcon extends Request
      *
      * @return string|null
      */
-    protected function cleanUp(?string $value) : ?String
+    protected function cleanUp(?string $value) : ?string
     {
         return strlen($value) !== 0 ? trim($value) : null;
     }
