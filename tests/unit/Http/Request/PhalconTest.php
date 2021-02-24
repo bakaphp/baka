@@ -34,6 +34,7 @@ class PhalconTest extends PhalconUnitTestCase
             ]
         ];
         $request = new Phalcon();
+        $request->enableSanitize();
 
         $data = $request->getPostData();
 
@@ -79,6 +80,7 @@ class PhalconTest extends PhalconUnitTestCase
         ];
 
         $request = new Phalcon();
+        $request->enableSanitize();
 
         $data = $request->getPutData();
 

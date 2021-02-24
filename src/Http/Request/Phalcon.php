@@ -8,6 +8,8 @@ use Phalcon\Http\Request;
 
 class Phalcon extends Request
 {
+    protected bool $inputSanitize = false;
+
     /**
      * Get the data from a POST request.
      *
@@ -17,7 +19,7 @@ class Phalcon extends Request
     {
         $data = $this->getPost() ?: $this->getJsonRawBody(true);
 
-        return $this->cleanUp($data) ?: [];
+        return $this->filterSanitize($data) ?: [];
     }
 
     /**
@@ -36,7 +38,7 @@ class Phalcon extends Request
          */
         $data = $data ?: $this->get();
 
-        return $this->cleanUp($data) ?: [];
+        return $this->filterSanitize($data) ?: [];
     }
 
     /**
@@ -66,8 +68,42 @@ class Phalcon extends Request
      *
      * @return array
      */
-    protected function cleanUp(array $data) : array
+    protected function filterSanitize(array $data) : array
     {
-        return filter_var($data, FILTER_CALLBACK, ['options' => 'trim']);
+        return $this->inputSanitize ?
+            filter_var($data, FILTER_CALLBACK, ['options' => [$this, 'cleanUp']]) :
+            $data;
+    }
+
+    /**
+     * Clean up the value.
+     *
+     * @param string|null $value
+     *
+     * @return string|null
+     */
+    protected function cleanUp(?string $value) : ?string
+    {
+        return strlen($value) !== 0 ? trim($value) : null;
+    }
+
+    /**
+     * Enable sanitize.
+     *
+     * @return void
+     */
+    public function enableSanitize() : void
+    {
+        $this->inputSanitize = true;
+    }
+
+    /**
+     * Enable sanitize.
+     *
+     * @return void
+     */
+    public function disableSanitize() : void
+    {
+        $this->inputSanitize = false;
     }
 }
