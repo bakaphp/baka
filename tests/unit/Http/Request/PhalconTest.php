@@ -73,7 +73,6 @@ class PhalconTest extends PhalconUnitTestCase
             json_encode($input)
         );
 
-        $store = $_SERVER ?? [];
         $time = $_SERVER['REQUEST_TIME_FLOAT'];
         $_SERVER = [
             'REQUEST_TIME_FLOAT' => $time,
