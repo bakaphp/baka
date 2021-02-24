@@ -17,7 +17,7 @@ class Phalcon extends Request
     {
         $data = $this->getPost() ?: $this->getJsonRawBody(true);
 
-        return $data ?: [];
+        return $this->cleanUp($data) ?: [];
     }
 
     /**
@@ -36,7 +36,7 @@ class Phalcon extends Request
          */
         $data = $data ?: $this->get();
 
-        return $data ?: [];
+        return $this->cleanUp($data) ?: [];
     }
 
     /**
@@ -57,5 +57,21 @@ class Phalcon extends Request
     public function withRelationships() : bool
     {
         return $this->hasQuery('relationships');
+    }
+
+    /**
+     * Clean up input data.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function cleanUp(array $data) : array
+    {
+        foreach ($data as $key => $value) {
+            $data[$key] = is_array($value) ? $this->cleanUp($value) : trim((string) $value);
+        }
+
+        return $data;
     }
 }
