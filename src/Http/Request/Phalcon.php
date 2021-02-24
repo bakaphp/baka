@@ -68,10 +68,6 @@ class Phalcon extends Request
      */
     protected function cleanUp(array $data) : array
     {
-        foreach ($data as $key => $value) {
-            $data[$key] = is_array($value) ? $this->cleanUp($value) : trim((string) $value);
-        }
-
-        return $data;
+        return filter_var($data, FILTER_CALLBACK, ['options' => 'trim']);
     }
 }
