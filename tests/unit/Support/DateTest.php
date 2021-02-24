@@ -10,12 +10,21 @@ use PhalconUnitTestCase;
 
 class DateTest extends PhalconUnitTestCase
 {
+    public function testSecsAgo()
+    {
+        $timeAgo = Date::howLongAgo(date('Y-m-d H:i:s', strtotime('-35 seconds')));
+
+        $this->assertTrue(
+            Str::contains($timeAgo, 's')
+        );
+    }
+
     public function testMinsAgo()
     {
         $timeAgo = Date::howLongAgo(date('Y-m-d H:i:s', strtotime('-10 minutes')));
 
         $this->assertTrue(
-            Str::contains($timeAgo, 'mins. ago')
+            Str::contains($timeAgo, 'm')
         );
     }
 
@@ -24,25 +33,34 @@ class DateTest extends PhalconUnitTestCase
         $timeAgo = Date::howLongAgo(date('Y-m-d H:i:s', strtotime('-8 hours')));
 
         $this->assertTrue(
-            Str::contains($timeAgo, 'hrs. ago')
+            Str::contains($timeAgo, 'h')
         );
     }
 
     public function testDaysAgo()
     {
-        $timeAgo = Date::howLongAgo(date('Y-m-d H:i:s', strtotime('-28 hours')));
+        $timeAgo = Date::howLongAgo(date('Y-m-d H:i:s', strtotime('-68 hours')));
 
         $this->assertTrue(
-            Str::contains($timeAgo, 'day')
+            Str::contains($timeAgo, 'd')
         );
     }
 
-    public function testDatesAgo()
+    public function testMonthAgo()
     {
         $timeAgo = Date::howLongAgo(date('Y-m-d H:i:s', strtotime('-750 hours')));
 
         $this->assertTrue(
-            Str::contains($timeAgo, date('Y', strtotime('-750 hours')))
+            Str::contains($timeAgo, date('M', strtotime('-750 hours')))
+        );
+    }
+
+    public function testYearsAgo()
+    {
+        $timeAgo = Date::howLongAgo(date('Y-m-d H:i:s', strtotime('-1 year')));
+
+        $this->assertTrue(
+            Str::contains($timeAgo, date('Y', strtotime('-1 year')))
         );
     }
 
