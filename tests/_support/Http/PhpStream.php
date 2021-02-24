@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of the Phalcon Framework.
- *
- * (c) Phalcon Team <team@phalcon.io>
- *
- * For the full copyright and license information, please view the LICENSE.txt
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Baka\Test\Support\Http;
@@ -17,7 +8,7 @@ namespace Baka\Test\Support\Http;
  * @link http://php.net/manual/en/class.streamwrapper.php
  * @link http://php.net/manual/en/stream.streamwrapper.example-1.php
  *
- * @codingStandardsIgnoreFile
+ * Taken from https://github.com/phalcon/cphalcon/blob/4.0.x/tests/unit/Http/Request/
  */
 class PhpStream
 {
