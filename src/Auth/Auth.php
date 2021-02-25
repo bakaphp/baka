@@ -37,7 +37,7 @@ class Auth
 
         //first we find the user
         if (!$user) {
-            throw new AuthException(_('Invalid Username or Password.'));
+            throw new AuthException(_('Invalid email or password.'));
         }
 
         self::loginAttemptsValidation($user);
@@ -54,7 +54,7 @@ class Auth
             // Only store a failed login attempt for an active user - inactive users can't login even with a correct password
             self::updateLoginTries($user);
 
-            throw new AuthException(_('Invalid Username or Password..'));
+            throw new AuthException(_('Invalid email or password.'));
         } elseif ($user->isBanned()) {
             throw new AuthException(_('User has not been banned, please check your email for the activation link.'));
         } else {
