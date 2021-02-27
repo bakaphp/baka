@@ -18,15 +18,15 @@ class Route
         Http::DELETE,
     ];
 
-    protected $path;
-    protected $action;
-    protected $prefix;
-    protected $namespace;
-    protected $controller;
-    protected $via = [];
-    protected $notVia = [];
-    protected $middlewares = [];
-    protected $restConvention = false;
+    protected ?string $path = null;
+    protected ?string $action = null;
+    protected ?string $prefix = null;
+    protected ?string $namespace = null;
+    protected ?string $controller = null;
+    protected array $via = [];
+    protected array $notVia = [];
+    protected array $middlewares = [];
+    protected bool $restConvention = false;
 
     /**
      * Constructor.
@@ -521,13 +521,13 @@ class Route
     }
 
     /**
-     * Return whether the parse should use rest convenction or not.
+     * Return whether the parse should use rest convention or not.
      *
-     * @param [type] $state
+     * @param ?bool $state
      *
      * @return bool
      */
-    public function useRestConvention($state = null) : bool
+    public function useRestConvention(?bool $state = null) : bool
     {
         if (null !== $state) {
             $this->restConvention = (bool) $state;
