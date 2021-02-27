@@ -261,7 +261,7 @@ class RouteGroup
     }
 
     /**
-     * Conver to a collection.
+     * Convert to a collection.
      *
      * @return array
      */

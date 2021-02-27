@@ -20,11 +20,11 @@ class RouteParser
     const GET_SPECIFIC_RESOURCE_ACTION = 'getById';
     const SPECIFIC_RESOURCE_PATH = '/{id}';
 
-    protected $route;
-    protected $collections = [];
+    protected Route $route;
+    protected array $collections = [];
 
     /**
-     * Contructor.
+     * Constructor.
      *
      * @param Route $route
      */
@@ -36,15 +36,28 @@ class RouteParser
     /**
      * Parse the route to create collection.
      *
-     * @return void
+     * @return array
      */
     public function parse() : array
     {
-        $this->hasMethod(Http::POST) and $this->addPostCollection();
-        $this->hasMethod(Http::GET) and $this->addGetCollection();
-        $this->hasMethod(Http::PUT) and $this->addPutCollection();
-        $this->hasMethod(Http::PATCH) and $this->addPatchCollection();
-        $this->hasMethod(Http::DELETE) and $this->addDeleteCollection();
+        if ($this->hasMethod(Http::POST)) {
+            $this->addPostCollection();
+        }
+
+        if ($this->hasMethod(Http::GET)) {
+            $this->addGetCollection();
+        }
+
+        if ($this->hasMethod(Http::PUT)) {
+            $this->addPutCollection();
+        }
+
+        if ($this->hasMethod(Http::PATCH)) {
+            $this->addPatchCollection();
+        }
+        if ($this->hasMethod(Http::DELETE)) {
+            $this->addDeleteCollection();
+        }
 
         return $this->getCollections();
     }
@@ -62,7 +75,7 @@ class RouteParser
     /**
      * Get POST collection from based on the route.
      *
-     * @return array
+     * @return void
      */
     protected function addPostCollection() : void
     {
@@ -81,7 +94,7 @@ class RouteParser
     /**
      * Get GET collection from based on the route.
      *
-     * @return array
+     * @return void
      */
     protected function addGetCollection() : void
     {
@@ -112,7 +125,7 @@ class RouteParser
     /**
      * Get PUT collection from based on the route.
      *
-     * @return array
+     * @return void
      */
     protected function addPutCollection() : void
     {
@@ -131,7 +144,7 @@ class RouteParser
     /**
      * Get PATCH collection from based on the route.
      *
-     * @return array
+     * @return void
      */
     protected function addPatchCollection() : void
     {
@@ -150,7 +163,7 @@ class RouteParser
     /**
      * Get DELETE collection from based on the route.
      *
-     * @return array
+     * @return void
      */
     protected function addDeleteCollection() : void
     {
