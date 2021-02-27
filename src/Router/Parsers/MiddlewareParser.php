@@ -12,7 +12,7 @@ class MiddlewareParser
     const EVENT_DELIMITER = ':';
     const PARAMETER_DELIMITER = ',';
 
-    protected $middlewareNotation;
+    protected string $middlewareNotation;
 
     /**
      * Constructor.
@@ -22,9 +22,9 @@ class MiddlewareParser
     public function __construct(string $middlewareNotation)
     {
         $this->middlewareNotation = $middlewareNotation;
-        $this->extractMiddlewareKey();
-        $this->extractEvent();
-        $this->extractParameters();
+        /*    $this->extractMiddlewareKey();
+           $this->extractEvent();
+           $this->extractParameters(); */
     }
 
     /**

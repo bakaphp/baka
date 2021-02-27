@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Baka\Router\Middlewares;
 
+use Baka\Router\Collection;
 use Baka\Router\Middleware;
+use Baka\Support\Str;
 use Phalcon\Mvc\Micro;
-use Phalcon\Utils\Slug;
 
 class RouteMiddlewareHelper
 {
@@ -36,9 +37,10 @@ class RouteMiddlewareHelper
     {
         $routeIdentifier = $this->getRouteIdentifier($this->api);
 
-        $middlewares = $this->api->getSharedService('routeMiddlewares')[$routeIdentifier] ?? [];
+        $routeMiddlewares = $this->api->getSharedService('routeMiddlewares')[$routeIdentifier] ?? [];
+        $middlewares = $routeMiddlewares instanceof Collection ? $routeMiddlewares->getMiddlewares() : [];
 
-        return array_filter($middlewares, function (Middleware $middleware) use ($event) {
+        return array_filter($middlewares, function ($middleware) use ($event) {
             $foundRouteMiddleware = $this->isInRouteMiddlewares(
                 $middleware->getMiddlewareKey()
             );
@@ -64,9 +66,9 @@ class RouteMiddlewareHelper
         $routeMethod = $this->api->di->get('router')->getMatchedRoute()->getHttpMethods();
         $routePattern = $this->api->di->get('router')->getMatchedRoute()->getPattern();
 
-        return  strtolower(Slug::generate(
+        return  Str::slug(
             $routeMethod . '-' . $routePattern . '-' . ($activeHandler[0])->getDefinition() . '-' . $activeHandler[1]
-        ));
+        );
     }
 
     /**

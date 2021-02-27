@@ -3,8 +3,8 @@
 namespace Baka\Router;
 
 use Baka\Router\Parsers\MiddlewareParser;
+use Baka\Support\Str;
 use Phalcon\Mvc\Micro\Collection as PhCollection;
-use Phalcon\Utils\Slug;
 
 class Collection extends PhCollection
 {
@@ -52,8 +52,8 @@ class Collection extends PhCollection
     {
         //$this->getHandlers()[0][0] whats the router method? GET , POST, PUT , DELETE
         //$this->getHandlers()[0][1] what the prefix
-        return strtolower(Slug::generate(
+        return Str::slug(
             $this->getHandlers()[0][0] . '-' . $this->getHandlers()[0][1] . '-' . $this->getHandler() . '-' . $this->getHandlers()[0][2]
-        ));
+        );
     }
 }

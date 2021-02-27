@@ -20,38 +20,24 @@ class RouterProvider implements ServiceProviderInterface
         /** @var Micro $application */
         $application = $container->getShared('application');
 
-        $this->attachRoutes($application);
-        $this->attachRouteMiddlewares($container);
+        $this->attachRoutes($application, $container);
     }
 
     /**
      * Attache the routes to the application; lazy loaded.
      *
      * @param Micro $application
-     */
-    protected function attachRoutes(Micro $application)
-    {
-        foreach ($this->getCollections() as $collection) {
-            $application->mount($collection);
-        }
-    }
-
-    /**
-     * Attache routes' middleware.
-     *
      * @param DiInterface $container
      */
-    protected function attachRouteMiddlewares(DiInterface $container)
+    protected function attachRoutes(Micro $application, DiInterface $container)
     {
         $routeMiddlewares = [];
 
         foreach ($this->getCollections() as $collection) {
-            $key = $collection->getCollectionIdentifier();
-            $middlewares = $collection->getMiddlewares();
+            $application->mount($collection);
 
-            if ($middlewares) {
-                $routeMiddlewares[$key] = $middlewares;
-            }
+            $key = $collection->getCollectionIdentifier();
+            $routeMiddlewares[$key] = $collection;
         }
 
         $container->setShared(
