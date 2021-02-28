@@ -12,6 +12,8 @@ class RouterTest extends PhalconUnitTestCase
         $router = Route::get('/')->controller('TestController');
 
         $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('get', $router->getVia()));
+        $this->assertTrue($router->getController() === 'TestController');
     }
 
     public function testPostRoute()
@@ -19,6 +21,8 @@ class RouterTest extends PhalconUnitTestCase
         $router = Route::post('/')->controller('TestController');
 
         $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('post', $router->getVia()));
+        $this->assertTrue($router->getController() === 'TestController');
     }
 
     public function testPutRoute()
@@ -26,6 +30,8 @@ class RouterTest extends PhalconUnitTestCase
         $router = Route::put('/')->controller('TestController');
 
         $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('put', $router->getVia()));
+        $this->assertTrue($router->getController() === 'TestController');
     }
 
     public function testDeleteRoute()
@@ -33,6 +39,8 @@ class RouterTest extends PhalconUnitTestCase
         $router = Route::delete('/')->controller('TestController');
 
         $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('delete', $router->getVia()));
+        $this->assertTrue($router->getController() === 'TestController');
     }
 
     public function testCrudRoute()
@@ -40,6 +48,8 @@ class RouterTest extends PhalconUnitTestCase
         $router = Route::crud('/')->controller('TestController')->action('index');
 
         $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('get', $router->getVia()));
+        $this->assertTrue($router->getController() === 'TestController');
     }
 
     public function testGetRouteWithAction()
@@ -47,6 +57,8 @@ class RouterTest extends PhalconUnitTestCase
         $router = Route::get('/')->controller('TestController')->action('index');
 
         $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('get', $router->getVia()));
+        $this->assertTrue($router->getController() === 'TestController');
     }
 
     public function testPostRouteWithAction()
@@ -54,6 +66,8 @@ class RouterTest extends PhalconUnitTestCase
         $router = Route::post('/')->controller('TestController')->action('index');
 
         $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('post', $router->getVia()));
+        $this->assertTrue($router->getController() === 'TestController');
     }
 
     public function testPutRouteWithAction()
@@ -61,6 +75,8 @@ class RouterTest extends PhalconUnitTestCase
         $router = Route::put('/')->controller('TestController')->action('index');
 
         $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('put', $router->getVia()));
+        $this->assertTrue($router->getController() === 'TestController');
     }
 
     public function testDeleteRouteWithAction()
@@ -68,6 +84,8 @@ class RouterTest extends PhalconUnitTestCase
         $router = Route::delete('/')->controller('TestController')->action('index');
 
         $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('delete', $router->getVia()));
+        $this->assertTrue($router->getController() === 'TestController');
     }
 
     public function testCrudRouteWithAction()
@@ -75,6 +93,17 @@ class RouterTest extends PhalconUnitTestCase
         $router = Route::crud('/')->controller('TestController')->action('index');
 
         $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('get', $router->getVia()));
+        $this->assertTrue($router->getController() === 'TestController');
+    }
+
+    public function testNoVia()
+    {
+        $router = Route::crud('/users')->notVia('post');
+
+        $this->assertTrue($router instanceof Route);
+        $this->assertTrue(in_array('post', $router->getNotVia()));
+        $this->assertTrue(empty($router->getController()));
     }
 
     public function testRouteCollection()
