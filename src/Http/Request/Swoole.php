@@ -62,6 +62,8 @@ class Swoole implements RequestInterface, InjectionAwareInterface
 
     protected $swooleRequest;
 
+    protected bool $inputSanitize = false;
+
     /**
      * Init the object with Swoole reqeust.
      *
@@ -1365,8 +1367,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
         }
     }
 
-    /**
-     * Get the data from a POST request.
+    /* Get the data from a POST request.
      *
      * @return array
      */
@@ -1374,7 +1375,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     {
         $data = $this->getPost() ?: $this->getJsonRawBody(true);
 
-        return $data ?: [];
+        return $this->filterSanitize($data) ?: [];
     }
 
     /**
@@ -1386,15 +1387,80 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     {
         $data = $this->getPut() ?: $this->getJsonRawBody(true);
 
-        return $data ?: [];
+        /**
+         * @todo get help from phalcon
+         * using browserkit with Phalcon4 + Put we have to relay on
+         * $_REQUEST
+         */
+        $data = $data ?: $this->get();
+
+        return $this->filterSanitize($data) ?: [];
     }
 
     /**
-     * @return string
+     * Is this request paginated?
+     *
+     * @return bool
      */
-    public function getBearerTokenFromHeader() : string
+    public function withPagination() : bool
     {
-        return str_replace('Bearer ', '', $this->getHeader('Authorization'));
+        return $this->getQuery('format', 'string') == 'true';
+    }
+
+    /**
+     * Is this a request requesting relationships.
+     *
+     * @return bool
+     */
+    public function withRelationships() : bool
+    {
+        return $this->hasQuery('relationships');
+    }
+
+    /**
+     * Clean up input data.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function filterSanitize(array $data) : array
+    {
+        return $this->inputSanitize ?
+            filter_var($data, FILTER_CALLBACK, ['options' => [$this, 'cleanUp']]) :
+            $data;
+    }
+
+    /**
+     * Clean up the value.
+     *
+     * @param string|null $value
+     *
+     * @return string|null
+     */
+    protected function cleanUp(?string $value) : ?string
+    {
+        return strlen($value) !== 0 ? trim($value) : null;
+    }
+
+    /**
+     * Enable sanitize.
+     *
+     * @return void
+     */
+    public function enableSanitize() : void
+    {
+        $this->inputSanitize = true;
+    }
+
+    /**
+     * Enable sanitize.
+     *
+     * @return void
+     */
+    public function disableSanitize() : void
+    {
+        $this->inputSanitize = false;
     }
 
     /**
