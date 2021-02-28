@@ -12,7 +12,7 @@ class RouterGroupTest extends PhalconUnitTestCase
     public function testGroup()
     {
         $group = [
-            $router = Route::get('/')->controller('TestController')
+            Route::get('/')->controller('TestController')
         ];
 
         $publicRoutesGroup = RouteGroup::from($group)
@@ -27,7 +27,7 @@ class RouterGroupTest extends PhalconUnitTestCase
     public function testGroupWithMiddleware()
     {
         $group = [
-            $router = Route::get('/')->controller('TestController')
+            Route::get('/')->controller('TestController')
         ];
 
         $publicRoutesGroup = RouteGroup::from($group)
@@ -44,8 +44,8 @@ class RouterGroupTest extends PhalconUnitTestCase
     public function testRouteCollection()
     {
         $group = [
-            $router = Route::get('/')->controller('TestController'),
-            $router = Route::post('/')->controller('TestController')
+            Route::get('/')->controller('TestController'),
+            Route::post('/')->controller('TestController')
         ];
 
         $publicRoutesGroup = RouteGroup::from($group)
@@ -53,8 +53,6 @@ class RouterGroupTest extends PhalconUnitTestCase
             ->addMiddlewares('auth.jwt@before', 'auth.acl@before', 'auth.activeStatus@before')
             ->defaultPrefix('/v1');
 
-        print_r($publicRoutesGroup->toCollections());
-        die();
         $this->assertIsArray($publicRoutesGroup->toCollections());
         $this->assertTrue($publicRoutesGroup->toCollections()[0] instanceof Collection);
     }
