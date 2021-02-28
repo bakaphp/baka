@@ -198,7 +198,9 @@ class RouteParser
      */
     protected function addCollection(Collection $collection) : void
     {
-        $this->collections[] = $collection;
+        if (!$collection->isReused()) {
+            $this->collections[] = $collection;
+        }
     }
 
     /**

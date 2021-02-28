@@ -7,11 +7,11 @@ use Baka\Router\Utils\Helper;
 
 class RouteGroup
 {
-    protected $defaultPrefix;
-    protected $defaultNamespace;
-    protected $defaultAction;
-    protected $routes = [];
-    protected $middlewares = [];
+    protected ?string $defaultPrefix = null;
+    protected ?string $defaultNamespace = null;
+    protected ?string $defaultAction = null;
+    protected array $routes = [];
+    protected array $middlewares = [];
 
     /**
      * Constructor.

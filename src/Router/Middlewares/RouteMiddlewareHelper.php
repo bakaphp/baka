@@ -11,11 +11,11 @@ use Phalcon\Mvc\Micro;
 
 class RouteMiddlewareHelper
 {
-    protected $api;
-    protected $routeMiddlewares;
+    protected Micro $api;
+    protected array $routeMiddlewares;
 
     /**
-     * Constructore.
+     * Constructor.
      *
      * @param Micro $api
      * @param array $routeMiddlewares

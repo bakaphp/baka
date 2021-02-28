@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Baka\Router\Providers;
 
+use Baka\Router\Collection;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\Mvc\Micro;
@@ -31,19 +32,18 @@ class RouterProvider implements ServiceProviderInterface
      */
     protected function attachRoutes(Micro $application, DiInterface $container)
     {
-        $routeMiddlewares = [];
-
         foreach ($this->getCollections() as $collection) {
             $application->mount($collection);
 
-            $key = $collection->getCollectionIdentifier();
-            $routeMiddlewares[$key] = $collection;
+            if ($collection->hasMiddleware()) {
+                Collection::generateMiddlewareMapping($collection);
+            }
         }
 
         $container->setShared(
             'routeMiddlewares',
-            function () use ($routeMiddlewares) {
-                return $routeMiddlewares;
+            function () {
+                return Collection::$collectionMiddleWare;
             }
         );
     }
