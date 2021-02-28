@@ -53,7 +53,9 @@ class RouterGroupTest extends PhalconUnitTestCase
             ->addMiddlewares('auth.jwt@before', 'auth.acl@before', 'auth.activeStatus@before')
             ->defaultPrefix('/v1');
 
+        $collection = $publicRoutesGroup->toCollections()[0];
+
         $this->assertIsArray($publicRoutesGroup->toCollections());
-        $this->assertTrue($publicRoutesGroup->toCollections()[0] instanceof Collection);
+        $this->assertTrue($collection instanceof Collection);
     }
 }
