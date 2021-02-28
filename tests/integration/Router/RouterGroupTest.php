@@ -7,7 +7,7 @@ use Baka\Router\Route;
 use Baka\Router\RouteGroup;
 use PhalconUnitTestCase;
 
-class RouterTest extends PhalconUnitTestCase
+class RouterGroupTest extends PhalconUnitTestCase
 {
     public function testGroup()
     {
