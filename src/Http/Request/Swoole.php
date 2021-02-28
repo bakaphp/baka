@@ -65,7 +65,7 @@ class Swoole implements RequestInterface, InjectionAwareInterface
     protected bool $inputSanitize = false;
 
     /**
-     * Init the object with Swoole reqeust.
+     * Init the object with Swoole request.
      *
      * @param swoole_http_request $request
      *
