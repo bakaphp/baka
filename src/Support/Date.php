@@ -34,7 +34,7 @@ class Date
         $hour = $minute * 60;
         $day = $hour * 24;
         $month = $day * 30;
-        $years = $day * 360;
+        $years = $day * 365;
 
         if ($diff < $minute) {
             $text = _('< 1 min.');
