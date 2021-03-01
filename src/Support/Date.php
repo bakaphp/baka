@@ -34,42 +34,31 @@ class Date
         $hour = $minute * 60;
         $day = $hour * 24;
         $month = $day * 30;
+        $years = $day * 365;
 
         if ($diff < $minute) {
             $text = _('< 1 min.');
 
-            return sprintf(_('%s ago'), $text);
+            return sprintf('%ds', $diff);
         } elseif ($diff < $hour) {
             $mins = (int) floor($diff / $minute);
 
-            return sprintf(ngettext('%d min. ago', '%d mins. ago', $mins), $mins);
+            return sprintf('%dm', $mins);
         } elseif ($diff < $day) {
             $hrs = (int) floor($diff / $hour);
             $mins = (int)  floor(($diff - $hrs * $hour) / $minute);
+            $text = sprintf('%dh', $hrs);
 
-            $text = sprintf(ngettext('%d hr.', '%d hrs.', $hrs), $hrs);
-
-            if ($mins > 0) {
-                $text .= ' ' . sprintf(
-                    ngettext('%d min.', '%d mins.', $mins),
-                    $mins
-                );
-            }
-
-            return sprintf(_('%s ago'), $text);
+            return $text;
         } elseif ($diff < $month) {
             $days = (int) floor($diff / $day);
+            $text = sprintf('%dd', $days);
 
-            $text = sprintf(ngettext('%d day', '%d days', $days), $days);
-
-            if ($days < 2) {
-                $hrs = (int) floor(($diff - $days * $day) / $hour);
-                $text .= ' ' . sprintf(ngettext('%d hr.', '%d hrs.', $hrs), $hrs);
-            }
-
-            return sprintf(_('%s ago'), $text);
+            return $text;
+        } elseif ($diff < $years) {
+            return date('M d', $ts);
         } else {
-            return date('Y-m-d', $ts);
+            return date('M d, Y', $ts);
         }
     }
 
