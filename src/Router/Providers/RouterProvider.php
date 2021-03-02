@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Baka\Router\Providers;
 
+use Baka\Router\Collection;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\Mvc\Micro;
@@ -20,44 +21,29 @@ class RouterProvider implements ServiceProviderInterface
         /** @var Micro $application */
         $application = $container->getShared('application');
 
-        $this->attachRoutes($application);
-        $this->attachRouteMiddlewares($container);
+        $this->attachRoutes($application, $container);
     }
 
     /**
      * Attache the routes to the application; lazy loaded.
      *
      * @param Micro $application
+     * @param DiInterface $container
      */
-    protected function attachRoutes(Micro $application)
+    protected function attachRoutes(Micro $application, DiInterface $container)
     {
         foreach ($this->getCollections() as $collection) {
             $application->mount($collection);
-        }
-    }
 
-    /**
-     * Attache routes' middleware.
-     *
-     * @param DiInterface $container
-     */
-    protected function attachRouteMiddlewares(DiInterface $container)
-    {
-        $routeMiddlewares = [];
-
-        foreach ($this->getCollections() as $collection) {
-            $key = $collection->getCollectionIdentifier();
-            $middlewares = $collection->getMiddlewares();
-
-            if ($middlewares) {
-                $routeMiddlewares[$key] = $middlewares;
+            if ($collection->hasMiddleware()) {
+                Collection::generateMiddlewareMapping($collection);
             }
         }
 
         $container->setShared(
             'routeMiddlewares',
-            function () use ($routeMiddlewares) {
-                return $routeMiddlewares;
+            function () {
+                return Collection::$collectionMiddleWare;
             }
         );
     }

@@ -220,4 +220,16 @@ class Str
     {
         return preg_replace("/[^a-zA-Z0-9_\s]/", '', $string);
     }
+
+    /**
+     * Generate none-unicode slugs for simple parsing.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function slug(string $string) : string
+    {
+        return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string)));
+    }
 }
