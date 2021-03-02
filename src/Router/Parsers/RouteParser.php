@@ -2,9 +2,9 @@
 
 namespace Baka\Router\Parsers;
 
-use Baka\Router\Utils\Http;
-use Baka\Router\Route;
 use Baka\Router\Collection;
+use Baka\Router\Route;
+use Baka\Router\Utils\Http;
 use function in_array;
 
 class RouteParser
@@ -20,11 +20,11 @@ class RouteParser
     const GET_SPECIFIC_RESOURCE_ACTION = 'getById';
     const SPECIFIC_RESOURCE_PATH = '/{id}';
 
-    protected $route;
-    protected $collections = [];
+    protected Route $route;
+    protected array $collections = [];
 
     /**
-     * Contructor.
+     * Constructor.
      *
      * @param Route $route
      */
@@ -36,15 +36,28 @@ class RouteParser
     /**
      * Parse the route to create collection.
      *
-     * @return void
+     * @return array
      */
-    public function parse(): array
+    public function parse() : array
     {
-        $this->hasMethod(Http::POST) and $this->addPostCollection();
-        $this->hasMethod(Http::GET) and $this->addGetCollection();
-        $this->hasMethod(Http::PUT) and $this->addPutCollection();
-        $this->hasMethod(Http::PATCH) and $this->addPatchCollection();
-        $this->hasMethod(Http::DELETE) and $this->addDeleteCollection();
+        if ($this->hasMethod(Http::POST)) {
+            $this->addPostCollection();
+        }
+
+        if ($this->hasMethod(Http::GET)) {
+            $this->addGetCollection();
+        }
+
+        if ($this->hasMethod(Http::PUT)) {
+            $this->addPutCollection();
+        }
+
+        if ($this->hasMethod(Http::PATCH)) {
+            $this->addPatchCollection();
+        }
+        if ($this->hasMethod(Http::DELETE)) {
+            $this->addDeleteCollection();
+        }
 
         return $this->getCollections();
     }
@@ -62,9 +75,9 @@ class RouteParser
     /**
      * Get POST collection from based on the route.
      *
-     * @return array
+     * @return void
      */
-    protected function addPostCollection(): void
+    protected function addPostCollection() : void
     {
         $collection = Collection::fromRoute($this->route);
 
@@ -81,9 +94,9 @@ class RouteParser
     /**
      * Get GET collection from based on the route.
      *
-     * @return array
+     * @return void
      */
-    protected function addGetCollection(): void
+    protected function addGetCollection() : void
     {
         $collection = Collection::fromRoute($this->route);
         $this->route->useRestConvention() and $collection2 = clone $collection;
@@ -112,9 +125,9 @@ class RouteParser
     /**
      * Get PUT collection from based on the route.
      *
-     * @return array
+     * @return void
      */
-    protected function addPutCollection(): void
+    protected function addPutCollection() : void
     {
         $collection = Collection::fromRoute($this->route);
 
@@ -131,9 +144,9 @@ class RouteParser
     /**
      * Get PATCH collection from based on the route.
      *
-     * @return array
+     * @return void
      */
-    protected function addPatchCollection(): void
+    protected function addPatchCollection() : void
     {
         $collection = Collection::fromRoute($this->route);
 
@@ -150,9 +163,9 @@ class RouteParser
     /**
      * Get DELETE collection from based on the route.
      *
-     * @return array
+     * @return void
      */
-    protected function addDeleteCollection(): void
+    protected function addDeleteCollection() : void
     {
         $collection = Collection::fromRoute($this->route);
 
@@ -171,7 +184,7 @@ class RouteParser
      *
      * @return bool
      */
-    protected function hasMethod(string $method): bool
+    protected function hasMethod(string $method) : bool
     {
         return in_array($method, $this->route->getVia());
     }
@@ -180,20 +193,24 @@ class RouteParser
      * Add a collection to the collections list.
      *
      * @param Collection $collection
+     *
      * @return void
      */
-    protected function addCollection(Collection $collection): void
+    protected function addCollection(Collection $collection) : void
     {
-        $this->collections[] = $collection;
+        if (!$collection->isReused()) {
+            $this->collections[] = $collection;
+        }
     }
 
     /**
      * Transform a pattern in rest convention if needed.
      *
      * @param string $pattern
+     *
      * @return string
      */
-    protected function parsePattern(string $pattern): string
+    protected function parsePattern(string $pattern) : string
     {
         $this->route->useRestConvention() and $pattern .= static::SPECIFIC_RESOURCE_PATH;
 
