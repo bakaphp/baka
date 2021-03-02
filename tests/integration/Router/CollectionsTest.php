@@ -21,8 +21,8 @@ class CollectionsTest extends PhalconUnitTestCase
             $action
         );
 
-        $this->assertTrue($collection instanceof Collection);
+        $this->assertInstanceOf(Collection::class, $collection);
         $this->assertTrue($collection->isLazy());
-        $this->assertTrue($collection->getHandler() == 'TestController');
+        $this->assertEquals('TestController', $collection->getHandler());
     }
 }

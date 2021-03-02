@@ -21,7 +21,7 @@ class RouterGroupTest extends PhalconUnitTestCase
 
         $this->assertIsArray($publicRoutesGroup->getRoutes());
         $this->assertIsArray($publicRoutesGroup->getMiddlewares());
-        $this->assertTrue(empty($publicRoutesGroup->getMiddlewares()));
+        $this->assertEmpty($publicRoutesGroup->getMiddlewares());
     }
 
     public function testGroupWithMiddleware()
@@ -37,8 +37,8 @@ class RouterGroupTest extends PhalconUnitTestCase
 
         $this->assertIsArray($publicRoutesGroup->getRoutes());
         $this->assertIsArray($publicRoutesGroup->getMiddlewares());
-        $this->assertIsArray(($publicRoutesGroup->getMiddlewares()));
-        $this->assertTrue(!empty($publicRoutesGroup->getMiddlewares()));
+        $this->assertIsArray($publicRoutesGroup->getMiddlewares());
+        $this->assertNotEmpty($publicRoutesGroup->getMiddlewares());
     }
 
     public function testRouteCollection()
@@ -56,6 +56,6 @@ class RouterGroupTest extends PhalconUnitTestCase
         $collection = $publicRoutesGroup->toCollections()[0];
 
         $this->assertIsArray($publicRoutesGroup->toCollections());
-        $this->assertTrue($collection instanceof Collection);
+        $this->assertInstanceOf(Collection::class, $collection);
     }
 }
