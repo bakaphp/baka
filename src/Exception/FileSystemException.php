@@ -6,5 +6,4 @@ namespace Baka\Exception;
 
 class FileSystemException extends Exception
 {
-
 }

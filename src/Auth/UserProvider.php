@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Baka\Auth;
 
+use Baka\Auth\Models\Users;
 use Baka\Contracts\Auth\UserInterface;
 use Phalcon\Di;
-use Baka\Auth\Models\Users;
 
 class UserProvider
 {

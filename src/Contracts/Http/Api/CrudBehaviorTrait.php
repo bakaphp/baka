@@ -134,7 +134,7 @@ trait CrudBehaviorTrait
             )->fetch(PDO::FETCH_OBJ)->total;
         } catch (PDOException $e) {
             throw InternalServerErrorException::create(
-                $e->getMessage(),
+                !$this->config->app->production ? $e->getMessage() : 'Error on Query Request',
                 !$this->config->app->production ? $processedRequest : null
             );
         }

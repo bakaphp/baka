@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Baka\Hashing;
 
-use Baka\Contracts\Auth\UserInterface;
 use Phalcon\Security\Random;
 
 class Keys
 {
     /**
-     * Given a length generate a save url Hash 
-     * based on Phalcon
+     * Given a length generate a save url Hash
+     * based on Phalcon.
      *
-     * @param integer $length
+     * @param int $length
+     *
      * @return string
      */
     public static function make(int $length = 32) : string

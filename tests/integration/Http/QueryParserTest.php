@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Baka\Test\Integration\Http;
@@ -26,7 +27,11 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
-            $this->assertTrue(isset($result['user']['id']));
+
+            //some records dont have users
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
         }
     }
 
@@ -43,7 +48,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
-            $this->assertTrue(isset($result['user']['id']));
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
         }
     }
 
@@ -60,7 +67,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
-            $this->assertTrue(isset($result['user']['id']));
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
         }
     }
 
@@ -79,7 +88,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
-            $this->assertTrue(isset($result['user']['id']));
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
         }
     }
 
@@ -87,7 +98,7 @@ class QueryParserTest extends PhalconUnitTestCase
     {
         $limit = 100;
         $params = [];
-        $params['q'] = '(is_deleted:0,companies_id>0,user.displayname:mc%,user.id>0;user.user_level:3)';
+        $params['q'] = '(is_deleted:0,user.displayname:mc%,user.id>0;user.user_level:3)';
         //$params['fields'] = '';
         $params['limit'] = $limit;
         $params['page'] = '1';
@@ -103,7 +114,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue(isset($result['id']));
-            $this->assertTrue(isset($result['user']['id']));
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
         }
     }
 
@@ -238,7 +251,9 @@ class QueryParserTest extends PhalconUnitTestCase
 
         foreach ($results as $result) {
             $this->assertTrue($result['id'] > 0);
-            $this->assertIsArray($result['user']);
+            if (isset($result['user'])) {
+                $this->assertIsArray($result['user']);
+            }
             $this->assertIsArray($result);
         }
     }

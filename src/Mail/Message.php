@@ -74,7 +74,13 @@ class Message extends PhalconMessage
         $this->failedRecipients = [];
         $options = $this->auth ? ['auth' => $this->smtp] : [];
 
-        Mail::dispatch($this, $options);
+        Mail::dispatch(
+            $this->getMessage(),
+            [
+                'options' => $options,
+                'config' => $this->getManager()->getConfigure()
+            ]
+        );
     }
 
     /**
