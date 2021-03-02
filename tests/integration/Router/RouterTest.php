@@ -103,7 +103,7 @@ class RouterTest extends PhalconUnitTestCase
 
         $this->assertInstanceOf(Route::class, $router);
         $this->assertContains('post', $router->getNotVia());
-        $this->assertTrue(empty($router->getController()));
+        $this->assertEmpty($router->getController());
     }
 
     public function testRouteCollection()
