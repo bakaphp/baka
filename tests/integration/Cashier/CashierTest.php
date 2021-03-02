@@ -75,21 +75,21 @@ class CashierTest extends PhalconUnitTestCase
         try {
             $user->newSubscription('main', 'monthly-10-1', $company, $apps)
             ->trialDays(7)->create($this->getTestToken());
-        } catch(Exception $e)
-        {
+
+            $subscription = $user->subscription('main');
+
+            $this->assertTrue($subscription->active());
+            $this->assertTrue($subscription->onTrial());
+            $dt = Carbon::parse($subscription->trial_ends_at);
+            $this->assertEquals(Carbon::today()->addDays(7)->day, $dt->day);
+
+            // Cancel Subscription
+            $subscription->cancel();
+
+            $this->assertFalse($subscription->active());
+            $this->assertFalse($subscription->onGracePeriod());
+        } catch (Exception $e) {
         }
-        $subscription = $user->subscription('main');
-
-        $this->assertTrue($subscription->active());
-        $this->assertTrue($subscription->onTrial());
-        $dt = Carbon::parse($subscription->trial_ends_at);
-        $this->assertEquals(Carbon::today()->addDays(7)->day, $dt->day);
-
-        // Cancel Subscription
-        $subscription->cancel();
-
-        $this->assertFalse($subscription->active());
-        $this->assertFalse($subscription->onGracePeriod());
     }
 
     public function testCreatingOneOffInvoices()
