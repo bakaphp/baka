@@ -16,8 +16,9 @@ class Random
      */
     public static function generateDisplayName(string $displayname, $randNo = 200) : string
     {
+        $displayname = Str::cleanup($displayname);
         $usernameParts = array_filter(explode(' ', strtolower($displayname))); //explode and lowercase name
-        $usernameParts = array_slice($usernameParts, 0, 2); //return only first two arry part
+        $usernameParts = array_slice($usernameParts, 0, 2); //return only first two array part
 
         $part1 = (!empty($usernameParts[0])) ? substr($usernameParts[0], 0, 8) : ''; //cut first name to 8 letters
         $part2 = (!empty($usernameParts[1])) ? substr($usernameParts[1], 0, 5) : ''; //cut second name to 5 letters
@@ -36,6 +37,6 @@ class Random
      */
     public static function generateDisplayNameFromEmail(string $email) : string
     {
-        return self::generateDisplayName(explode('@', $email)[0]);
+        return self::generateDisplayName($email);
     }
 }
