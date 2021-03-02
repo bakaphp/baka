@@ -22,9 +22,6 @@ class MiddlewareParser
     public function __construct(string $middlewareNotation)
     {
         $this->middlewareNotation = $middlewareNotation;
-        /*    $this->extractMiddlewareKey();
-           $this->extractEvent();
-           $this->extractParameters(); */
     }
 
     /**
