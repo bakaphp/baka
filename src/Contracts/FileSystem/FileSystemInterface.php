@@ -6,5 +6,4 @@ namespace Baka\Contracts\FileSystem;
 
 interface FileSystemInterface
 {
-
 }

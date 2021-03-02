@@ -7,6 +7,7 @@ use Baka\Contracts\Http\Converter\CustomQueriesTrait;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
+use Baka\Support\Str;
 use Exception;
 use Phalcon\Di;
 use Phalcon\Di\Injectable;
@@ -948,6 +949,8 @@ class RequestUriToSql extends Injectable implements ConverterInterface
                 $modelNamespace = Di::getDefault()->get('config')->namespace->models;
                 // Get the model name and the sort column from the sent parameter
                 list($model, $column) = explode('.', $modelColumn);
+                $order = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+                $modelColumn = Str::cleanup($modelColumn);
                 // Convert the model name into camel case.
                 $modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', $model)));
                 // Create the model name with the appended namespace.

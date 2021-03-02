@@ -7,6 +7,7 @@ use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Database\Exception\ModelNotProcessedException;
 use function Baka\getShortClassName;
 use Phalcon\Mvc\Model as PhalconModel;
+use Phalcon\Mvc\Model\Relation;
 use Phalcon\Mvc\Model\ResultsetInterface;
 use Phalcon\Mvc\ModelInterface as PhalconModelInterface;
 use RuntimeException;
@@ -27,6 +28,19 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     public ?string $created_at = null;
     public ?string $updated_at = null;
     public ?int $is_deleted = 0;
+
+    /**
+     * Do we allow this model to create related entities
+     * if pass with the alias?
+     *
+     */
+    protected bool $canCreateRelationshipsRecords = false;
+
+    /**
+     * If we allow to create related entities
+     * on every update we will delete a create a new one.
+     */
+    protected bool $canOverWriteRelationshipsData = false;
 
     /**
      * Get the primary id of this model.
@@ -89,15 +103,48 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     }
 
     /**
+     * Make a cascade softdelete.
+     *
+     * @return void
+     */
+    public function cascadeSoftDelete(): void
+    {
+        foreach ($this->getDependentRelationships() as $relation => $data) {
+            $relationData = $this->{'get'.$relation}();
+
+            if ($data['type'] === Relation::HAS_ONE) {
+                if (isset($relationData)) {
+                    $relationData->softDelete();
+                }
+            } elseif ($data['type'] === Relation::HAS_MANY && isset($relationData[0])) {
+                foreach ($relationData as $singleData) {
+                    $singleData->softDelete();
+                }
+            }
+        }
+    }
+
+    /**
      * Soft Delete.
      *
      * @return void
      */
     public function softDelete()
     {
+        $this->beforeSoftDelete();
+
         $this->is_deleted = 1;
 
         return $this->save();
+    }
+
+    /**
+     * Execute actions before the softDelete method.
+     *
+     * @return void
+     */
+    public function beforeSoftDelete()
+    {
     }
 
     /**
@@ -180,6 +227,10 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $this->assign($data, $whiteList);
         }
 
+        if ($this->canCreateRelationshipsRecords && !empty($data)) {
+            $this->setNewRelationshipsRecords($data);
+        }
+
         if ($savedModel = $this->save()) {
             return $savedModel;
         }
@@ -197,6 +248,10 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     {
         if (is_array($data)) {
             $this->assign($data, $whiteList);
+        }
+
+        if ($this->canCreateRelationshipsRecords && !empty($data)) {
+            $this->setExistentRelationshipsRecords($data);
         }
 
         if ($updatedModel = $this->update()) {
@@ -269,9 +324,34 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
         //convert the obj to array in order to convert to json
         $result = get_object_vars($this);
 
+        $modelPhalconProperties = [
+            'container',
+            'dirtyState',
+            'dirtyRelated',
+            'errorMessages',
+            'modelsManager',
+            'modelsMetaData',
+            'related',
+            'oldSnapshot',
+            'skipped',
+            'snapshot',
+            'transaction',
+            'uniqueKey',
+            'uniqueParams',
+            'uniqueTypes',
+            'auditExcludeFields',
+            'eventsManager',
+            'settingsModel',
+            'operationMade'
+        ];
         foreach ($result as $key => $value) {
-            if (preg_match('#^_#', $key) === 1) {
+            if (preg_match('#^_#', $key) === 1 || in_array($key, $modelPhalconProperties)) {
                 unset($result[$key]);
+            }
+
+            //avoid issue with elastic
+            if ($value === '0000-00-00 00:00:00') {
+                $result[$key] = null;
             }
         }
 
@@ -332,5 +412,111 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
         $metadata = $this->getModelsMetaData();
         $attributes = $metadata->getAttributes($this);
         return key_exists($property, $attributes);
+    }
+
+    /**
+     * Get the relationship from has one and has many
+     * so we can create and update records.
+     *
+     * @return array
+     */
+    protected function getDependentRelationships() : array
+    {
+        $hasOne = $this->getModelsManager()->getHasOne($this);
+        $hasMany = $this->getModelsManager()->getHasMany($this);
+        $relationships = [];
+
+        if ($mergeRelationships = array_merge($hasOne, $hasMany)) {
+            foreach ($mergeRelationships as $relationship) {
+                $relationships[$relationship->getOptions()['alias']] = [
+                    'model' => $relationship->getReferencedModel(),
+                    'type' => $relationship->getType(),
+                    'referencedFields' => $relationship->getReferencedFields()
+                ];
+            }
+        }
+
+        return $relationships;
+    }
+
+    /**
+     * Set the arrays to create new records from relationships.
+     *
+     * @param array $records
+     *
+     * @return void
+     */
+    public function setNewRelationshipsRecords(array $records) : void
+    {
+        $relationships = $this->getDependentRelationships();
+
+        foreach ($relationships as $key => $model) {
+            $$key = [];
+            $relationData = $records[$key];
+            if (!empty($relationData) && is_array($relationData)) {
+                $method = 'get' . ucfirst($key);
+                if ($this->canOverWriteRelationshipsData) {
+                    $this->$method()->delete();
+                }
+                foreach ($relationData as $data) {
+                    if ($model['type'] === Relation::HAS_MANY) {
+                        $$key[] = new $model['model']($data);
+                    } else {
+                        $$key = new $model['model']($data);
+                    }
+                }
+
+                $this->$key = $$key;
+            }
+        }
+    }
+
+    /**
+     * Only update existent related records.
+     *
+     * @param array $records
+     *
+     * @return void
+     */
+    public function setExistentRelationshipsRecords(array $records) : void
+    {
+        if ($this->canOverWriteRelationshipsData) {
+            $this->setNewRelationshipsRecords($records);
+            return ;
+        }
+        $relationships = $this->getDependentRelationships();
+
+        foreach ($relationships as $key => $model) {
+            $$key = [];
+            $relationData = $records[$key];
+            if (!empty($relationData) && is_array($relationData)) {
+                foreach ($relationData as $data) {
+                    if (isset($data['id'])) {
+                        $method = 'get' . ucfirst($key);
+                        //if we have the id , update its record
+                        $records = $this->$method([
+                            'conditions' => 'id = :id:',
+                            'bind' => [
+                                'id' => (int) $data['id']
+                            ],
+                            'limit' => 1
+                        ]);
+
+                        //never let them overwrite the reference field
+                        unset($data[$model['referencedFields']]);
+                        if ($model['type'] === Relation::HAS_MANY && isset($records[0])) {
+                            $records[0]->updateOrFail($data);
+                        } elseif ($model['type'] !== Relation::HAS_MANY) {
+                            $records->updateOrFail($data);
+                        }
+                    } else {
+                        //create new record
+                        $new = new $model['model']();
+                        $data[$model['referencedFields']] = $this->getId();
+                        $new->saveOrFail($data);
+                    }
+                }
+            }
+        }
     }
 }

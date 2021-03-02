@@ -40,14 +40,15 @@ class RequestUriToElasticSearch extends RequestUriToSql
     }
 
     /**
-    * Main method for parsing a query string.
-    * Finds search parameters, partial response fields, limits, and offsets.
-    * Sets Controller fields for these variables.
-    *
-    * @param  array $allowedFields Allowed fields array for search and partials
-    * @return boolean              Always true if no exception is thrown
-    */
-    public function convert(): array
+     * Main method for parsing a query string.
+     * Finds search parameters, partial response fields, limits, and offsets.
+     * Sets Controller fields for these variables.
+     *
+     * @param  array $allowedFields Allowed fields array for search and partials
+     *
+     * @return bool              Always true if no exception is thrown
+     */
+    public function convert() : array
     {
         $params = [
             'subquery' => '',
@@ -125,9 +126,10 @@ class RequestUriToElasticSearch extends RequestUriToSql
      * gien the request array , get the custom query to find the results.
      *
      * @param  array  $params
+     *
      * @return string
      */
-    protected function prepareCustomSearch($hasSubquery = false): array
+    protected function prepareCustomSearch($hasSubquery = false) : array
     {
         $metaData = new \Phalcon\Mvc\Model\MetaData\Memory();
         $classReflection = (new \ReflectionClass($this->model));
@@ -178,7 +180,7 @@ class RequestUriToElasticSearch extends RequestUriToSql
 
             // print_r($customSearchFields);die();
 
-            $prepareNestedSql = function (array $searchCriteria, string $classname, string $andOr, string $fKey): string {
+            $prepareNestedSql = function (array $searchCriteria, string $classname, string $andOr, string $fKey) : string {
                 $sql = '';
                 $textFields = $this->getTextFields($classname);
                 list($searchField, $operator, $searchValues) = $searchCriteria;
@@ -317,7 +319,7 @@ class RequestUriToElasticSearch extends RequestUriToSql
      *
      * @return string
      */
-    protected function prepareNormalSql(array $searchCriteria, string $classname, string $andOr, int $fKey): string
+    protected function prepareNormalSql(array $searchCriteria, string $classname, string $andOr, int $fKey) : string
     {
         $sql = '';
         $textFields = $this->getTextFields($classname);
@@ -384,7 +386,7 @@ class RequestUriToElasticSearch extends RequestUriToSql
      *
      * @return string
      */
-    protected function prepareNestedSql(array $searchCriteria, string $classname, string $andOr, string $fKey): string
+    protected function prepareNestedSql(array $searchCriteria, string $classname, string $andOr, string $fKey) : string
     {
         $sql = '';
         $textFields = $this->getTextFields($classname);
@@ -447,7 +449,7 @@ class RequestUriToElasticSearch extends RequestUriToSql
      *
      * @return void
      */
-    protected function prepareParams(array $unparsed): void
+    protected function prepareParams(array $unparsed) : void
     {
         $this->customSearchFields = array_key_exists('cparams', $unparsed) ? $this->parseSearchParameters($unparsed['cparams'])['mapped'] : [];
         $this->normalSearchFields = array_key_exists('params', $unparsed) ? $this->parseSearchParameters($unparsed['params'])['mapped'] : [];
@@ -460,7 +462,7 @@ class RequestUriToElasticSearch extends RequestUriToSql
      *
      * @return void
      */
-    protected function parseColumns(string $columns): void
+    protected function parseColumns(string $columns) : void
     {
         // Split the columns string into individual columns
         $columns = explode(',', $columns);
@@ -483,6 +485,7 @@ class RequestUriToElasticSearch extends RequestUriToSql
      *
      * @param  string $relationships
      * @param  Model $results
+     *
      * @return array
      */
     public static function parseRelationShips(string $relationships, &$results) : array

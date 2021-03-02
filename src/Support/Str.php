@@ -220,6 +220,7 @@ class Str
     {
         return preg_replace("/[^a-zA-Z0-9_\s]/", '', $string);
     }
+<<<<<<< HEAD
 
     /**
      * Generate none-unicode slugs for simple parsing.
@@ -232,4 +233,6 @@ class Str
     {
         return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string)));
     }
+=======
+>>>>>>> 0fac52458334ea5d8211abdd09db877425600763
 }
