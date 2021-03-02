@@ -41,6 +41,27 @@ class RouterGroupTest extends PhalconUnitTestCase
         $this->assertNotEmpty($publicRoutesGroup->getMiddlewares());
     }
 
+    public function testGroupWithMiddlewareIndex()
+    {
+        $group = [
+            Route::get('/')->controller('GroupController')
+        ];
+
+        $publicRoutesGroup = RouteGroup::from($group)
+            ->defaultNamespace('Canvas\Api\Controllers')
+            ->addMiddlewares('auth.jwt@before', 'auth.acl@before', 'auth.activeStatus@before')
+            ->defaultPrefix('/v1');
+
+        //generate middleware index
+        Collection::generateMiddlewareMapping($publicRoutesGroup->toCollections()[0]);
+
+        $this->assertNotEmpty(Collection::$collectionMiddleWare);
+        $this->assertIsArray($publicRoutesGroup->getRoutes());
+        $this->assertIsArray($publicRoutesGroup->getMiddlewares());
+        $this->assertIsArray($publicRoutesGroup->getMiddlewares());
+        $this->assertNotEmpty($publicRoutesGroup->getMiddlewares());
+    }
+
     public function testRouteCollection()
     {
         $group = [

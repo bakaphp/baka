@@ -10,7 +10,7 @@ use Phalcon\Mvc\Micro\MiddlewareInterface;
 
 class RouteMiddleware implements MiddlewareInterface
 {
-    protected $helper;
+    protected RouteMiddlewareHelper $helper;
 
     /**
      * Construct.
