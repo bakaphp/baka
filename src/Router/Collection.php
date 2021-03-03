@@ -28,7 +28,9 @@ class Collection extends PhCollection
         $middlewareKey = implode('-', $route->getMiddlewares());
         $key = $route->getController() . '_middleware_' . $middlewareKey;
 
-        $collection = self::$index[$key] ?? false;
+        //cant use static method on test
+        $collection = self::$index[$key] && !defined('API_TESTS') ? self::$index[$key] : false;
+        
         if (!$collection) {
             $collection = new self();
             $collection->route = $route;
