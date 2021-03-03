@@ -30,7 +30,7 @@ class Collection extends PhCollection
 
         //cant use static method on test
         $collection = self::$index[$key] && !defined('API_TESTS') ? self::$index[$key] : false;
-        
+
         if (!$collection) {
             $collection = new self();
             $collection->route = $route;
