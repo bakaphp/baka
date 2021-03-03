@@ -29,7 +29,7 @@ class Collection extends PhCollection
         $key = $route->getController() . '_middleware_' . $middlewareKey;
 
         //cant use static method on test
-        $collection = self::$index[$key] && !defined('API_TESTS') ? self::$index[$key] : false;
+        $collection = isset(self::$index[$key]) && !defined('API_TESTS') ? self::$index[$key] : false;
 
         if (!$collection) {
             $collection = new self();
