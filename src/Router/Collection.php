@@ -24,23 +24,10 @@ class Collection extends PhCollection
      */
     final public static function fromRoute(Route $route) : self
     {
-        $totalMiddleware = count($route->getMiddlewares());
-        $middlewareKey = implode('-', $route->getMiddlewares());
-        $key = $route->getController() . '_middleware_' . $middlewareKey;
-
-        //cant use static method on test
-        $collection = isset(self::$index[$key]) && !defined('API_TESTS') ? self::$index[$key] : false;
-
-        if (!$collection) {
-            $collection = new self();
-            $collection->route = $route;
-            $collection->hasMiddleware = $totalMiddleware > 0;
-            $collection->setHandler($route->getHandler(), true);
-
-            self::$index[$key] = $collection;
-        } else {
-            $collection->reUse = true;
-        }
+        $collection = new self();
+        $collection->route = $route;
+        $collection->hasMiddleware = count($route->getMiddlewares()) > 0;
+        $collection->setHandler($route->getHandler(), true);
 
         return $collection;
     }
