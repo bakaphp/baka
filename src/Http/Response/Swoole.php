@@ -6,9 +6,13 @@
 
 namespace Baka\Http\Response;
 
+use Baka\Http\Exception\InternalServerErrorException;
+use Baka\Http\Request\Swoole as RequestSwoole;
+use Baka\Http\Response\Phalcon as PhResponse;
+use Error;
 use Exception;
+use Phalcon\Di;
 use Phalcon\Http\Cookie;
-use Phalcon\Http\Response as PhResponse;
 use swoole_http_response;
 use Throwable;
 
@@ -73,7 +77,7 @@ class Swoole extends PhResponse
 
         //set swoole response
         $this->response->status($this->getStatusCode());
-        $this->response->end($this->_content);
+        $this->response->end($this->getContent());
 
         //reset di
         $this->resetDi();
@@ -88,13 +92,40 @@ class Swoole extends PhResponse
      *
      * @return Response
      */
-    public function handleException(Throwable $e) : Response
+    public function handleException(Throwable $e) : PhResponse
     {
         //reset di
-        $response = parent::handleException($e);
+        $request = new RequestSwoole();
+        $identifier = $request->getServerAddress();
+        $config = Di::getDefault()->getConfig();
+
+        $httpCode = (method_exists($e, 'getHttpCode')) ? $e->getHttpCode() : 404;
+        $httpMessage = (method_exists($e, 'getHttpMessage')) ? $e->getHttpMessage() : 'Not Found';
+        $data = (method_exists($e, 'getData')) ? $e->getData() : [];
+
+        $this->setHeader('Access-Control-Allow-Origin', '*'); //@todo check why this fails on nginx
+        $this->setStatusCode($httpCode, $httpMessage);
+        $this->setContentType('application/json');
+        $this->setJsonContent([
+            'errors' => [
+                'type' => $httpMessage,
+                'identifier' => $identifier,
+                'message' => $e->getMessage(),
+                'trace' => !$config->app->production ? $e->getTraceAsString() : null,
+                'data' => !$config->app->production ? $data : null,
+            ],
+        ]);
+
+        //Log Errors or Internal Servers Errors in Production
+        if ($e instanceof InternalServerErrorException ||
+            $e instanceof Error ||
+            $config->app->production) {
+            Di::getDefault()->getLog()->error($e->getMessage(), [$e->getTraceAsString()]);
+        }
+
         $this->resetDi();
 
-        return $response;
+        return $this;
     }
 
     /**
