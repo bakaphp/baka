@@ -7,6 +7,7 @@ use Baka\Contracts\Database\ElasticModelInterface;
 use Baka\Elasticsearch\Query\FromClause;
 use function Baka\envValue;
 use Baka\Exception\Exception;
+use Baka\Exception\HttpException;
 use Phalcon\Di;
 use Phalcon\Mvc\Model\Query\Builder;
 use SplFixedArray;
