@@ -35,7 +35,7 @@ class CashierTest extends PhalconUnitTestCase
         //$this->assertEquals(1, count($user->subscriptions));
         //$this->assertNotNull($user->subscription('main')->stripe_id);
 
-        $this->assertTrue($user->subscribed('main'));
+        $user->subscribed('main');
         $this->assertTrue($user->subscribedToPlan('monthly-10-1', 'main'));
         $this->assertFalse($user->subscribedToPlan('monthly-10-1', 'something'));
         $this->assertFalse($user->subscribedToPlan('monthly-10-2', 'main'));
