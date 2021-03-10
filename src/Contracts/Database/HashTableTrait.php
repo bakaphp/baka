@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Baka\Contracts\Database;
 
+use function Baka\isJson;
 use RuntimeException;
 
 trait HashTableTrait
@@ -65,7 +66,7 @@ trait HashTableTrait
         }
 
         $this->settingsModel->name = $key;
-        $this->settingsModel->value = (string) $value;
+        $this->settingsModel->value = !is_array($value) ? (string) $value : json_encode($value);
         $this->settingsModel->saveOrFail();
 
         return true;
@@ -117,7 +118,7 @@ trait HashTableTrait
         $value = $this->getSettingsByKey($key);
 
         if (is_object($value)) {
-            return $value->value;
+            return !isJson($value->value) ? $value->value : json_decode($value->value, true);
         }
 
         return null;
