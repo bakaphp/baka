@@ -8,6 +8,7 @@ use Baka\Database\CustomFields\AppsCustomFields;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\CustomFieldsModules;
 use Baka\Database\Model;
+use function Baka\isJson;
 use Phalcon\Di;
 use Phalcon\Mvc\ModelInterface;
 use Phalcon\Utils\Slug;
@@ -136,9 +137,11 @@ trait CustomFieldsTrait
             return $value;
         }
 
-        $field = $this->getCustomField($name);
+        if ($field = $this->getCustomField($name)) {
+            return !isJson($field->value) ? $field->value : json_decode($field->value, true);
+        }
 
-        return $field ? $field->value : null;
+        return ;
     }
 
     /**
@@ -239,7 +242,7 @@ trait CustomFieldsTrait
             'entity_id' => $this->getId(),
             'label' => $name,
             'name' => $name,
-            'value' => $value
+            'value' => !is_array($value) ? $value : json_encode($value)
         ]);
     }
 
