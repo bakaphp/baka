@@ -19,7 +19,7 @@ class Phalcon extends Request
     {
         $data = $this->getPost() ?: $this->getJsonRawBody(true);
 
-        return $this->filterSanitize($data) ?: [];
+        return  is_array($data) ? $this->filterSanitize($data) : [];
     }
 
     /**
@@ -38,7 +38,7 @@ class Phalcon extends Request
          */
         $data = $data ?: $this->get();
 
-        return $this->filterSanitize($data) ?: [];
+        return is_array($data) ? $this->filterSanitize($data) : [];
     }
 
     /**
