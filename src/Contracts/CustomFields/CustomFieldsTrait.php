@@ -99,7 +99,7 @@ trait CustomFieldsTrait
         $listOfCustomFields = [];
 
         while ($row = $result->fetch()) {
-            $listOfCustomFields[$row['name']] = $row['value'];
+            $listOfCustomFields[$row['name']] = !isJson($row['value']) ? $row['value'] : json_decode($row['value'], true);
         }
 
         return $listOfCustomFields;
@@ -202,10 +202,12 @@ trait CustomFieldsTrait
         if (Di::getDefault()->has('redis')) {
             $redis = Di::getDefault()->get('redis');
 
-            return $redis->hGet(
+            $value = $redis->hGet(
                 $this->getCustomFieldPrimaryKey(),
                 $name
             );
+
+            return $value && isJson($value) ? json_decode($value, true) : $value;
         }
 
         return false;
@@ -317,7 +319,7 @@ trait CustomFieldsTrait
             return (bool) $redis->hSet(
                 $this->getCustomFieldPrimaryKey(),
                 $name,
-                $value
+                !is_array($value) ? $value : json_encode($value)
             );
         }
 
