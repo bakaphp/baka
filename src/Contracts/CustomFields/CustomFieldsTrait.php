@@ -138,7 +138,7 @@ trait CustomFieldsTrait
         }
 
         if ($field = $this->getCustomField($name)) {
-            return !isJson($field->value) ? $field->value : json_decode($field->value, true);
+            return is_string($field->value) && isJson($field->value) ? json_decode($field->value, true) : $field->value;
         }
 
         return ;
@@ -207,7 +207,7 @@ trait CustomFieldsTrait
                 $name
             );
 
-            return $value && isJson($value) ? json_decode($value, true) : $value;
+            return is_string($value) && isJson($value) ? json_decode($value, true) : $value;
         }
 
         return false;
