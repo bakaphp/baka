@@ -2,9 +2,9 @@
 
 namespace Baka\Social\Apple;
 
-use \DomainException;
-use \InvalidArgumentException;
-use \UnexpectedValueException;
+use DomainException;
+use InvalidArgumentException;
+use UnexpectedValueException;
 
 /**
  * JSON Web Token implementation, based on this spec:
