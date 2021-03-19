@@ -11,7 +11,7 @@ use function Baka\getShortClassName;
 abstract class Documents implements ElasticModelInterface
 {
     public $id;
-    public array $data;
+    public array $data = [];
     public ?string $indices = null;
 
     protected string $text = 'text';
