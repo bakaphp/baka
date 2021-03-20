@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Baka\Elasticsearch\Models;
 
-use Baka\Contracts\CustomFields\CustomFieldsTrait;
 use Baka\Contracts\Database\ElasticModelInterface;
 use Baka\Elasticsearch\Client;
 use Baka\Elasticsearch\IndexBuilder;
@@ -27,7 +26,7 @@ class Documents
         $document = $model->toArray();
 
         //merge custom fields
-        if (in_array(CustomFieldsTrait::class, class_uses(get_class($model)))) {
+        if (method_exists($model, 'getAll')) {
             $document = array_merge($document, $model->getAll());
         }
 
