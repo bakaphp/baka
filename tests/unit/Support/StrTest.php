@@ -120,4 +120,12 @@ class StrTest extends PhalconUnitTestCase
         $this->assertIsArray($array);
         $this->assertIsArray($arrayTwo);
     }
+
+    public function testEmptyJsonNotArray()
+    {
+        $json = null;
+        $array = Str::jsonToArray($json);
+
+        $this->assertIsNotArray($array);
+    }
 }
