@@ -238,11 +238,11 @@ class Str
     /**
      * Given a json string decode it into array.
      *
-     * @param ?string $string
+     * @param mixed $string
      *
      * @return array|?string|mixed
      */
-    public static function jsonToArray(?string $string)
+    public static function jsonToArray($string)
     {
         return is_string($string) && isJson($string) ? json_decode($string, true) : $string;
     }
