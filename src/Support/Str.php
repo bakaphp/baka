@@ -240,7 +240,7 @@ class Str
      *
      * @param ?string $string
      *
-     * @return array|?string
+     * @return array|?string|mixed
      */
     public static function jsonToArray(?string $string)
     {
