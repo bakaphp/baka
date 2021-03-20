@@ -8,7 +8,7 @@ use Baka\Database\CustomFields\AppsCustomFields;
 use Baka\Database\CustomFields\CustomFields;
 use Baka\Database\CustomFields\CustomFieldsModules;
 use Baka\Database\Model;
-use function Baka\isJson;
+use Baka\Support\Str;
 use Phalcon\Di;
 use Phalcon\Mvc\ModelInterface;
 use Phalcon\Utils\Slug;
@@ -99,7 +99,7 @@ trait CustomFieldsTrait
         $listOfCustomFields = [];
 
         while ($row = $result->fetch()) {
-            $listOfCustomFields[$row['name']] = !isJson($row['value']) ? $row['value'] : json_decode($row['value'], true);
+            $listOfCustomFields[$row['name']] = Str::jsonToArray($row['value']);
         }
 
         return $listOfCustomFields;
@@ -116,9 +116,15 @@ trait CustomFieldsTrait
         if (Di::getDefault()->has('redis')) {
             $redis = Di::getDefault()->get('redis');
 
-            return $redis->hGetAll(
+            $fields = $redis->hGetAll(
                 $this->getCustomFieldPrimaryKey(),
             );
+
+            foreach ($fields as $key => $value) {
+                $fields[$key] = Str::jsonToArray($value['value']);
+            }
+
+            return $fields;
         }
 
         return [];
@@ -138,7 +144,7 @@ trait CustomFieldsTrait
         }
 
         if ($field = $this->getCustomField($name)) {
-            return is_string($field->value) && isJson($field->value) ? json_decode($field->value, true) : $field->value;
+            return Str::jsonToArray($field->value);
         }
 
         return ;
@@ -207,7 +213,7 @@ trait CustomFieldsTrait
                 $name
             );
 
-            return is_string($value) && isJson($value) ? json_decode($value, true) : $value;
+            return Str::jsonToArray($value);
         }
 
         return false;

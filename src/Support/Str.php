@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Baka\Support;
 
+use function Baka\isJson;
+
 class Str
 {
     /**
@@ -231,5 +233,17 @@ class Str
     public static function slug(string $string) : string
     {
         return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string)));
+    }
+
+    /**
+     * Given a json string decode it into array.
+     *
+     * @param mixed $string
+     *
+     * @return array|?string
+     */
+    public static function jsonToArray($string)
+    {
+        return is_string($string) && isJson($string) ? json_decode($string, true) : $string;
     }
 }
