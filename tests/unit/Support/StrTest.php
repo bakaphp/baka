@@ -113,8 +113,11 @@ class StrTest extends PhalconUnitTestCase
     public function testJsonToArray()
     {
         $json = '[{"id":"57","name":"Clientes","description":"e","scope":0,"companies_id":1,"apps_id":15,"created_at":"2019-06-11 20:34:05","updated_at":"2021-01-24 01:44:03","is_default":1,"is_active":1,"is_deleted":0}]';
+        $jsonTwo = '{"settingsmenu":{"app-settings":0,"companies-manager":0,"companies-settings":0}}';
         $array = Str::jsonToArray($json);
+        $arrayTwo = Str::jsonToArray($jsonTwo);
 
         $this->assertIsArray($array);
+        $this->assertIsArray($arrayTwo);
     }
 }
