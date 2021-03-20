@@ -121,7 +121,7 @@ trait CustomFieldsTrait
             );
 
             foreach ($fields as $key => $value) {
-                $fields[$key] = Str::jsonToArray($value['value']);
+                $fields[$key] = Str::jsonToArray($value);
             }
 
             return $fields;
