@@ -8,6 +8,7 @@ use Baka\Elasticsearch\Models\Documents;
 use function Baka\getShortClassName;
 use Baka\Http\QueryParser\QueryParser;
 use Phalcon\Http\RequestInterface;
+use Phalcon\Http\Response;
 
 trait CrudElasticBehaviorTrait
 {
