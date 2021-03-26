@@ -19,6 +19,7 @@ class QueryParser
         '>' => '>',
         '<' => '<',
         '!' => '!',
+        '¬' => 'BETWEEN',
     ];
 
     /**
@@ -29,6 +30,7 @@ class QueryParser
         '>' => '>=',
         '<' => '<=',
         '!' => '<>',
+        'BETWEEN' => 'BETWEEN',
     ];
 
     /**
@@ -357,7 +359,7 @@ class QueryParser
         $comparison = self::buildComparison($field, $operator, array_shift($values));
 
         foreach ($values as $value) {
-            $comparison .= ' OR ' . self::buildComparison($field, $operator, $value);
+            $comparison .= $operator == 'BETWEEN' ? ' AND '. $value: ' OR ' . self::buildComparison($field, $operator, $value);
         }
 
         return $comparison;
@@ -507,7 +509,6 @@ class QueryParser
         if ($validOperator) {
             return $validOperator;
         }
-
         throw new OutOfScopeOperatorException($operator);
     }
 }
