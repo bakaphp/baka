@@ -9,6 +9,7 @@ use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
 use Baka\Support\Str;
 use Exception;
+use Phalcon\Db\Column;
 use Phalcon\Di;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\MetaData\Memory as MetaDataMemory;
@@ -765,8 +766,12 @@ class RequestUriToSql extends Injectable implements ConverterInterface
 
         foreach ($columnsData as $column) {
             switch ($column->getType()) {
-                case \Phalcon\Db\Column::TYPE_VARCHAR:
-                case \Phalcon\Db\Column::TYPE_TEXT:
+                case Column::TYPE_VARCHAR:
+                case Column::TYPE_TEXT:
+                case Column::TYPE_LONGTEXT:
+                case Column::TYPE_MEDIUMTEXT:
+                case Column::TYPE_TINYTEXT:
+                case Column::TYPE_JSON:
                     $textFields[] = $column->getName();
                     break;
             }
@@ -942,6 +947,9 @@ class RequestUriToSql extends Injectable implements ConverterInterface
         if (!is_null($sort)) {
             // Get the model, column and sort order from the sent parameter.
             list($modelColumn, $order) = explode('|', $sort);
+            //limit the sort
+            $order = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+            $modelColumn = Str::cleanup($modelColumn);
             // Check to see whether this is a related sorting by looking for a .
             if (strpos($modelColumn, '.') !== false) {
                 // We are using a related sort.
@@ -949,8 +957,6 @@ class RequestUriToSql extends Injectable implements ConverterInterface
                 $modelNamespace = Di::getDefault()->get('config')->namespace->models;
                 // Get the model name and the sort column from the sent parameter
                 list($model, $column) = explode('.', $modelColumn);
-                $order = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
-                $modelColumn = Str::cleanup($modelColumn);
                 // Convert the model name into camel case.
                 $modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', $model)));
                 // Create the model name with the appended namespace.
