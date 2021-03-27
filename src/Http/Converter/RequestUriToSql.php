@@ -9,6 +9,7 @@ use Baka\Database\CustomFields\Modules;
 use Baka\Database\Model;
 use Baka\Support\Str;
 use Exception;
+use Phalcon\Db\Column;
 use Phalcon\Di;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\MetaData\Memory as MetaDataMemory;
@@ -765,8 +766,13 @@ class RequestUriToSql extends Injectable implements ConverterInterface
 
         foreach ($columnsData as $column) {
             switch ($column->getType()) {
-                case \Phalcon\Db\Column::TYPE_VARCHAR:
-                case \Phalcon\Db\Column::TYPE_TEXT:
+                case Column::TYPE_VARCHAR:
+                case Column::TYPE_TEXT:
+                case Column::TYPE_TEXT:
+                case Column::TYPE_LONGTEXT:
+                case Column::TYPE_MEDIUMTEXT:
+                case Column::TYPE_TINYTEXT:
+                case Column::TYPE_JSON:
                     $textFields[] = $column->getName();
                     break;
             }
