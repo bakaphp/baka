@@ -768,7 +768,6 @@ class RequestUriToSql extends Injectable implements ConverterInterface
             switch ($column->getType()) {
                 case Column::TYPE_VARCHAR:
                 case Column::TYPE_TEXT:
-                case Column::TYPE_TEXT:
                 case Column::TYPE_LONGTEXT:
                 case Column::TYPE_MEDIUMTEXT:
                 case Column::TYPE_TINYTEXT:
