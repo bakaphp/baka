@@ -43,7 +43,7 @@ class NestedParenthesesParser
         $this->query = $query;
         $this->querySplit = mb_str_split($query);
         $this->length = mb_strlen($this->query);
-        
+
         foreach ($this->querySplit as $currentPosition => $value) {
             $this->currentPosition = $currentPosition;
 
