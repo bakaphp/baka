@@ -259,7 +259,7 @@ class QueryParserTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test for querys between two values
+     * Test for querys between two values.
      */
     public function testSimpleBetweenQuery()
     {
@@ -273,7 +273,8 @@ class QueryParserTest extends PhalconUnitTestCase
         $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
 
         foreach ($results as $result) {
-            $this->assertTrue(($result['id'] >= 1 && $result['id'] <= 20));
+            $this->assertTrue($result['id'] >= 1);
+            $this->assertTrue($result['id'] <= 20);
             if (isset($result['user'])) {
                 $this->assertIsArray($result['user']);
             }
