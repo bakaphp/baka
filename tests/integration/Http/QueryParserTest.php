@@ -275,10 +275,6 @@ class QueryParserTest extends PhalconUnitTestCase
         foreach ($results as $result) {
             $this->assertTrue($result['id'] >= 1);
             $this->assertTrue($result['id'] <= 20);
-            if (isset($result['user'])) {
-                $this->assertIsArray($result['user']);
-            }
-            $this->assertIsArray($result);
         }
     }
 }
