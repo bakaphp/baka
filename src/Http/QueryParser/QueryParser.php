@@ -359,7 +359,7 @@ class QueryParser
         $comparison = self::buildComparison($field, $operator, array_shift($values));
 
         foreach ($values as $value) {
-            $comparison .= $operator == 'BETWEEN' ? ' AND '. $value : ' OR ' . self::buildComparison($field, $operator, $value);
+            $comparison .= $operator == 'BETWEEN' ? ' AND ' . $value : ' OR ' . self::buildComparison($field, $operator, $value);
         }
 
         return $comparison;
