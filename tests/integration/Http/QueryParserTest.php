@@ -264,7 +264,7 @@ class QueryParserTest extends PhalconUnitTestCase
     public function testSimpleBetweenQuery()
     {
         $params = [];
-        $params['q'] = '(user.id¬1|20)';
+        $params['q'] = '(id¬1|20)';
         $params['page'] = '1';
         $params['sort'] = 'id|desc';
 
