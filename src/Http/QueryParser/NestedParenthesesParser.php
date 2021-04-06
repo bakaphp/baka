@@ -10,6 +10,8 @@ class NestedParenthesesParser
     protected array $currentScope = [];
     // input string to parse
     protected ?string $query = null;
+    // query split
+    protected ?array $querySplit = null;
     // current character offset in string
     protected ?int $currentPosition = null;
 
@@ -39,12 +41,13 @@ class NestedParenthesesParser
         $this->currentScope = [];
         $this->stack = [];
         $this->query = $query;
-
+        $this->querySplit = mb_str_split($query);
         $this->length = mb_strlen($this->query);
 
-        // look at each character
-        for ($this->currentPosition = 0; $this->currentPosition < $this->length; ++$this->currentPosition) {
-            if (QueryParser::QUOTE_CHAR == $this->query[$this->currentPosition]) {
+        foreach ($this->querySplit as $currentPosition => $value) {
+            $this->currentPosition = $currentPosition;
+
+            if (QueryParser::QUOTE_CHAR == $value) {
                 $this->ignoreMode = !$this->ignoreMode;
             }
 
@@ -52,12 +55,13 @@ class NestedParenthesesParser
                 continue;
             }
 
-            if (QueryParser::isAValidJoiner($this->query[$this->currentPosition])) {
-                $this->lastJoiner = $this->query[$this->currentPosition];
+            if (QueryParser::isAValidJoiner($value)) {
+                $this->lastJoiner = $value;
                 $this->push();
                 continue;
             }
-            switch ($this->query[$this->currentPosition]) {
+
+            switch ($value) {
                 case '(':
                     $this->push();
                     // push current scope to the stack an begin a new scope
@@ -88,7 +92,6 @@ class NestedParenthesesParser
         }
 
         $this->overwriteCurrentScope();
-
         return $this->currentScope;
     }
 
