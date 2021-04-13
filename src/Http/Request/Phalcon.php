@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Baka\Http\Request;
 
+use Baka\Http\Exception\BadRequestException;
+use Baka\Validations\Request as ValidationsRequest;
+use Illuminate\Validation\Validator;
 use Phalcon\Http\Request;
 
 class Phalcon extends Request
@@ -105,5 +108,38 @@ class Phalcon extends Request
     public function disableSanitize() : void
     {
         $this->inputSanitize = false;
+    }
+
+    /**
+     * Get request info.
+     *
+     * @return array
+     */
+    public function all() : array
+    {
+        return $this->isPut() ? $this->getPutData() : $this->getPostData();
+    }
+
+    /**
+     * Use laravel validation for a request.
+     *
+     * @param array $rules
+     *
+     * @return Translator
+     */
+    public function validate(array $rules) : Validator
+    {
+        $requestValidation = ValidationsRequest::getInstance();
+
+        $request = $requestValidation->make($this->all(), $rules);
+
+        if ($request->fails()) {
+            throw BadRequestException::create(
+                'The given data was invalid.',
+                $request->errors()->getMessages()
+            );
+        }
+
+        return $request;
     }
 }
