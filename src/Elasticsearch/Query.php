@@ -16,6 +16,7 @@ class Query
 {
     public ?ElasticModelInterface $model = null;
     protected string $sql;
+    protected int $totalResultSet = 0;
     protected int $total = 0;
 
     /**
@@ -85,9 +86,10 @@ class Query
 
         //set total
         $dataset = isset($results['datarows']) ? $results['datarows'] : $results['hits']['hits'];
-        $this->total = count($dataset);
+        $this->totalResultSet = count($dataset);
+        $this->total = $results['hits']['total']['value'];
 
-        if (!$this->total) {
+        if (!$this->totalResultSet) {
             return [];
         }
 
@@ -142,7 +144,7 @@ class Query
      */
     private function getResultSet(array $elasticResults) : SplFixedArray
     {
-        $results = new SplFixedArray($this->total);
+        $results = new SplFixedArray($this->totalResultSet);
         $i = 0;
 
         if (!empty($elasticResults)) {
