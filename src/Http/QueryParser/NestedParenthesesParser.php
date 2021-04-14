@@ -9,15 +9,16 @@ class NestedParenthesesParser
     // current level
     protected array $currentScope = [];
     // input string to parse
-    protected ?string $query = null;
+    protected string $query = '';
     // query split
     protected ?array $querySplit = null;
     // current character offset in string
-    protected ?int $currentPosition = null;
+    protected int $currentPosition = 0;
 
     protected ?string $lastJoiner = null;
     // start of text-buffer
     protected ?int $bufferStartAt = null;
+    protected int $length = 0;
 
     // Ignore current char meaning on the iteration
     protected bool $ignoreMode = false;
