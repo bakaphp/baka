@@ -19,7 +19,8 @@ class QueryParser
         '>' => '>',
         '<' => '<',
         '!' => '!',
-        '¬' => 'BETWEEN',
+        '¬' => '>',
+        //'¬' => 'BETWEEN',
     ];
 
     /**
@@ -30,7 +31,8 @@ class QueryParser
         '>' => '>=',
         '<' => '<=',
         '!' => '<>',
-        'BETWEEN' => 'BETWEEN',
+        'BETWEEN' => '>',
+        //'BETWEEN' => 'BETWEEN',
     ];
 
     /**
@@ -346,6 +348,14 @@ class QueryParser
      *
      * @param array $comparison The array of comparison elements
      *
+     * [field] => rating
+     * [operator] => ¬
+     * [values] => 1|3
+     *
+     * [field] => field.categories_id
+     * [operator] => :
+     * [values] => 2
+     *
      * @return string
      */
     protected function parseComparison(array $comparison) : string
@@ -358,8 +368,16 @@ class QueryParser
 
         $comparison = self::buildComparison($field, $operator, array_shift($values));
 
+        /**
+         * Multi value operation
+         *  - for OR or Between.
+         */
         foreach ($values as $value) {
-            $comparison .= $operator == 'BETWEEN' ? ' AND ' . $value : ' OR ' . self::buildComparison($field, $operator, $value);
+            /**
+             * @todo temp solution to handle between while this pull is merged https://github.com/opendistro-for-elasticsearch/sql/pull/1067
+             */
+            $comparison .= $operator == '>' ? ' AND ' . $field . ' <= ' . $value : ' OR ' . self::buildComparison($field, $operator, $value);
+            //$comparison .= $operator == 'BETWEEN' ? ' AND ' . $value : ' OR ' . self::buildComparison($field, $operator, $value);
         }
 
         return $comparison;

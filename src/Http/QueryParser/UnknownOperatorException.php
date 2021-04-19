@@ -2,7 +2,9 @@
 
 namespace Baka\Http\QueryParser;
 
-class UnknownOperatorException extends \Exception
+use Exception;
+
+class UnknownOperatorException extends Exception
 {
     /**
      * @var string
@@ -14,9 +16,9 @@ class UnknownOperatorException extends \Exception
      *
      * @param string     $operator
      * @param int        $code
-     * @param \Exception $previous
+     * @param Exception $previous
      */
-    public function __construct(string $operator, $code = 0, \Exception $previous = null)
+    public function __construct(string $operator, $code = 0, Exception $previous = null)
     {
         $this->operator = $operator;
         parent::__construct('Unknown operator: ' . $this->getOperator(), $code, $previous);

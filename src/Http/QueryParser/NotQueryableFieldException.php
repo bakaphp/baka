@@ -2,7 +2,9 @@
 
 namespace Baka\Http\QueryParser;
 
-class NotQueryableFieldException extends \Exception
+use Exception;
+
+class NotQueryableFieldException extends Exception
 {
     /**
      * @var string
@@ -14,9 +16,9 @@ class NotQueryableFieldException extends \Exception
      *
      * @param string     $field
      * @param int        $code
-     * @param \Exception $previous
+     * @param Exception $previous
      */
-    public function __construct(string $field, $code = 0, \Exception $previous = null)
+    public function __construct(string $field, $code = 0, Exception $previous = null)
     {
         $this->field = $field;
         parent::__construct('Field is not queryable: ' . $this->getField(), $code, $previous);

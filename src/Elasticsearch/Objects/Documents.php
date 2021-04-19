@@ -232,6 +232,8 @@ abstract class Documents implements ElasticModelInterface
     /**
      * Find by query in this document.
      *
+     * @todo add findFirst and Find() like phalcon
+     *
      * @param string $sql
      *
      * @return array
