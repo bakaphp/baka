@@ -936,20 +936,41 @@ class RequestUriToSql extends Injectable implements ConverterInterface
     }
 
     /**
+     * Get table columns.
+     */
+    public function getTableColumns() : array
+    {
+        $fields = $this->model->getReadConnection()->describeColumns($this->model->getSource());
+        $columns = [];
+
+        foreach ($fields as $field) {
+            $columns[$field->getName()] = $field->getName();
+        }
+
+        return $columns;
+    }
+
+    /**
      * Set CustomSort for the query.
      *
      * @param string $sort
      *
-     * @return string
+     * @return void
      */
     public function setCustomSort(?string $sort) : void
     {
-        if (!is_null($sort)) {
+        if (!is_null($sort) && Str::contains($sort, '|')) {
             // Get the model, column and sort order from the sent parameter.
             list($modelColumn, $order) = explode('|', $sort);
             //limit the sort
             $order = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
             $modelColumn = Str::cleanup($modelColumn);
+            $columnsData = $this->getTableColumns();
+
+            if (!isset($columnsData[$modelColumn])) {
+                return ;
+            }
+
             // Check to see whether this is a related sorting by looking for a .
             if (strpos($modelColumn, '.') !== false) {
                 // We are using a related sort.
