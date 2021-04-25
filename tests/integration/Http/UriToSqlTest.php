@@ -28,7 +28,7 @@ class UriToSqlTest extends PhalconUnitTestCase
         $results = (new SimpleRecords(null, $leads, $leads->getReadConnection()->query($request['sql'], $request['bind'])));
         $count = $leads->getReadConnection()->query($request['countSql'], $request['bind'])->fetch(\PDO::FETCH_OBJ)->total;
 
-        //confirme records
+        //confirmed records
         foreach ($results as $result) {
             $this->assertTrue($result->id > 0);
         }
@@ -48,7 +48,7 @@ class UriToSqlTest extends PhalconUnitTestCase
         $params['columns'] = '(users_id, firstname, lastname, is_deleted, is_active, leads_owner_id)';
         $params['limit'] = '10';
         $params['page'] = '1';
-        $params['sort'] = 'id|desc';
+        $params['sort'] = 'columnDoesntExist|asc';
 
         $leads = new Leads();
         $requestToSql = new RequestUriToSql($params, $leads);
@@ -59,7 +59,37 @@ class UriToSqlTest extends PhalconUnitTestCase
 
         //confirmed records
         foreach ($results as $result) {
-            //doesn't existe id
+            //doesn't exists id
+            $this->assertFalse(isset($result->id));
+        }
+
+        $this->assertTrue(count($results->toArray()) == 10);
+        $this->assertTrue($count > 0);
+    }
+
+    /**
+     * Test normal columns.
+     *
+     * @return void
+     */
+    public function testQuerySortAsc()
+    {
+        $params = [];
+        $params['columns'] = '(users_id, firstname, lastname, is_deleted, is_active, leads_owner_id)';
+        $params['limit'] = '10';
+        $params['page'] = '1';
+        $params['sort'] = 'id|asc';
+
+        $leads = new Leads();
+        $requestToSql = new RequestUriToSql($params, $leads);
+        $request = $requestToSql->convert();
+
+        $results = (new SimpleRecords(null, $leads, $leads->getReadConnection()->query($request['sql'], $request['bind'])));
+        $count = $leads->getReadConnection()->query($request['countSql'], $request['bind'])->fetch(\PDO::FETCH_OBJ)->total;
+
+        //confirmed records
+        foreach ($results as $result) {
+            //doesn't exists id
             $this->assertFalse(isset($result->id));
         }
 
@@ -116,7 +146,7 @@ class UriToSqlTest extends PhalconUnitTestCase
         $results = (new SimpleRecords(null, $leads, $leads->getReadConnection()->query($request['sql'], $request['bind'])));
         $count = $leads->getReadConnection()->query($request['countSql'], $request['bind'])->fetch(\PDO::FETCH_OBJ)->total;
 
-        //confirme records
+        //confirmed records
         foreach ($results as $result) {
             $this->assertTrue($result->id > 0);
         }
@@ -144,7 +174,7 @@ class UriToSqlTest extends PhalconUnitTestCase
         $results = (new SimpleRecords(null, $leads, $leads->getReadConnection()->query($request['sql'], $request['bind'])));
         $count = $leads->getReadConnection()->query($request['countSql'], $request['bind'])->fetch(\PDO::FETCH_OBJ)->total;
 
-        //confirme records
+        //confirmed records
         foreach ($results as $result) {
             $this->assertTrue($result->id > 0);
         }
@@ -173,7 +203,7 @@ class UriToSqlTest extends PhalconUnitTestCase
         $results = (new SimpleRecords(null, $leads, $leads->getReadConnection()->query($request['sql'], $request['bind'])));
         $count = $leads->getReadConnection()->query($request['countSql'], $request['bind'])->fetch(\PDO::FETCH_OBJ)->total;
 
-        //confirme records
+        //confirmed records
         foreach ($results as $result) {
             $this->assertTrue($result->id > 0);
         }
@@ -202,7 +232,7 @@ class UriToSqlTest extends PhalconUnitTestCase
         $results = (new SimpleRecords(null, $leads, $leads->getReadConnection()->query($request['sql'], $request['bind'])));
         $count = $leads->getReadConnection()->query($request['countSql'], $request['bind'])->fetch(\PDO::FETCH_OBJ)->total;
 
-        //confirme records
+        //confirmed records
         foreach ($results as $result) {
             $this->assertTrue($result->id > 0);
         }
@@ -251,7 +281,7 @@ class UriToSqlTest extends PhalconUnitTestCase
         $results = (new SimpleRecords(null, $leads, $leads->getReadConnection()->query($request['sql'], $request['bind'])));
         $count = $leads->getReadConnection()->query($request['countSql'], $request['bind'])->fetch(\PDO::FETCH_OBJ)->total;
 
-        //confirme records
+        //confirmed records
         foreach ($results as $result) {
             $this->assertTrue(isset($result->companies_id));
             $this->assertFalse(isset($result->users_id));
@@ -284,7 +314,7 @@ class UriToSqlTest extends PhalconUnitTestCase
         $results = (new SimpleRecords(null, $leads, $leads->getReadConnection()->query($request['sql'], $request['bind'])));
         $count = $leads->getReadConnection()->query($request['countSql'], $request['bind'])->fetch(\PDO::FETCH_OBJ)->total;
 
-        //confirme records
+        //confirmed records
         foreach ($results as $result) {
             $this->assertTrue(isset($result->companies_id));
             $this->assertTrue(isset($result->users_id));

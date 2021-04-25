@@ -107,10 +107,10 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
      *
      * @return void
      */
-    public function cascadeSoftDelete(): void
+    public function cascadeSoftDelete() : void
     {
         foreach ($this->getDependentRelationships() as $relation => $data) {
-            $relationData = $this->{'get'.$relation}();
+            $relationData = $this->{'get' . $relation}();
 
             if ($data['type'] === Relation::HAS_ONE) {
                 if (isset($relationData)) {
@@ -375,7 +375,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     /**
      * Get get the primary key, if we have more than 1 , use keys.
      *
-     * @return array
+     * @return string
      */
     public function getPrimaryKey() : string
     {
@@ -401,6 +401,19 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     }
 
     /**
+     * Get model Table Columns.
+     *
+     * @return array
+     */
+    public function getTableColumns() : array
+    {
+        $metadata = $this->getModelsMetaData();
+        $attributes = $metadata->getAttributes($this);
+
+        return $attributes;
+    }
+
+    /**
      * hasProperty.
      *
      * @param  string $property
@@ -410,8 +423,8 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     public function hasProperty(string $property) : bool
     {
         $metadata = $this->getModelsMetaData();
-        $attributes = $metadata->getAttributes($this);
-        return key_exists($property, $attributes);
+
+        return $metadata->hasAttribute($this, $property);
     }
 
     /**
