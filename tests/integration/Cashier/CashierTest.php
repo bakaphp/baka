@@ -45,18 +45,18 @@ class CashierTest extends PhalconUnitTestCase
             $this->assertTrue($user->subscription('main')->active());
             $this->assertFalse($user->subscription('main')->cancelled());
             $this->assertFalse($user->subscription('main')->onGracePeriod());
+
+            //Cancel Subscription
+            $subscription = $user->subscription('main');
+            $subscription->cancel();
+
+            $this->assertFalse($subscription->active());
+            $this->assertTrue($subscription->cancelled());
+            $this->assertFalse($subscription->onGracePeriod());
+
+            // Update current plan
+            $subscription->swap('monthly-10-2');
         }
-
-        //Cancel Subscription
-        $subscription = $user->subscription('main');
-        $subscription->cancel();
-
-        $this->assertFalse($subscription->active());
-        $this->assertTrue($subscription->cancelled());
-        $this->assertFalse($subscription->onGracePeriod());
-
-        // Update current plan
-        $subscription->swap('monthly-10-2');
 
         $this->assertEquals('monthly-10-2', $subscription->stripe_plan);
     }
