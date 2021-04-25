@@ -8,7 +8,6 @@ use Baka\Test\Support\Models\Companies;
 use Baka\Test\Support\Models\Users;
 use Carbon\Carbon;
 use Exception;
-use Exception;
 use PhalconUnitTestCase;
 use Stripe\Token;
 
