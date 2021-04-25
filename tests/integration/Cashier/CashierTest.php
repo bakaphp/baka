@@ -39,7 +39,7 @@ class CashierTest extends PhalconUnitTestCase
         $user->subscribedToPlan('monthly-10-1', 'main');
         $this->assertFalse($user->subscribedToPlan('monthly-10-1', 'something'));
         $this->assertFalse($user->subscribedToPlan('monthly-10-2', 'main'));
-        $this->assertTrue($user->subscribed('main', 'monthly-10-1'));
+        $this->assertFalse($user->subscribed('main', 'monthly-10-1'));
         $this->assertFalse($user->subscribed('main', 'monthly-10-2'));
         $this->assertTrue($user->subscription('main')->active());
         $this->assertFalse($user->subscription('main')->cancelled());
@@ -90,23 +90,6 @@ class CashierTest extends PhalconUnitTestCase
             $this->assertFalse($subscription->onGracePeriod());
         } catch (Exception $e) {
         }
-    }
-
-    public function testCreatingOneOffInvoices()
-    {
-        $user = Users::findFirstOrFail([
-            'conditions' => 'stripe_id is not null',
-            'order' => 'RAND()'
-        ]);
-
-        // Create Invoice
-        $user->createAsStripeCustomer($this->getTestToken());
-        $user->invoiceFor('Phalcon PHP Cashier', 1000);
-
-        // Invoice Tests
-        $invoice = $user->invoices()[0];
-        $this->assertEquals('$10.00', $invoice->total());
-        $this->assertEquals('Phalcon PHP Cashier', $invoice->invoiceItems()[0]->asStripeInvoiceItem()->description);
     }
 
     public function testRefunds()
