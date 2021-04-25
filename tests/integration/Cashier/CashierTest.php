@@ -56,9 +56,8 @@ class CashierTest extends PhalconUnitTestCase
 
             // Update current plan
             $subscription->swap('monthly-10-2');
+            $this->assertEquals('monthly-10-2', $subscription->stripe_plan);
         }
-
-        $this->assertEquals('monthly-10-2', $subscription->stripe_plan);
     }
 
     public function testCreatingSubscriptionWithTrial()
