@@ -100,10 +100,10 @@ class CashierTest extends PhalconUnitTestCase
             'order' => 'RAND()'
         ]);
         // Create Invoice
-        $user->createAsStripeCustomer($this->getTestToken());
-        $invoice = $user->invoiceFor('Phalcon PHP Cashier', 1000);
 
         try {
+            $user->createAsStripeCustomer($this->getTestToken());
+            $invoice = $user->invoiceFor('Phalcon PHP Cashier', 1000);
             // Create the refund
             $refund = $user->refund($invoice->charge);
 
