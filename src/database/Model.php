@@ -333,4 +333,18 @@ class Model extends PhalconModel
     {
         return isset($this->customFields);
     }
+
+    /**
+     * hasProperty.
+     *
+     * @param  string $property
+     *
+     * @return bool
+     */
+    public function hasProperty(string $property) : bool
+    {
+        $metaData = new MetaDataMemory();
+
+        return $metadata->hasAttribute($this, $property);
+    }
 }
