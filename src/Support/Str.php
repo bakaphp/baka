@@ -77,6 +77,7 @@ class Str
      *
      * @param string $needle
      * @param string $haystack
+     * contains('This is an example string', 'example');
      *
      * @return bool
      */
