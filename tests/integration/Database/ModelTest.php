@@ -119,4 +119,24 @@ class ModelTest extends PhalconUnitTestCase
 
         $this->assertEmpty($user->getSubscriptions());
     }
+
+    public function testHasProperty()
+    {
+        $lead = Leads::findFirst();
+        $this->assertTrue($lead->hasProperty('id'));
+        $this->assertTrue($lead->hasProperty('firstname'));
+    }
+
+    public function testGetPrimaryKey()
+    {
+        $lead = Leads::findFirst();
+        $this->assertEquals('id', $lead->getPrimaryKey());
+    }
+
+    public function testGetTableColumns()
+    {
+        $lead = Leads::findFirst();
+        $this->assertIsArray($lead->getTableColumns());
+        $this->assertArrayHasKey('id', array_flip($lead->getTableColumns()));
+    }
 }

@@ -12,7 +12,6 @@ use Exception;
 use Phalcon\Db\Column;
 use Phalcon\Di;
 use Phalcon\Di\Injectable;
-use Phalcon\Mvc\Model\MetaData\Memory as MetaDataMemory;
 use Phalcon\Mvc\Model\ResultsetInterface;
 use ReflectionClass;
 
@@ -936,56 +935,47 @@ class RequestUriToSql extends Injectable implements ConverterInterface
     }
 
     /**
+     * Get table columns.
+     */
+    public function getTableColumns() : array
+    {
+        $fields = $this->model->getReadConnection()->describeColumns($this->model->getSource());
+        $columns = [];
+
+        foreach ($fields as $field) {
+            $columns[$field->getName()] = $field->getName();
+        }
+
+        return $columns;
+    }
+
+    /**
      * Set CustomSort for the query.
      *
      * @param string $sort
      *
-     * @return string
+     * @return void
      */
     public function setCustomSort(?string $sort) : void
     {
         if (!is_null($sort)) {
-            // Get the model, column and sort order from the sent parameter.
-            list($modelColumn, $order) = explode('|', $sort);
+            $order = null;
+            $modelColumn = $sort;
+            if (Str::contains($sort, '|')) {
+                // Get the model, column and sort order from the sent parameter.
+                list($modelColumn, $order) = explode('|', $sort);
+            }
+
+            $modelColumn = Str::cleanup($modelColumn);
+
+            if (!$this->model->hasProperty($modelColumn)) {
+                return ;
+            }
+
             //limit the sort
             $order = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
-            $modelColumn = Str::cleanup($modelColumn);
-            // Check to see whether this is a related sorting by looking for a .
-            if (strpos($modelColumn, '.') !== false) {
-                // We are using a related sort.
-                // Get the namespace for the models from the configuration.
-                $modelNamespace = Di::getDefault()->get('config')->namespace->models;
-                // Get the model name and the sort column from the sent parameter
-                list($model, $column) = explode('.', $modelColumn);
-                // Convert the model name into camel case.
-                $modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', $model)));
-                // Create the model name with the appended namespace.
-                $modelName = $modelNamespace . '\\' . $modelName;
 
-                // Make sure the model exists.
-                if (!class_exists($modelName)) {
-                    throw new Exception('Related model does not exist.');
-                }
-
-                // Instance the model so we have access to the getSource() function.
-                $modelObject = new $modelName();
-                // Instance meta data memory to access the primary keys for the table.
-                $metaData = new MetaDataMemory();
-
-                // Get the first matching primary key.
-                // @TODO This will hurt on compound primary keys.
-                $primaryKey = $metaData->getPrimaryKeyAttributes($modelObject)[0];
-                // We need the table to exist in the query in order for the related sort to work.
-                // Therefore we add it to comply with this by comparing the primary key to not being NULL.
-                $this->relationSearchFields[$modelName][] = [
-                    $primaryKey, ':', '$$',
-                ];
-
-                $this->sort = " ORDER BY {$modelObject->getSource()}.{$column} {$order}";
-                unset($modelObject);
-            } else {
-                $this->sort = " ORDER BY {$modelColumn} {$order}";
-            }
+            $this->sort = " ORDER BY {$modelColumn} {$order}";
         }
     }
 }
