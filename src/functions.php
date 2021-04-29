@@ -170,3 +170,15 @@ if (!function_exists('Baka\getShortClassName')) {
         return (new ReflectionClass($object))->getShortName();
     }
 }
+
+if (!function_exists('Baka\isCLI')) {
+    /**
+     * Check to see if it a CLI.
+     *
+     * @return bool
+     */
+    function isCLI() : bool
+    {
+        return (php_sapi_name() === 'cli');
+    }
+}
