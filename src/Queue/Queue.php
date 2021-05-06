@@ -77,36 +77,34 @@ class Queue
         /**
          * Use Swoole Coroutine.
          */
-        go(function () use ($queue, $queueName, $callback) {
-            $channel = $queue->channel();
+        $channel = $queue->channel();
 
-            $channel->queue_declare($queueName, false, true, false, false);
+        $channel->queue_declare($queueName, false, true, false, false);
 
-            //Fair dispatch https://lukasmestan.com/rabbitmq-broken-pipe-or-closed-connection/
-            $prefetchSize = null;    // message size in bytes or null, otherwise error
-            $prefetchCount = 1;      // prefetch count value
-            $applyPerChannel = null; // can be false or null, otherwise error
+        //Fair dispatch https://lukasmestan.com/rabbitmq-broken-pipe-or-closed-connection/
+        $prefetchSize = null;    // message size in bytes or null, otherwise error
+        $prefetchCount = 1;      // prefetch count value
+        $applyPerChannel = null; // can be false or null, otherwise error
 
-            $channel->basic_qos($prefetchSize, $prefetchCount, $applyPerChannel);
+        $channel->basic_qos($prefetchSize, $prefetchCount, $applyPerChannel);
 
-            /*
-                queueName: Queue from where to get the messages
-                consumer_tag: Consumer identifier
-                no_local: Don't receive messages published by this consumer.
-                no_ack: If set to true, automatic acknowledgement mode will be used by this consumer. See https://www.rabbitmq.com/confirms.html for details.
-                exclusive: Request exclusive consumer access, meaning only this consumer can access the queue
-                nowait:
-                callback: A PHP Callback
-            */
-            $channel->basic_consume($queueName, '', false, true, false, false, $callback);
+        /*
+            queueName: Queue from where to get the messages
+            consumer_tag: Consumer identifier
+            no_local: Don't receive messages published by this consumer.
+            no_ack: If set to true, automatic acknowledgement mode will be used by this consumer. See https://www.rabbitmq.com/confirms.html for details.
+            exclusive: Request exclusive consumer access, meaning only this consumer can access the queue
+            nowait:
+            callback: A PHP Callback
+        */
+        $channel->basic_consume($queueName, '', false, true, false, false, $callback);
 
-            while ($channel->is_consuming()) {
-                $channel->wait();
-            }
+        while ($channel->is_consuming()) {
+            $channel->wait();
+        }
 
-            $channel->close();
-            $queue->close();
-        });
+        $channel->close();
+        $queue->close();
     }
 
     /**
