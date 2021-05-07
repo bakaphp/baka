@@ -169,6 +169,10 @@ class NestedParenthesesParser
          *  2 -> value
          *  3 -> join operator.
          */
+
+        /**
+         * @todo move the index to constants same for additional params in controller
+         */
         foreach ($additionalQueryFields as $query) {
             $newAdditionalQueryFields[$query[0]] = [
                 'comparison' => implode('', array_slice($query, 0, 3)),
