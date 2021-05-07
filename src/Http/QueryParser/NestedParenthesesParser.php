@@ -172,7 +172,7 @@ class NestedParenthesesParser
         foreach ($additionalQueryFields as $query) {
             $newAdditionalQueryFields[$query[0]] = [
                 'comparison' => implode('', array_slice($query, 0, 3)),
-                'joiner' => !is_null($query[3]) && QueryParser::isAValidJoiner($query[3]) ? $query[3] : ',',
+                'joiner' => isset($query[3]) && QueryParser::isAValidJoiner($query[3]) ? $query[3] : ',',
                 'key' => $query[0]
             ];
         }
