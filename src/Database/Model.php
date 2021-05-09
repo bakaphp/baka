@@ -513,6 +513,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             return ;
         }
         $relationships = $this->getDependentRelationships();
+        $create = false;
 
         foreach ($relationships as $key => $model) {
             $$key = [];
@@ -536,13 +537,19 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
                             if (isset($relatedRecord[0]) && is_object($relatedRecord[0])) {
                                 $relatedRecord[0]->updateOrFail($data);
                             }
+                        } else {
+                            $$key[] = new $model['model']($data);
+                            $this->$key = $$key;
                         }
                     }
                 } else {
                     //has one or belongs to
                     $relatedRecord = $this->$method();
                     if (is_object($relatedRecord)) {
-                        $relatedRecord->saveOrFail($relationData);
+                        $relatedRecord->updateOrFail($relationData);
+                    } else {
+                        $$key = new $model['model']($relationData);
+                        $this->$key = $$key;
                     }
                 }
             }
