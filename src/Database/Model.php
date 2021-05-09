@@ -513,7 +513,6 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             return ;
         }
         $relationships = $this->getDependentRelationships();
-        $create = false;
 
         foreach ($relationships as $key => $model) {
             $$key = [];
