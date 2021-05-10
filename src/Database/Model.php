@@ -116,7 +116,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
                 if (isset($relationData)) {
                     $relationData->softDelete();
                 }
-            } elseif ($data['type'] === Relation::HAS_MANY && isset($relationData[0])) {
+            } elseif ($data['type'] === Relation::HAS_MANY && $relationData->count()) {
                 foreach ($relationData as $singleData) {
                     $singleData->softDelete();
                 }
