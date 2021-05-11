@@ -161,10 +161,22 @@ class NestedParenthesesParser
     {
         $newAdditionalQueryFields = [];
 
+        /**
+         * Additional Params
+         * ['follows_rs.users_id', ':', $this->userData->getId()],
+         *  0 -> key
+         *  1 -> operation
+         *  2 -> value
+         *  3 -> join operator.
+         */
+
+        /**
+         * @todo move the index to constants same for additional params in controller
+         */
         foreach ($additionalQueryFields as $query) {
             $newAdditionalQueryFields[$query[0]] = [
-                'comparison' => implode('', $query),
-                'joiner' => ',',
+                'comparison' => implode('', array_slice($query, 0, 3)),
+                'joiner' => isset($query[3]) && QueryParser::isAValidJoiner($query[3]) ? $query[3] : ',',
                 'key' => $query[0]
             ];
         }
