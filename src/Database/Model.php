@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Baka\Database;
 
 use Baka\Contracts\Database\ModelInterface;
@@ -227,7 +229,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $this->assign($data, $whiteList);
         }
 
-        if ($this->canCreateRelationshipsRecords && !empty($data)) {
+        if ($this->canCreateRelationshipsRecords && is_array($data) && !empty($data)) {
             $this->setNewRelationshipsRecords($data);
         }
 
@@ -250,7 +252,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $this->assign($data, $whiteList);
         }
 
-        if ($this->canCreateRelationshipsRecords && !empty($data)) {
+        if ($this->canCreateRelationshipsRecords && is_array($data) && !empty($data)) {
             $this->setExistentRelationshipsRecords($data);
         }
 
@@ -446,10 +448,11 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     protected function getDependentRelationships() : array
     {
         $hasOne = $this->getModelsManager()->getHasOne($this);
+        $belongsTo = $this->getModelsManager()->getBelongsTo($this);
         $hasMany = $this->getModelsManager()->getHasMany($this);
         $relationships = [];
 
-        if ($mergeRelationships = array_merge($hasOne, $hasMany)) {
+        if ($mergeRelationships = array_merge($hasOne, $belongsTo, $hasMany)) {
             foreach ($mergeRelationships as $relationship) {
                 $relationships[$relationship->getOptions()['alias']] = [
                     'model' => $relationship->getReferencedModel(),
@@ -477,16 +480,18 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $$key = [];
             $relationData = $records[$key];
             if (!empty($relationData) && is_array($relationData)) {
-                $method = 'get' . ucfirst($key);
-                if ($this->canOverWriteRelationshipsData) {
-                    $this->$method()->delete();
-                }
-                foreach ($relationData as $data) {
-                    if ($model['type'] === Relation::HAS_MANY) {
-                        $$key[] = new $model['model']($data);
-                    } else {
-                        $$key = new $model['model']($data);
+                if ($model['type'] === Relation::HAS_MANY) {
+                    if ($this->canOverWriteRelationshipsData) {
+                        if (is_object($this->$key)) {
+                            $this->$key->delete();
+                        }
                     }
+
+                    foreach ($relationData as $data) {
+                        $$key[] = new $model['model']($data);
+                    }
+                } else {
+                    $$key = new $model['model']($relationData);
                 }
 
                 $this->$key = $$key;
@@ -513,30 +518,37 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
             $$key = [];
             $relationData = $records[$key];
             if (!empty($relationData) && is_array($relationData)) {
-                foreach ($relationData as $data) {
-                    if (isset($data['id'])) {
-                        $method = 'get' . ucfirst($key);
-                        //if we have the id , update its record
-                        $records = $this->$method([
-                            'conditions' => 'id = :id:',
-                            'bind' => [
-                                'id' => (int) $data['id']
-                            ],
-                            'limit' => 1
-                        ]);
+                $method = 'get' . ucfirst($key);
+                if ($model['type'] === Relation::HAS_MANY) {
+                    foreach ($relationData as $data) {
+                        if (isset($data['id'])) {
+                            //if we have the id , update its record
+                            $relatedRecord = $this->$method([
+                                'conditions' => 'id = :id:',
+                                'bind' => [
+                                    'id' => (int) $data['id']
+                                ],
+                                'limit' => 1
+                            ]);
 
-                        //never let them overwrite the reference field
-                        unset($data[$model['referencedFields']]);
-                        if ($model['type'] === Relation::HAS_MANY && isset($records[0])) {
-                            $records[0]->updateOrFail($data);
-                        } elseif ($model['type'] !== Relation::HAS_MANY) {
-                            $records->updateOrFail($data);
+                            //never let them overwrite the reference field
+                            unset($data[$model['referencedFields']]);
+                            if (isset($relatedRecord[0]) && is_object($relatedRecord[0])) {
+                                $relatedRecord[0]->updateOrFail($data);
+                            }
+                        } else {
+                            $$key[] = new $model['model']($data);
+                            $this->$key = $$key;
                         }
+                    }
+                } else {
+                    //has one or belongs to
+                    $relatedRecord = $this->$method();
+                    if (is_object($relatedRecord)) {
+                        $relatedRecord->updateOrFail($relationData);
                     } else {
-                        //create new record
-                        $new = new $model['model']();
-                        $data[$model['referencedFields']] = $this->getId();
-                        $new->saveOrFail($data);
+                        $$key = new $model['model']($relationData);
+                        $this->$key = $$key;
                     }
                 }
             }
