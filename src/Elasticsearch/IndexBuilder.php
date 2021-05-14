@@ -208,7 +208,7 @@ class IndexBuilder
                 }
 
                 //$params['custom_fields']['properties'][$field['name']] = $type;
-                $params[$field['name']] = $type;
+                $params[strtolower($field['name'])] = $type;
             }
         }
     }
