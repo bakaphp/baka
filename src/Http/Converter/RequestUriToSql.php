@@ -966,9 +966,10 @@ class RequestUriToSql extends Injectable implements ConverterInterface
 
     /**
      * Allow use to overwrite the sort , since its manual it can be only run by the user
-     * so he has to avoid the sql injection
+     * so he has to avoid the sql injection.
      *
      * @param string|null $sort
+     * 
      * @return void
      */
     public function setManualCustomSort(?string $sort) : void
