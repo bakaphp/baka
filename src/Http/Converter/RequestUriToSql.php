@@ -168,7 +168,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
 
         // Sorting logic for related searches.
         if (array_key_exists('sort', $this->request)) {
-            if (!empty($this->request['sort'])) {
+            if (!empty($this->request['sort']) && empty($this->sort)) {
                 $this->setCustomSort(trim($this->request['sort']));
             }
         }
@@ -178,7 +178,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
 
         // Append any additional user parameters
         $this->appendAdditionalParams();
-        //base on th eesarch params get the raw query
+        //base on th search params get the raw query
         $rawSql = $this->prepareCustomSearch();
 
         if (!is_null($this->sort)) {
