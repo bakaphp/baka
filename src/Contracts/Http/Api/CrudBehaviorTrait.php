@@ -44,7 +44,7 @@ trait CrudBehaviorTrait
         $parse->setCustomTableJoins($this->customTableJoins);
         $parse->setCustomConditions($this->customConditions);
         $parse->setCustomLimit($this->customLimit);
-        $parse->setCustomSort($this->customSort);
+        $parse->setManualCustomSort($this->customSort);
         $parse->appendParams($this->additionalSearchFields);
         $parse->appendCustomParams($this->additionalCustomSearchFields);
         $parse->appendRelationParams($this->additionalRelationSearchFields);

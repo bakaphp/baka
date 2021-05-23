@@ -941,7 +941,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
      *
      * @return void
      */
-    public function setCustomSort(?string $sort) : void
+    public function setCustomSort(?string $sort, bool $validateModelProperties = true) : void
     {
         if (!is_null($sort)) {
             $order = null;
@@ -953,7 +953,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
 
             $modelColumn = Str::cleanup($modelColumn);
 
-            if (!$this->model->hasProperty($modelColumn)) {
+            if ($validateModelProperties && !$this->model->hasProperty($modelColumn)) {
                 return ;
             }
 
@@ -962,5 +962,17 @@ class RequestUriToSql extends Injectable implements ConverterInterface
 
             $this->sort = " ORDER BY {$modelColumn} {$order}";
         }
+    }
+
+    /**
+     * Allow use to overwrite the sort , since its manual it can be only run by the user
+     * so he has to avoid the sql injection
+      *
+      * @param string|null $sort
+      * @return void
+      */
+    public function setManualCustomSort(?string $sort) : void
+    {
+        $this->setCustomSort($sort, false);
     }
 }
