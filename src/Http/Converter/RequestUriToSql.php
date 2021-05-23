@@ -969,7 +969,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
      * so he has to avoid the sql injection.
      *
      * @param string|null $sort
-     * 
+     *
      * @return void
      */
     public function setManualCustomSort(?string $sort) : void
