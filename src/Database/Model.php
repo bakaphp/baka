@@ -203,7 +203,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
      *
      * @param array $parameters
      *
-     * @return self
+     * @return ResultsetInterface
      */
     public static function findOrFail($parameters = null) : ResultsetInterface
     {

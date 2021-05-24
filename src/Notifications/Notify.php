@@ -29,10 +29,10 @@ class Notify
     /**
      * Process just one.
      *
-     * @param Users $user
+     * @param UserInterface $user
      * @param NotificationInterface $notification
      *
-     * @return void
+     * @return bool
      */
     public static function one(UserInterface $user, NotificationInterface $notification) : bool
     {
