@@ -975,7 +975,17 @@ class RequestUriToSql extends Injectable implements ConverterInterface
     public function setManualCustomSort(?string $sort) : void
     {
         if (!is_null($sort)) {
-            $this->sort = " ORDER BY {$sort}";
+            if (Str::contains($sort, '|')) {
+                // Get the model, column and sort order from the sent parameter.
+                list($modelColumn, $order) = explode('|', $sort);
+
+                //limit the sort
+                $order = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+
+                $this->sort = " ORDER BY {$modelColumn} {$order}";
+            } else {
+                $this->sort = " ORDER BY {$sort}";
+            }
         }
     }
 }
