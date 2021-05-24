@@ -941,7 +941,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
      *
      * @return void
      */
-    public function setCustomSort(?string $sort, bool $validateModelProperties = true) : void
+    public function setCustomSort(?string $sort) : void
     {
         if (!is_null($sort)) {
             $order = null;
@@ -953,7 +953,7 @@ class RequestUriToSql extends Injectable implements ConverterInterface
 
             $modelColumn = Str::cleanup($modelColumn);
 
-            if ($validateModelProperties && !$this->model->hasProperty($modelColumn)) {
+            if (!$this->model->hasProperty($modelColumn)) {
                 return ;
             }
 
@@ -974,6 +974,8 @@ class RequestUriToSql extends Injectable implements ConverterInterface
      */
     public function setManualCustomSort(?string $sort) : void
     {
-        $this->setCustomSort($sort, false);
+        if (!is_null($sort)) {
+            $this->sort = " ORDER BY {$sort}";
+        }
     }
 }
