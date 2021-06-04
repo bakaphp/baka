@@ -478,7 +478,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
 
         foreach ($relationships as $key => $model) {
             $$key = [];
-            $relationData = $records[$key];
+            $relationData = $records[$key] ?? [];
             if (!empty($relationData) && is_array($relationData)) {
                 if ($model['type'] === Relation::HAS_MANY) {
                     if ($this->canOverWriteRelationshipsData) {
@@ -516,7 +516,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
 
         foreach ($relationships as $key => $model) {
             $$key = [];
-            $relationData = $records[$key];
+            $relationData = $records[$key] ?? [];
             if (!empty($relationData) && is_array($relationData)) {
                 $method = 'get' . ucfirst($key);
                 if ($model['type'] === Relation::HAS_MANY) {
