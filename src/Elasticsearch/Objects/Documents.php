@@ -12,6 +12,7 @@ abstract class Documents implements ElasticModelInterface
 {
     public $id;
     public array $data = [];
+    public array $dataIndex = [];
     public ?string $indices = null;
 
     protected string $text = 'text';
@@ -58,8 +59,48 @@ abstract class Documents implements ElasticModelInterface
     {
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
+            $this->dataIndex[] = $key;
         }
         return $this;
+    }
+
+    /**
+     * Assign document properties to data when
+     * - User assign the document data to each properties
+     * - User assign the value via de construct.
+     *
+     * @return void
+     */
+    public function assignFromProperties() : void
+    {
+        if (empty($this->data) && !empty($this->dataIndex)) {
+            foreach ($this->dataIndex as $index) {
+                $this->data[$index] = $this->{$index};
+            }
+        } elseif (empty($this->data) && empty($this->dataIndex)) {
+            $objectProperties = get_object_vars($this);
+
+            $elasticDocumentProperties = [
+                'data',
+                'dataIndex',
+                'indices',
+                'text',
+                'keyword',
+                'integer',
+                'bigInt',
+                'dateNormal',
+                'dateTime',
+                'decimal',
+                'relations',
+            ];
+            foreach ($objectProperties as $key => $value) {
+                if (preg_match('#^_#', $key) === 1 || in_array($key, $elasticDocumentProperties) || empty($value)) {
+                    unset($objectProperties[$key]);
+                }
+            }
+
+            $this->data = $objectProperties;
+        }
     }
 
     /**
@@ -159,6 +200,7 @@ abstract class Documents implements ElasticModelInterface
      */
     public function getData() : array
     {
+        $this->assignFromProperties();
         return $this->data;
     }
 
@@ -179,7 +221,7 @@ abstract class Documents implements ElasticModelInterface
         $params = [
             'index' => $this->getIndices(),
             'id' => $this->id,
-            'body' => $this->data,
+            'body' => $this->getData(),
         ];
 
         return Client::getInstance()->index($params);
