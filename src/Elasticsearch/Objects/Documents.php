@@ -8,6 +8,9 @@ use Baka\Elasticsearch\Client;
 use Baka\Elasticsearch\Query;
 use function Baka\getShortClassName;
 
+/**
+ * @psalm-consistent-constructor
+ */
 abstract class Documents implements ElasticModelInterface
 {
     public $id;
@@ -152,12 +155,27 @@ abstract class Documents implements ElasticModelInterface
      * @param $id
      * @param  array $data
      *
-     * @return void
+     * @return self
      */
     public function setData($id, array $data) : self
     {
         $this->id = $id;
         $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * set data based on model.
+     *
+     * @param ElasticModelInterface $model
+     *
+     * @return self
+     */
+    public function setDataModel(ElasticModelInterface $model) : self
+    {
+        $this->id = $model->getId();
+
         return $this;
     }
 
@@ -261,14 +279,16 @@ abstract class Documents implements ElasticModelInterface
      */
     public static function getById($id) : self
     {
+        $selfClass = new static();
+
         $params = [
-            'index' => (new static())->getIndices(),
+            'index' => $selfClass->getIndices(),
             'id' => $id
         ];
 
         $response = Client::getInstance()->get($params);
 
-        return (new static())->setData($id, $response['_source']);
+        return $selfClass->setData($id, $response['_source']);
     }
 
     /**
