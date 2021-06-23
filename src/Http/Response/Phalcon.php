@@ -7,10 +7,7 @@ namespace Baka\Http\Response;
 use Baka\Http\Exception\InternalServerErrorException;
 use Baka\Http\Request\Phalcon as Request;
 use Error;
-use Phalcon\Di;
 use Phalcon\Http\Response;
-use Phalcon\Mvc\Model\MessageInterface as ModelMessage;
-use Phalcon\Validation\Message\Group as ValidationMessage;
 use Throwable;
 
 class Phalcon extends Response
@@ -32,7 +29,7 @@ class Phalcon extends Response
     const BAD_GATEWAY = 502;
     const UNPROCESSABLE_ENTITY = 422;
 
-    private $codes = [
+    private array $codes = [
         200 => 'OK',
         301 => 'Moved Permanently',
         302 => 'Found',
@@ -80,7 +77,7 @@ class Phalcon extends Response
          *
          * @todo change in the future to implements other formats
          */
-        if ($this->getStatusCode() > 400) {
+        if ($this->isServerError() || $this->isClientError()) {
             $timestamp = date('c');
             $hash = sha1($timestamp . $content);
 
@@ -138,7 +135,7 @@ class Phalcon extends Response
     /**
      * Traverses the errors collection and sets the errors in the payload.
      *
-     * @param ModelMessage[]|ValidationMessage $errors
+     * @param mixed $errors
      *
      * @return self
      */
@@ -163,8 +160,8 @@ class Phalcon extends Response
      */
     public function setPayloadSuccess($content = []) : self
     {
-        $data = (true === is_array($content)) ? $content : ['data' => $content];
-        $data = (true === isset($data['data'])) ? $data : ['data' => $data];
+        $data = is_array($content) ? $content : ['data' => $content];
+        $data = isset($data['data']) ? $data : ['data' => $data];
 
         $this->setJsonContent($data);
 
@@ -182,7 +179,7 @@ class Phalcon extends Response
     {
         $request = new Request();
         $identifier = $request->getServerAddress();
-        $config = Di::getDefault()->getConfig();
+        $config = $this->getDI()->get('config');
 
         $httpCode = (method_exists($e, 'getHttpCode')) ? $e->getHttpCode() : 404;
         $httpMessage = (method_exists($e, 'getHttpMessage')) ? $e->getHttpMessage() : 'Not Found';
@@ -205,9 +202,30 @@ class Phalcon extends Response
         if ($e instanceof InternalServerErrorException ||
             $e instanceof Error ||
             $config->app->production) {
-            Di::getDefault()->getLog()->error($e->getMessage(), [$e->getTraceAsString()]);
+            $this->getDI()->get('log')->error($e->getMessage(), [$e->getTraceAsString()]);
         }
 
         return $this;
+    }
+
+    /**
+     * Is the current response a error response?
+     * Error response are anything over a 400 code.
+     *
+     * @return bool
+     */
+    public function isServerError() : bool
+    {
+        return $this->getStatusCode() > 500;
+    }
+
+    /**
+     * Client errors.
+     *
+     * @return bool
+     */
+    public function isClientError() : bool
+    {
+        return $this->getStatusCode() > 400 && $this->getStatusCode() < 500;
     }
 }
