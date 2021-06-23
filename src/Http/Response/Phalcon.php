@@ -67,9 +67,9 @@ class Phalcon extends Response
     /**
      * Send the response back.
      *
-     * @return PhResponse
+     * @return self
      */
-    public function send() : Response
+    public function send() : self
     {
         $content = $this->getContent();
         $data = $content;
@@ -78,14 +78,18 @@ class Phalcon extends Response
         /**
          * At the moment we are only using this format for error msg.
          *
-         * @todo change in the future to implemente other formats
+         * @todo change in the future to implements other formats
          */
-        if ($this->getStatusCode() != 200) {
+        if ($this->getStatusCode() > 400) {
             $timestamp = date('c');
             $hash = sha1($timestamp . $content);
 
             /** @var array $content */
             $content = json_decode($this->getContent(), true);
+
+            if (!is_array($content)) {
+                $content = ['message' => $content];
+            }
 
             $jsonapi = [
                 'jsonapi' => [
@@ -103,6 +107,7 @@ class Phalcon extends Response
              * Join the array again.
              */
             $data = $jsonapi + $content + $meta;
+
             $this->setJsonContent($data);
         }
 
@@ -116,7 +121,7 @@ class Phalcon extends Response
      *
      * @param string $detail
      *
-     * @return Response
+     * @return self
      */
     public function setPayloadError(string $detail = '') : self
     {
@@ -135,7 +140,7 @@ class Phalcon extends Response
      *
      * @param ModelMessage[]|ValidationMessage $errors
      *
-     * @return Response
+     * @return self
      */
     public function setPayloadErrors($errors) : self
     {
@@ -154,7 +159,7 @@ class Phalcon extends Response
      *
      * @param null|string|array $content The content
      *
-     * @return Response
+     * @return self
      */
     public function setPayloadSuccess($content = []) : self
     {
@@ -171,7 +176,7 @@ class Phalcon extends Response
      *
      * @param Throwable $e
      *
-     * @return Response
+     * @return self
      */
     public function handleException(Throwable $e) : self
     {
