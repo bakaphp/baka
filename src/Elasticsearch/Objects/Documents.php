@@ -22,6 +22,7 @@ abstract class Documents implements ElasticModelInterface
     protected string $keyword = 'keyword';
     protected string $integer = 'integer';
     protected string $bigInt = 'long';
+    protected string $boolean = 'boolean';
     protected array $dateNormal = ['date', 'yyyy-MM-dd'];
     protected array $dateTime = ['date', 'yyyy-MM-dd HH:mm:ss'];
     protected string $decimal = 'float';
