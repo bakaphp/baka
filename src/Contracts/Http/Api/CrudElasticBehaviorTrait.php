@@ -39,7 +39,17 @@ trait CrudElasticBehaviorTrait
         //parse the request
         $parse = new QueryParser($this->model, $request->getQuery());
         $parse->setAdditionalQueryFields($this->additionalSearchFields);
+        if ($this->customSort) {
+            $parse->setSort($this->customSort);
+        }
 
+        if ($this->customLimit) {
+            $parse->setLimit($this->customLimit);
+        }
+
+        if ($this->customColumns) {
+            $parse->setFields($this->customColumns);
+        }
         //convert to SQL
         return [
             'sql' => $parse
