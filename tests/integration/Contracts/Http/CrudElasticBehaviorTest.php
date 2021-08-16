@@ -19,6 +19,7 @@ class CrudElasticBehaviorTest extends PhalconUnitTestCase
 
     protected ?RequestInterface $request = null;
     public $model;
+    protected $customSort = null;
 
     public function testIndex()
     {
