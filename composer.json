@@ -37,7 +37,8 @@
         "odan/phinx-migrations-generator": "^5",
         "phpunit/phpunit": "^9.1", 
         "squizlabs/php_codesniffer": "1.*",
-        "symfony/var-dumper": "^4.3@dev"
+        "symfony/var-dumper": "^4.3@dev",
+        "phalcon/ide-stubs": "^4.1"
     },
     "autoload": {
         "psr-4": {
