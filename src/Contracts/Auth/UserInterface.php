@@ -6,4 +6,5 @@ namespace Baka\Contracts\Auth;
 
 interface UserInterface
 {
+    public function getId();
 }
