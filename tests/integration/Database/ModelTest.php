@@ -139,4 +139,17 @@ class ModelTest extends PhalconUnitTestCase
         $this->assertIsArray($lead->getTableColumns());
         $this->assertArrayHasKey('id', array_flip($lead->getTableColumns()));
     }
+
+    public function testRawQueries()
+    {
+        $leads = Leads::findByRawSql(
+            'SELECT * FROM leads WHERE id > ?',
+            [
+                0
+            ]
+        );
+
+        $this->assertIsObject($leads);
+        $this->assertTrue($leads->count() > 0);
+    }
 }
