@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Baka\Http\Response;
 
+use function Baka\envValue;
 use Baka\Http\Exception\InternalServerErrorException;
 use Baka\Http\Request\Phalcon as Request;
 use Error;
 use Phalcon\Http\Response;
+
 use Throwable;
 
 class Phalcon extends Response
@@ -181,8 +183,8 @@ class Phalcon extends Response
         $identifier = $request->getServerAddress();
         $config = $this->getDI()->get('config');
 
-        $httpCode = (method_exists($e, 'getHttpCode')) ? $e->getHttpCode() : 404;
-        $httpMessage = (method_exists($e, 'getHttpMessage')) ? $e->getHttpMessage() : 'Not Found';
+        $httpCode = (method_exists($e, 'getHttpCode')) ? $e->getHttpCode() : 500;
+        $httpMessage = (method_exists($e, 'getHttpMessage')) ? $e->getHttpMessage() : 'Internal Server Error';
         $data = (method_exists($e, 'getData')) ? $e->getData() : [];
 
         $this->setHeader('Access-Control-Allow-Origin', '*'); //@todo check why this fails on nginx
@@ -199,9 +201,7 @@ class Phalcon extends Response
         ]);
 
         //Log Errors or Internal Servers Errors in Production
-        if ($e instanceof InternalServerErrorException ||
-            $e instanceof Error ||
-            $config->app->production) {
+        if (($e instanceof InternalServerErrorException || $e instanceof Error) && (bool) envValue('SENTRY_PROJECT', 0)) {
             $this->getDI()->get('log')->error($e->getMessage(), [$e->getTraceAsString()]);
         }
 
@@ -216,7 +216,7 @@ class Phalcon extends Response
      */
     public function isServerError() : bool
     {
-        return $this->getStatusCode() > 500;
+        return $this->getStatusCode() >= 500;
     }
 
     /**
