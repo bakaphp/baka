@@ -8,14 +8,12 @@ use Baka\Contracts\Database\ModelInterface;
 use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Database\Exception\ModelNotProcessedException;
 use function Baka\getShortClassName;
-
 use Phalcon\Di;
 use Phalcon\Mvc\Model as PhalconModel;
 use Phalcon\Mvc\Model\Query\BuilderInterface;
 use Phalcon\Mvc\Model\Relation;
 use Phalcon\Mvc\Model\Resultset\Simple;
 use Phalcon\Mvc\Model\ResultsetInterface;
-
 use Phalcon\Mvc\ModelInterface as PhalconModelInterface;
 use RuntimeException;
 
