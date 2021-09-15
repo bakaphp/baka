@@ -8,7 +8,10 @@ use Baka\Contracts\Database\ModelInterface;
 use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Database\Exception\ModelNotProcessedException;
 use function Baka\getShortClassName;
+
+use Phalcon\Di;
 use Phalcon\Mvc\Model as PhalconModel;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 use Phalcon\Mvc\Model\Relation;
 use Phalcon\Mvc\Model\Resultset\Simple;
 use Phalcon\Mvc\Model\ResultsetInterface;
@@ -579,5 +582,16 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
                 $params
             )
         );
+    }
+
+    /**
+     * Return a query builder for the current model.
+     * So we can do more complicated queries.
+     *
+     * @return BuilderInterface
+     */
+    public static function queryBuilder() : BuilderInterface
+    {
+        return Di::getDefault()->get('modelsManager')->createBuilder();
     }
 }
