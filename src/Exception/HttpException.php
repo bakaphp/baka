@@ -33,7 +33,7 @@ class HttpException extends Exception
     }
 
     /**
-     * Get the severity of the exception
+     * Get the severity of the exception.
      *
      * @return string
      */
