@@ -14,4 +14,5 @@ class InternalServerErrorException extends HttpException
 {
     protected $httpCode = Response::INTERNAL_SERVER_ERROR;
     protected $httpMessage = 'Internal Server Error';
+    protected $severity = 'emergency';
 }

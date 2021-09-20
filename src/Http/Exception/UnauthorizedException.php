@@ -11,4 +11,5 @@ class UnauthorizedException extends HttpException
 {
     protected $httpCode = Response::UNAUTHORIZED;
     protected $httpMessage = 'Unauthorized';
+    protected $severity = 'warning';
 }

@@ -120,7 +120,7 @@ class Swoole extends PhResponse
         if ($e instanceof InternalServerErrorException ||
             $e instanceof Error ||
             $config->app->production) {
-            Di::getDefault()->getLog()->error($e->getMessage(), [$e->getTraceAsString()]);
+            Di::getDefault()->getLog()->$e->getHttpSeverity()($e->getMessage(), [$e->getTraceAsString()]);
         }
 
         $this->resetDi();

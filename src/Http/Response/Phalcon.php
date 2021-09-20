@@ -202,7 +202,7 @@ class Phalcon extends Response
 
         //Log Errors or Internal Servers Errors in Production
         if (($e instanceof InternalServerErrorException || $e instanceof Error) && (bool) envValue('SENTRY_PROJECT', 0)) {
-            $this->getDI()->get('log')->error($e->getMessage(), [$e->getTraceAsString()]);
+            $this->getDI()->get('log')->$e->getHttpSeverity()($e->getMessage(), [$e->getTraceAsString()]);
         }
 
         return $this;
