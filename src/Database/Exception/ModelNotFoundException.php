@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Baka\Database\Exception;
 
-use RuntimeException;
+use Baka\Exception\ModelException;
 
-class ModelNotFoundException extends RuntimeException
+class ModelNotFoundException extends ModelException
 {
 }
