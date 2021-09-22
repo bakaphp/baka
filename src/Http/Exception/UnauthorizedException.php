@@ -9,7 +9,7 @@ use Baka\Http\Response\Phalcon as Response;
 
 class UnauthorizedException extends HttpException
 {
-    protected $httpCode = Response::UNAUTHORIZED;
-    protected $httpMessage = 'Unauthorized';
-    protected $severity = 'warning';
+    protected string $httpCode = Response::UNAUTHORIZED;
+    protected string $httpMessage = 'Unauthorized';
+    protected string $severity = 'warning';
 }
