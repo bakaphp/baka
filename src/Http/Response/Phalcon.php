@@ -185,6 +185,7 @@ class Phalcon extends Response
 
         $httpCode = (method_exists($e, 'getHttpCode')) ? $e->getHttpCode() : 500;
         $httpMessage = (method_exists($e, 'getHttpMessage')) ? $e->getHttpMessage() : 'Internal Server Error';
+        $httpSeverity = (method_exists($e, 'getHttpSeverity')) ? $e->getHttpSeverity() : 'error';
         $data = (method_exists($e, 'getData')) ? $e->getData() : [];
 
         $this->setHeader('Access-Control-Allow-Origin', '*'); //@todo check why this fails on nginx
@@ -193,6 +194,7 @@ class Phalcon extends Response
         $this->setJsonContent([
             'errors' => [
                 'type' => $httpMessage,
+                'severity' => $httpSeverity,
                 'identifier' => $identifier,
                 'message' => $e->getMessage(),
                 'trace' => !$config->app->production ? $e->getTraceAsString() : null,
@@ -202,7 +204,7 @@ class Phalcon extends Response
 
         //Log Errors or Internal Servers Errors in Production
         if (($e instanceof InternalServerErrorException || $e instanceof Error) && (bool) envValue('SENTRY_PROJECT', 0)) {
-            $this->getDI()->get('log')->error($e->getMessage(), [$e->getTraceAsString()]);
+            $this->getDI()->get('log')->$httpSeverity($e->getMessage(), [$e->getTraceAsString()]);
         }
 
         return $this;

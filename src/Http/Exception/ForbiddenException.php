@@ -9,6 +9,7 @@ use Baka\Http\Response\Phalcon as Response;
 
 class ForbiddenException extends HttpException
 {
-    protected $httpCode = Response::FORBIDDEN;
-    protected $httpMessage = 'Forbidden';
+    protected int $httpCode = Response::FORBIDDEN;
+    protected string $httpMessage = 'Forbidden';
+    protected string $severity = 'warning';
 }

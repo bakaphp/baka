@@ -12,6 +12,7 @@ use Baka\Http\Response\Phalcon as Response;
  */
 class InternalServerErrorException extends HttpException
 {
-    protected $httpCode = Response::INTERNAL_SERVER_ERROR;
-    protected $httpMessage = 'Internal Server Error';
+    protected int $httpCode = Response::INTERNAL_SERVER_ERROR;
+    protected string $httpMessage = 'Internal Server Error';
+    protected string $severity = 'emergency';
 }

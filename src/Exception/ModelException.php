@@ -11,6 +11,6 @@ use Baka\Http\Response\Phalcon as Response;
  */
 class ModelException extends HttpException
 {
-    protected $httpCode = Response::NOT_FOUND;
-    protected $httpMessage = 'Not Found';
+    protected int $httpCode = Response::NOT_FOUND;
+    protected string $httpMessage = 'Not Found';
 }
