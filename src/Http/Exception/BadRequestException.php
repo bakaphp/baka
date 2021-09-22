@@ -14,7 +14,7 @@ use Baka\Http\Response\Phalcon as Response;
  */
 class BadRequestException extends HttpException
 {
-    protected string $httpCode = Response::BAD_REQUEST;
+    protected int $httpCode = Response::BAD_REQUEST;
     protected string $httpMessage = 'Bad Request';
     protected string $severity = 'error';
 }

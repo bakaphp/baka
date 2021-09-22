@@ -9,7 +9,7 @@ use Baka\Http\Response\Phalcon as Response;
 
 class UnprocessableEntityException extends HttpException
 {
-    protected string $httpCode = Response::UNPROCESSABLE_ENTITY;
+    protected int $httpCode = Response::UNPROCESSABLE_ENTITY;
     protected string $httpMessage = 'Unprocessable Entity';
     protected string $severity = 'alert';
 }
