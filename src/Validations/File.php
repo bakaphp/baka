@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Baka\Validations;
 
 use Baka\Validation as CanvasValidation;
+use Phalcon\Di;
 use Phalcon\Http\Request\FileInterface;
 use Phalcon\Validation\Validator\File as FileValidator;
 
@@ -56,9 +57,9 @@ class File
             'file',
             new FileValidator($uploadConfig)
         );
-
+        $req = Di::getDefault()->get('request');
         //phalcon has a issue it requires to be a POST to validate file, so we ignore this for now
-        if (php_sapi_name() != 'cli') {
+        if ($req->hasFiles()) {
             //validate this form for password
             $validator->validate([
                 'file' => [
