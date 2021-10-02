@@ -284,6 +284,26 @@ class QueryParserTest extends PhalconUnitTestCase
         }
     }
 
+
+    public function testMultiNestedWithNestedWithColumnsAndGroupingQuery()
+    {
+        $params = [];
+        $params['q'] = '(is_deleted:0,companies_id>0,user.subscriptions.apps_id:1),(user.welcome:0)';
+        $params['fields'] = 'id,email';
+        $params['page'] = '1';
+        $params['sort'] = 'id|desc';
+
+        $lead = new Leads();
+        $queryParser = new QueryParser($lead, $params);
+        $results = ModelsDocuments::findBySql($queryParser->getParsedQuery(), new Leads());
+
+        foreach ($results as $result) {
+            $this->assertTrue($result->getId() > 0);
+            $this->assertTrue($result->getId() > 0);
+            $this->assertNotEmpty($result->email);
+        }
+    }
+
     public function testMultiNestedWithNestedNotModelQuery()
     {
         $params = [];
