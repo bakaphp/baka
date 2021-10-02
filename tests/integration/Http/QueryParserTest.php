@@ -284,7 +284,6 @@ class QueryParserTest extends PhalconUnitTestCase
         }
     }
 
-
     public function testMultiNestedWithNestedWithColumnsAndGroupingQuery()
     {
         $params = [];
