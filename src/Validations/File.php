@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Baka\Validations;
 
+use function Baka\isCLI;
 use Baka\Validation as CanvasValidation;
 use Phalcon\Di;
 use Phalcon\Http\Request\FileInterface;
+
 use Phalcon\Validation\Validator\File as FileValidator;
 
 class File
@@ -59,7 +61,7 @@ class File
         );
         $req = Di::getDefault()->get('request');
         //phalcon has a issue it requires to be a POST to validate file, so we ignore this for now
-        if ($req->hasFiles()) {
+        if ($req->hasFiles() && !isCLI()) {
             //validate this form for password
             $validator->validate([
                 'file' => [
