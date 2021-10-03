@@ -94,6 +94,27 @@ class QueryParserTest extends PhalconUnitTestCase
         }
     }
 
+    public function testSimpleQueryWithConditionalAndGrouping()
+    {
+        $limit = 100;
+        $params = [];
+        $params['q'] = '(is_deleted:0,companies_id>0),(user.displayname:mc%,user.id>0;user.user_level:3)';
+        //$params['fields'] = '';
+        $params['limit'] = $limit;
+        $params['page'] = '1';
+        $params['sort'] = 'id|desc';
+
+        $queryParser = new QueryParser(new Leads(), $params);
+        $results = ElasticDocuments::findBySql($queryParser->getParsedQuery());
+
+        foreach ($results as $result) {
+            $this->assertTrue(isset($result['id']));
+            if (isset($result['user'])) {
+                $this->assertTrue(isset($result['user']['id']));
+            }
+        }
+    }
+
     public function testSimpleQueryWithConditionalAndAdditionalQueryFields()
     {
         $limit = 100;
@@ -263,6 +284,25 @@ class QueryParserTest extends PhalconUnitTestCase
         }
     }
 
+    public function testMultiNestedWithNestedWithColumnsAndGroupingQuery()
+    {
+        $params = [];
+        $params['q'] = '(is_deleted:0,companies_id>0,user.subscriptions.apps_id:1),(user.welcome:0)';
+        $params['fields'] = 'id,email';
+        $params['page'] = '1';
+        $params['sort'] = 'id|desc';
+
+        $lead = new Leads();
+        $queryParser = new QueryParser($lead, $params);
+        $results = ModelsDocuments::findBySql($queryParser->getParsedQuery(), new Leads());
+
+        foreach ($results as $result) {
+            $this->assertTrue($result->getId() > 0);
+            $this->assertTrue($result->getId() > 0);
+            $this->assertNotEmpty($result->email);
+        }
+    }
+
     public function testMultiNestedWithNestedNotModelQuery()
     {
         $params = [];
@@ -285,7 +325,7 @@ class QueryParserTest extends PhalconUnitTestCase
     }
 
     /**
-     * Test for querys between two values.
+     * Test for query's between two values.
      */
     public function testSimpleBetweenQuery()
     {
