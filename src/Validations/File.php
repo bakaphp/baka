@@ -59,6 +59,7 @@ class File
             'file',
             new FileValidator($uploadConfig)
         );
+        
         $req = Di::getDefault()->get('request');
         //phalcon has a issue it requires to be a POST to validate file, so we ignore this for now
         if ($req->hasFiles() && !isCLI()) {
