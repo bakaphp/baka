@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Baka\Validations;
 
+use function Baka\isCLI;
 use Baka\Validation as CanvasValidation;
 use Phalcon\Di;
 use Phalcon\Http\Request\FileInterface;
+
 use Phalcon\Validation\Validator\File as FileValidator;
 
 class File
@@ -57,20 +59,24 @@ class File
             'file',
             new FileValidator($uploadConfig)
         );
-        $req = Di::getDefault()->get('request');
-        //phalcon has a issue it requires to be a POST to validate file, so we ignore this for now
-        if ($req->hasFiles()) {
-            //validate this form for password
-            $validator->validate([
-                'file' => [
-                    'name' => $file->getName(),
-                    'type' => $file->getType(),
-                    'tmp_name' => $file->getTempName(),
-                    'error' => $file->getError(),
-                    'size' => $file->getSize(),
-                ]
-            ]);
+
+        if (Di::getDefault()->has('request')) {
+            $req = Di::getDefault()->get('request');
+            //phalcon has a issue it requires to be a POST to validate file, so we ignore this for now
+            if ($req->hasFiles() && !isCLI()) {
+                //validate this form for password
+                $validator->validate([
+                    'file' => [
+                        'name' => $file->getName(),
+                        'type' => $file->getType(),
+                        'tmp_name' => $file->getTempName(),
+                        'error' => $file->getError(),
+                        'size' => $file->getSize(),
+                    ]
+                ]);
+            }
         }
+
 
         return true;
     }
