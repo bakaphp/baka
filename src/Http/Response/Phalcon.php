@@ -9,7 +9,6 @@ use Baka\Http\Exception\InternalServerErrorException;
 use Baka\Http\Request\Phalcon as Request;
 use Error;
 use Phalcon\Http\Response;
-
 use Throwable;
 
 class Phalcon extends Response
@@ -26,6 +25,7 @@ class Phalcon extends Response
     const FORBIDDEN = 403;
     const NOT_FOUND = 404;
     const NOT_ACCEPTABLE = 406;
+    const SESSION_NOT_FOUND = 499;
     const INTERNAL_SERVER_ERROR = 500;
     const NOT_IMPLEMENTED = 501;
     const BAD_GATEWAY = 502;
@@ -42,6 +42,7 @@ class Phalcon extends Response
         403 => 'Forbidden',
         404 => 'Not Found',
         422 => 'Unprocessable Entity',
+        499 => 'Session Not Found',
         500 => 'Internal Server Error',
         501 => 'Not Implemented',
         502 => 'Bad Gateway',

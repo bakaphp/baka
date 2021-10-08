@@ -15,7 +15,7 @@ class HttpException extends Exception
     /**
      * Get the http status code of the exception.
      *
-     * @return string
+     * @return int
      */
     public function getHttpCode() : int
     {
