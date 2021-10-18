@@ -6,6 +6,7 @@ namespace Baka\Queue;
 
 use function Baka\envValue;
 use Phalcon\Di;
+use Phalcon\Security\Random;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Wire\AMQPTable;
 
@@ -14,11 +15,11 @@ class Queue
     /**
      * default canvas queues system name.
      */
-    const EVENTS = 'events';
-    const NOTIFICATIONS = 'notifications';
-    const JOBS = 'jobs';
-    const EXCHANGE_NAME = 'baka_exchange';
-    const EXCHANGE_TYPE = 'direct';
+    public const EVENTS = 'events';
+    public const NOTIFICATIONS = 'notifications';
+    public const JOBS = 'jobs';
+    public const EXCHANGE_NAME = 'baka_exchange';
+    public const EXCHANGE_TYPE = 'direct';
 
     public static bool $passive = false;
     public static bool $durable = true;
@@ -67,7 +68,8 @@ class Queue
         );
 
         $msg = new AMQPMessage($msg, [
-            'delivery_mode' => 2
+            'delivery_mode' => 2,
+            'message_id' => (new Random())->uuid(),
         ]);
 
         $channel->basic_publish($msg, self::EXCHANGE_NAME, $name);
