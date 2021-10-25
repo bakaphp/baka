@@ -4,22 +4,17 @@ declare(strict_types=1);
 
 namespace Baka\Queue;
 
-use function Baka\envValue;
 use Phalcon\Di;
-use Phalcon\Security\Random;
 use PhpAmqpLib\Message\AMQPMessage;
-use PhpAmqpLib\Wire\AMQPTable;
 
 class Queue
 {
     /**
      * default canvas queues system name.
      */
-    public const EVENTS = 'events';
-    public const NOTIFICATIONS = 'notifications';
-    public const JOBS = 'jobs';
-    public const EXCHANGE_NAME = 'baka_exchange';
-    public const EXCHANGE_TYPE = 'direct';
+    const EVENTS = 'events';
+    const NOTIFICATIONS = 'notifications';
+    const JOBS = 'jobs';
 
     public static bool $passive = false;
     public static bool $durable = true;
@@ -40,16 +35,6 @@ class Queue
 
         $channel = $queue->channel();
 
-        $args = new AMQPTable();
-
-        $args->set('x-dead-letter-exchange', self::EXCHANGE_NAME);
-        $args->set(
-            'x-message-ttl',
-            (int) envValue('QUEUE_JOB_TIME_TO_LIVE', 15000),
-        );
-
-        $channel->exchange_declare(self::EXCHANGE_NAME, self::EXCHANGE_TYPE, false, true, false, false, false, $args);
-
         /*
             name: $queueName
             passive: false
@@ -57,23 +42,20 @@ class Queue
             exclusive: false // the queue can be accessed in other channels
             auto_delete: false //the queue won't be deleted once the channel is closed.
         */
+
         $channel->queue_declare(
             $name,
             self::getPassive(),
             self::getDurable(),
             self::getExclusive(),
-            self::getAutoDelete(),
-            false,
-            $args
+            self::getAutoDelete()
         );
 
         $msg = new AMQPMessage($msg, [
-            'delivery_mode' => 2,
-            'message_id' => (new Random())->uuid(),
+            'delivery_mode' => 2
         ]);
 
-        $channel->basic_publish($msg, self::EXCHANGE_NAME, $name);
-
+        $channel->basic_publish($msg, '', $name);
         $channel->close();
 
         return true;
@@ -97,19 +79,7 @@ class Queue
          */
         $channel = $queue->channel();
 
-        $args = new AMQPTable();
-
-        $args->set('x-dead-letter-exchange', self::EXCHANGE_NAME);
-        $args->set(
-            'x-message-ttl',
-            (int) envValue('QUEUE_JOB_TIME_TO_LIVE', 15000),
-        );
-
-        $channel->exchange_declare(self::EXCHANGE_NAME, self::EXCHANGE_TYPE, false, true, false, false, false, $args);
-
-        $channel->queue_declare($queueName, false, true, false, false, false, $args);
-
-        $channel->queue_bind($queueName, self::EXCHANGE_NAME, self::JOBS);
+        $channel->queue_declare($queueName, false, true, false, false);
 
         //Fair dispatch https://lukasmestan.com/rabbitmq-broken-pipe-or-closed-connection/
         $prefetchSize = null;    // message size in bytes or null, otherwise error
@@ -127,7 +97,7 @@ class Queue
             nowait:
             callback: A PHP Callback
         */
-        $channel->basic_consume($queueName, '', false, false, false, false, $callback);
+        $channel->basic_consume($queueName, '', false, true, false, false, $callback);
 
         while ($channel->is_consuming()) {
             $channel->wait();

@@ -16,20 +16,6 @@ trait QueueableTrait
     public string $queue = Queue::JOBS;
 
     /**
-     * whether to retry the job on fail or not.
-     *
-     * @var bool
-     */
-    public bool $useRetry = false;
-
-    /**
-     * Delay time in seconds between each retry.
-     *
-     * @var bool
-     */
-    public int $retryDelay = 0;
-
-    /**
      * Set the desired queue for the job.
      *
      * @param  string $queue
