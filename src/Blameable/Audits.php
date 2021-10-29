@@ -2,6 +2,7 @@
 
 namespace Baka\Blameable;
 
+use Baka\Auth\Models\Users;
 use Baka\Database\Model;
 
 class Audits extends Model
@@ -20,8 +21,23 @@ class Audits extends Model
     public function initialize()
     {
         $this->setSource('audits');
-        $this->hasMany('id', '\Baka\Blameable\AuditsDetails', 'audits_id', ['alias' => 'details']);
-        $this->belongsTo('users_id', '\Baka\Auth\Users', 'id', ['alias' => 'user']);
+        $this->hasMany(
+            'id',
+            AuditsDetails::class,
+            'audits_id',
+            [
+                'alias' => 'details'
+            ]
+        );
+
+        $this->belongsTo(
+            'users_id',
+            Users::class,
+            'id',
+            [
+                'alias' => 'user'
+            ]
+        );
     }
 
     /**
