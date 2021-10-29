@@ -16,8 +16,6 @@ class Blameable extends Behavior implements BehaviorInterface
      * @var array
      */
     protected array $excludeFields = [];
-
-
     protected array $snapshot = [];
     protected array $changedFields = [];
 
