@@ -294,12 +294,13 @@ trait CrudBehaviorTrait
      */
     protected function processEdit(RequestInterface $request, ModelInterface $record) : ModelInterface
     {
+        $this->model = $record;
         //process the input
         $request = $this->processInput($request->getPutData());
 
-        $record->updateOrFail($request, $this->updateFields);
+        $this->model->updateOrFail($request, $this->updateFields);
 
-        return $record;
+        return $this->model;
     }
 
     /**
