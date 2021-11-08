@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Baka\Http\Response;
 
+use function Baka\envValue;
 use Baka\Http\Exception\InternalServerErrorException;
 use Baka\Http\Request\Phalcon as Request;
 use Error;
-use Phalcon\Di;
 use Phalcon\Http\Response;
-use Phalcon\Mvc\Model\MessageInterface as ModelMessage;
-use Phalcon\Validation\Message\Group as ValidationMessage;
 use Throwable;
 
 class Phalcon extends Response
@@ -27,12 +25,13 @@ class Phalcon extends Response
     const FORBIDDEN = 403;
     const NOT_FOUND = 404;
     const NOT_ACCEPTABLE = 406;
+    const SESSION_NOT_FOUND = 499;
     const INTERNAL_SERVER_ERROR = 500;
     const NOT_IMPLEMENTED = 501;
     const BAD_GATEWAY = 502;
     const UNPROCESSABLE_ENTITY = 422;
 
-    private $codes = [
+    private array $codes = [
         200 => 'OK',
         301 => 'Moved Permanently',
         302 => 'Found',
@@ -43,6 +42,7 @@ class Phalcon extends Response
         403 => 'Forbidden',
         404 => 'Not Found',
         422 => 'Unprocessable Entity',
+        499 => 'Session Not Found',
         500 => 'Internal Server Error',
         501 => 'Not Implemented',
         502 => 'Bad Gateway',
@@ -67,9 +67,9 @@ class Phalcon extends Response
     /**
      * Send the response back.
      *
-     * @return PhResponse
+     * @return self
      */
-    public function send() : Response
+    public function send() : self
     {
         $content = $this->getContent();
         $data = $content;
@@ -78,14 +78,18 @@ class Phalcon extends Response
         /**
          * At the moment we are only using this format for error msg.
          *
-         * @todo change in the future to implemente other formats
+         * @todo change in the future to implements other formats
          */
-        if ($this->getStatusCode() != 200) {
+        if ($this->isServerError() || $this->isClientError()) {
             $timestamp = date('c');
             $hash = sha1($timestamp . $content);
 
             /** @var array $content */
             $content = json_decode($this->getContent(), true);
+
+            if (!is_array($content)) {
+                $content = ['message' => $content];
+            }
 
             $jsonapi = [
                 'jsonapi' => [
@@ -103,6 +107,7 @@ class Phalcon extends Response
              * Join the array again.
              */
             $data = $jsonapi + $content + $meta;
+
             $this->setJsonContent($data);
         }
 
@@ -116,7 +121,7 @@ class Phalcon extends Response
      *
      * @param string $detail
      *
-     * @return Response
+     * @return self
      */
     public function setPayloadError(string $detail = '') : self
     {
@@ -133,9 +138,9 @@ class Phalcon extends Response
     /**
      * Traverses the errors collection and sets the errors in the payload.
      *
-     * @param ModelMessage[]|ValidationMessage $errors
+     * @param mixed $errors
      *
-     * @return Response
+     * @return self
      */
     public function setPayloadErrors($errors) : self
     {
@@ -154,12 +159,12 @@ class Phalcon extends Response
      *
      * @param null|string|array $content The content
      *
-     * @return Response
+     * @return self
      */
     public function setPayloadSuccess($content = []) : self
     {
-        $data = (true === is_array($content)) ? $content : ['data' => $content];
-        $data = (true === isset($data['data'])) ? $data : ['data' => $data];
+        $data = is_array($content) ? $content : ['data' => $content];
+        $data = isset($data['data']) ? $data : ['data' => $data];
 
         $this->setJsonContent($data);
 
@@ -171,16 +176,17 @@ class Phalcon extends Response
      *
      * @param Throwable $e
      *
-     * @return Response
+     * @return self
      */
     public function handleException(Throwable $e) : self
     {
         $request = new Request();
         $identifier = $request->getServerAddress();
-        $config = Di::getDefault()->getConfig();
+        $config = $this->getDI()->get('config');
 
-        $httpCode = (method_exists($e, 'getHttpCode')) ? $e->getHttpCode() : 404;
-        $httpMessage = (method_exists($e, 'getHttpMessage')) ? $e->getHttpMessage() : 'Not Found';
+        $httpCode = (method_exists($e, 'getHttpCode')) ? $e->getHttpCode() : 500;
+        $httpMessage = (method_exists($e, 'getHttpMessage')) ? $e->getHttpMessage() : 'Internal Server Error';
+        $httpSeverity = (method_exists($e, 'getHttpSeverity')) ? $e->getHttpSeverity() : 'error';
         $data = (method_exists($e, 'getData')) ? $e->getData() : [];
 
         $this->setHeader('Access-Control-Allow-Origin', '*'); //@todo check why this fails on nginx
@@ -189,6 +195,7 @@ class Phalcon extends Response
         $this->setJsonContent([
             'errors' => [
                 'type' => $httpMessage,
+                'severity' => $httpSeverity,
                 'identifier' => $identifier,
                 'message' => $e->getMessage(),
                 'trace' => !$config->app->production ? $e->getTraceAsString() : null,
@@ -197,12 +204,31 @@ class Phalcon extends Response
         ]);
 
         //Log Errors or Internal Servers Errors in Production
-        if ($e instanceof InternalServerErrorException ||
-            $e instanceof Error ||
-            $config->app->production) {
-            Di::getDefault()->getLog()->error($e->getMessage(), [$e->getTraceAsString()]);
+        if (($e instanceof InternalServerErrorException || $e instanceof Error) && (bool) envValue('SENTRY_PROJECT', 0)) {
+            $this->getDI()->get('log')->$httpSeverity($e->getMessage(), [$e->getTraceAsString()]);
         }
 
         return $this;
+    }
+
+    /**
+     * Is the current response a error response?
+     * Error response are anything over a 400 code.
+     *
+     * @return bool
+     */
+    public function isServerError() : bool
+    {
+        return $this->getStatusCode() >= 500;
+    }
+
+    /**
+     * Client errors.
+     *
+     * @return bool
+     */
+    public function isClientError() : bool
+    {
+        return $this->getStatusCode() > 400 && $this->getStatusCode() < 500;
     }
 }

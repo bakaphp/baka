@@ -139,4 +139,45 @@ class ModelTest extends PhalconUnitTestCase
         $this->assertIsArray($lead->getTableColumns());
         $this->assertArrayHasKey('id', array_flip($lead->getTableColumns()));
     }
+
+    public function testRawQueries()
+    {
+        $leads = Leads::findByRawSql(
+            'SELECT * FROM leads WHERE id > ?',
+            [
+                0
+            ]
+        );
+
+        $this->assertIsObject($leads);
+        $this->assertTrue($leads->count() > 0);
+    }
+
+    public function testQueryBuilderByGettingFirst()
+    {
+        $leads = Leads::queryBuilder()
+            ->addFrom(Leads::class)
+            ->where('id > :id:', ['id' => 0])
+            ->getQuery()
+            ->execute()
+            ->getFirst();
+
+        $this->assertIsObject($leads);
+        $this->assertTrue($leads instanceof Leads);
+    }
+
+    public function testQueryBuilderByGettingAll()
+    {
+        $leads = Leads::queryBuilder()
+            ->addFrom(Leads::class)
+            ->where('id > :id:', ['id' => 0])
+            ->limit(10)
+            ->getQuery()
+            ->execute();
+
+        $this->assertGreaterThan(0, $leads->count());
+        foreach ($leads as $lead) {
+            $this->assertTrue($lead instanceof Leads);
+        }
+    }
 }

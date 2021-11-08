@@ -101,6 +101,7 @@ class Swoole extends PhResponse
 
         $httpCode = (method_exists($e, 'getHttpCode')) ? $e->getHttpCode() : 404;
         $httpMessage = (method_exists($e, 'getHttpMessage')) ? $e->getHttpMessage() : 'Not Found';
+        $httpSeverity = (method_exists($e, 'getHttpSeverity')) ? $e->getHttpSeverity() : 'error';
         $data = (method_exists($e, 'getData')) ? $e->getData() : [];
 
         $this->setHeader('Access-Control-Allow-Origin', '*'); //@todo check why this fails on nginx
@@ -109,6 +110,7 @@ class Swoole extends PhResponse
         $this->setJsonContent([
             'errors' => [
                 'type' => $httpMessage,
+                'severity' => $httpSeverity,
                 'identifier' => $identifier,
                 'message' => $e->getMessage(),
                 'trace' => !$config->app->production ? $e->getTraceAsString() : null,
@@ -120,7 +122,7 @@ class Swoole extends PhResponse
         if ($e instanceof InternalServerErrorException ||
             $e instanceof Error ||
             $config->app->production) {
-            Di::getDefault()->getLog()->error($e->getMessage(), [$e->getTraceAsString()]);
+            Di::getDefault()->getLog()->$httpSeverity($e->getMessage(), [$e->getTraceAsString()]);
         }
 
         $this->resetDi();

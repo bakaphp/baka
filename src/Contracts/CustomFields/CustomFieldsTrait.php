@@ -185,9 +185,12 @@ trait CustomFieldsTrait
     public function getCustomField(string $name) : ?ModelInterface
     {
         return AppsCustomFields::findFirst([
-            'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
+            'conditions' => 'companies_id = :companies_id: 
+                            AND model_name = :model_name: 
+                            AND entity_id = :entity_id: 
+                            AND name = :name:',
             'bind' => [
-                'companies_id' => $this->companies_id,
+                'companies_id' => $this->companies_id ?? 0,
                 'model_name' => get_class($this),
                 'entity_id' => $this->getId(),
                 'name' => $name,
@@ -236,7 +239,10 @@ trait CustomFieldsTrait
         $this->createCustomField($name);
 
         return AppsCustomFields::updateOrCreate([
-            'conditions' => 'companies_id = :companies_id:  AND model_name = :model_name: AND entity_id = :entity_id: AND name = :name:',
+            'conditions' => 'companies_id = :companies_id: 
+                            AND model_name = :model_name: 
+                            AND entity_id = :entity_id: 
+                            AND name = :name:',
             'bind' => [
                 'companies_id' => $companyId,
                 'model_name' => get_class($this),
@@ -287,7 +293,9 @@ trait CustomFieldsTrait
             ]);
 
         $customField = CustomFields::findFirstOrCreate([
-            'conditions' => 'apps_id = :apps_id: AND name = :name: AND custom_fields_modules_id = :custom_fields_modules_id:',
+            'conditions' => 'apps_id = :apps_id: 
+                            AND name = :name: 
+                            AND custom_fields_modules_id = :custom_fields_modules_id:',
             'bind' => [
                 'apps_id' => $appsId,
                 'name' => $name,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Baka\Traits;
+namespace Baka\Contracts\Response;
 
 use Baka\Http\Response\Phalcon as Response;
 use function Baka\isSwooleServer;

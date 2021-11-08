@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace Baka\Queue;
 
-use function Baka\envValue;
 use Phalcon\Di;
-use Phalcon\Security\Random;
 use PhpAmqpLib\Message\AMQPMessage;
-use PhpAmqpLib\Wire\AMQPTable;
 
 class Queue
 {
     /**
      * default canvas queues system name.
      */
-    public const EVENTS = 'events';
-    public const NOTIFICATIONS = 'notifications';
-    public const JOBS = 'jobs';
-    public const EXCHANGE_PREFIX = 'baka_exchange';
-    public const EXCHANGE_TYPE = 'direct';
+    const EVENTS = 'events';
+    const NOTIFICATIONS = 'notifications';
+    const JOBS = 'jobs';
+    const EXCHANGE_PREFIX = 'baka_exchange';
+    const EXCHANGE_TYPE = 'direct';
+
 
     private static bool $passive = false;
     private static bool $durable = true;
@@ -94,6 +92,7 @@ class Queue
             auto_delete: false // The queue won't be deleted once the channel is closed.
             nowait: false // The client should not wait for a reply.
         */
+
         $channel->queue_declare(
             $name,
             self::getPassive(),
@@ -190,8 +189,7 @@ class Queue
         $channel = $queue->channel();
 
         $msg = new AMQPMessage($msg, [
-            'delivery_mode' => 2,
-            'message_id' => (new Random())->uuid(),
+            'delivery_mode' => 2
         ]);
 
         self::createFlow($name);
@@ -241,7 +239,7 @@ class Queue
             nowait: The client should not wait for a reply.
             callback: A PHP Callback.
         */
-        $channel->basic_consume($queueName, '', false, false, false, false, $callback);
+        $channel->basic_consume($queueName, '', false, true, false, false, $callback);
 
         while ($channel->is_consuming()) {
             $channel->wait();

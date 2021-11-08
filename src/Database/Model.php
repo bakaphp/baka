@@ -8,8 +8,11 @@ use Baka\Contracts\Database\ModelInterface;
 use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Database\Exception\ModelNotProcessedException;
 use function Baka\getShortClassName;
+use Phalcon\Di;
 use Phalcon\Mvc\Model as PhalconModel;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 use Phalcon\Mvc\Model\Relation;
+use Phalcon\Mvc\Model\Resultset\Simple;
 use Phalcon\Mvc\Model\ResultsetInterface;
 use Phalcon\Mvc\ModelInterface as PhalconModelInterface;
 use RuntimeException;
@@ -158,7 +161,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
      */
     public static function getByIdOrFail($id) : ModelInterface
     {
-        if (property_exists(new static, 'is_deleted')) {
+        if (property_exists(new static(), 'is_deleted')) {
             if ($record = static::findFirst([
                 'conditions' => 'id = :id:  and is_deleted = :is_deleted:',
                 'bind' => [
@@ -175,7 +178,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
         }
 
         throw new ModelNotFoundException(
-            getShortClassName(new static) . ' Record not found'
+            getShortClassName(new static()) . ' Record not found'
         );
     }
 
@@ -191,7 +194,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
         $result = static::findFirst($parameters);
         if (!$result) {
             throw new ModelNotFoundException(
-                getShortClassName(new static) . ' Record not found'
+                getShortClassName(new static()) . ' Record not found'
             );
         }
 
@@ -210,7 +213,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
         $results = static::find($parameters);
         if (!$results) {
             throw new ModelNotFoundException(
-                getShortClassName(new static) . ' Record not found'
+                getShortClassName(new static()) . ' Record not found'
             );
         }
 
@@ -275,7 +278,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
         $model = static::findFirst($parameters);
 
         if (!$model) {
-            $model = new static;
+            $model = new static();
             $model->assign($fields);
             $model->saveOrFail();
         }
@@ -294,7 +297,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
         $model = static::findFirst($parameters);
 
         if (!$model) {
-            $model = new static;
+            $model = new static();
         }
 
         $model->assign($fields);
@@ -398,7 +401,7 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
     protected function throwErrorMessages() : void
     {
         throw new ModelNotProcessedException(
-            getShortClassName(new static) . ' ' . current($this->getMessages())->getMessage()
+            getShortClassName(new static()) . ' ' . current($this->getMessages())->getMessage()
         );
     }
 
@@ -553,5 +556,40 @@ class Model extends PhalconModel implements ModelInterface, PhalconModelInterfac
                 }
             }
         }
+    }
+
+    /**
+     * Run raw query against the current model.
+     *
+     * @param string $sql
+     * @param array|null $params
+     *
+     * @return Simple
+     */
+    public static function findByRawSql(string $sql, ?array $params = null) : ResultsetInterface
+    {
+        // Base model
+        $model = new static();
+
+        // Execute the query
+        return new Simple(
+            null,
+            $model,
+            $model->getReadConnection()->query(
+                $sql,
+                $params
+            )
+        );
+    }
+
+    /**
+     * Return a query builder for the current model.
+     * So we can do more complicated queries.
+     *
+     * @return BuilderInterface
+     */
+    public static function queryBuilder() : BuilderInterface
+    {
+        return Di::getDefault()->get('modelsManager')->createBuilder();
     }
 }

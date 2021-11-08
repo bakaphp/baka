@@ -97,6 +97,8 @@ class QueryParser
 
     protected array $additionalQueryFields = [];
 
+    protected int $totalQueryGroups = 0;
+
     /**
      * Constructor.
      *
@@ -288,7 +290,7 @@ class QueryParser
     /**
      * Get offset.
      */
-    protected function getOffset() : int
+    protected function getOffset() : float
     {
         return round(($this->page - 1) * $this->limit);
     }
@@ -310,13 +312,14 @@ class QueryParser
             return '';
         }
 
+        $this->totalQueryGroups = count($comparisons);
         return  $this->transformNestedComparisons($comparisons);
     }
 
     /**
      * Convert nested property into sql comparisons.
      */
-    protected function transformNestedComparisons(array &$comparisons) : string
+    protected function transformNestedComparisons(array &$comparisons, bool $nested = false) : string
     {
         $operatorsPattern = '#(' . implode('|', array_keys(self::OPERATORS)) . ')#';
         $sql = '';
@@ -324,19 +327,33 @@ class QueryParser
 
         foreach ($comparisons as $index => $comparison) {
             if (count($comparison) != count($comparison, COUNT_RECURSIVE)) {
-                $sqlComparison = "{$this->transformNestedComparisons($comparison)}";
+                $sqlComparison = "{$this->transformNestedComparisons($comparison, true)}";
             } else {
                 $joiner = isset($comparisons[(int) $index - 1]) ? self::JOINERS[$comparisons[(int) $index - 1]['joiner']] : self::DEFAULT_JOINER;
 
+                $parsedComparison = [];
                 list(
                     $parsedComparison['field'],
                     $parsedComparison['operator'],
                     $parsedComparison['values']
-                    ) = preg_split($operatorsPattern, $comparison['comparison'], 2, PREG_SPLIT_DELIM_CAPTURE);
+                    ) = preg_split(
+                        $operatorsPattern,
+                        $comparison['comparison'],
+                        2,
+                        PREG_SPLIT_DELIM_CAPTURE
+                    );
 
                 $sqlComparison = $this->parseComparison($parsedComparison);
             }
 
+            /**
+             * Temp, if we are not a recursive call , than lets see if we have oder
+             * conditionals q=(group1),(group2),(group3)
+             * if so, than lets add the joiner of the group.
+             */
+            if (!$nested && $index > 0) {
+                $joiner = isset($comparison[0]['joiner']) ? self::JOINERS[$comparison[0]['joiner']] : self::DEFAULT_JOINER;
+            }
             $sql = $sql ? "{$sql} {$joiner} ({$sqlComparison})" : "({$sqlComparison})";
         }
 

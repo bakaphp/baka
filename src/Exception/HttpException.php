@@ -8,13 +8,14 @@ use Baka\Http\Response\Phalcon as Response;
 
 class HttpException extends Exception
 {
-    protected $httpCode = Response::BAD_REQUEST;
-    protected $httpMessage = 'Bad Request';
+    protected int $httpCode = Response::BAD_REQUEST;
+    protected string $httpMessage = 'Bad Request';
+    protected string $severity = 'notice';
 
     /**
      * Get the http status code of the exception.
      *
-     * @return string
+     * @return int
      */
     public function getHttpCode() : int
     {
@@ -29,5 +30,15 @@ class HttpException extends Exception
     public function getHttpMessage() : string
     {
         return $this->httpMessage;
+    }
+
+    /**
+     * Get the severity of the exception.
+     *
+     * @return string
+     */
+    public function getHttpSeverity() : string
+    {
+        return $this->severity;
     }
 }
