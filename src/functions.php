@@ -110,7 +110,7 @@ if (!function_exists('Baka\paymentGatewayIsActive')) {
      */
     function paymentGatewayIsActive() : bool
     {
-        return !empty(getenv('STRIPE_SECRET')) ? true : false;
+        return !empty(getenv('STRIPE_SECRET'));
     }
 }
 
@@ -118,12 +118,16 @@ if (!function_exists('Baka\isJson')) {
     /**
      * Given a string determine if its a json.
      *
-     * @param string $string
+     * @param string|null $string
      *
      * @return bool
      */
-    function isJson(string $string) : bool
+    function isJson(?string $string = null) : bool
     {
+        if ($string === null) {
+            return false;
+        }
+
         try {
             json_decode($string);
             return true;
@@ -155,7 +159,7 @@ if (!function_exists('Baka\isSwooleServer')) {
      */
     function isSwooleServer() : bool
     {
-        return defined('ENGINE') && ENGINE === 'SWOOLE' ? true : false;
+        return defined('ENGINE') && ENGINE === 'SWOOLE';
     }
 }
 
@@ -179,6 +183,6 @@ if (!function_exists('Baka\isCLI')) {
      */
     function isCLI() : bool
     {
-        return (php_sapi_name() === 'cli');
+        return php_sapi_name() === 'cli';
     }
 }

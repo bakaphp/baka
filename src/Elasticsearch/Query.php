@@ -140,7 +140,7 @@ class Query
      *
      * @param array $elasticResults
      *
-     * @return array
+     * @return SplFixedArray
      */
     private function getResultSet(array $elasticResults) : SplFixedArray
     {
