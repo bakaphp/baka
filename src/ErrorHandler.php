@@ -7,18 +7,10 @@ namespace Baka;
 use Monolog\Logger;
 use Phalcon\Config;
 
-/**
- * Class ErrorHandler.
- *
- * @package Canvas
- */
 class ErrorHandler
 {
-    /** @var Config */
-    private $config;
-
-    /** @var Logger */
-    private $logger;
+    private Config $config;
+    private Logger $logger;
 
     /**
      * ErrorHandler constructor.
