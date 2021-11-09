@@ -142,6 +142,18 @@ class Queue
         $channel->queue_bind($queueName, $exchange, $queueName);
     }
 
+    /**
+     * Creates all the exchanges and queues for a given name.
+     * Add a "nack handle" exchange that sends the failed jobs to a waiting queue with a "time to live" defined.
+     * After the time is up a "requeue handle" exchange sends the job back to the main queue.
+     * For future reference, read https://engineering.nanit.com/rabbitmq-retries-the-full-story-ca4cc6c5b493.
+     *
+     * @param string $queueName
+     * @param int $delay
+     * @param bool $force
+     *
+     * @return void
+     */
     public static function createFlowWithDelay(string $queueName, int $delay, bool $force = false) : void
     {
         $queue = Di::getDefault()->get('queue');
