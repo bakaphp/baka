@@ -6,25 +6,10 @@ use Baka\Database\Model;
 
 class Conditions extends Model
 {
-    /**
-     * @var int
-     */
-    public $custom_filter_id;
-
-    /**
-     * @var int
-     */
-    public $position;
-
-    /**
-     * @var string
-     */
-    public $conditional;
-
-    /**
-     * @var string
-     */
-    public $value;
+    public int $custom_filter_id;
+    public int $position;
+    public string $conditional;
+    public string $value;
 
     /**
      * Initialize some stuff.
@@ -34,6 +19,13 @@ class Conditions extends Model
     public function initialize() : void
     {
         $this->setSource('custom_filters_conditions');
-        $this->belongsTo('custom_filter_id', '\Baka\Database\CustomFilters\CustomFilters', 'id', ['alias' => 'filter']);
+        $this->belongsTo(
+            'custom_filter_id',
+            CustomFilters::class,
+            'id',
+            [
+                'alias' => 'filter'
+            ]
+        );
     }
 }
