@@ -28,7 +28,6 @@ trait CustomFilterTrait
      */
     public function processFilter(array $params) : CustomFilters
     {
-        //check system module?
         if (!array_key_exists('criterias', $params)) {
             throw new RuntimeException('Expected Criteria key on this array');
         }
@@ -36,8 +35,16 @@ trait CustomFilterTrait
         $customFilter = null;
         if (array_key_exists('id', $params)) {
             $customFilter = CustomFilters::findFirst([
-                'conditions' => 'id = ?0 and apps_id = ?1 and companies_id = ?2 and system_modules_id = ?3',
-                'bind' => [$params['id'], $params['apps_id'], $params['companies_id'], $params['system_modules_id']]
+                'conditions' => 'id = :id: 
+                                AND apps_id = :apps_id:
+                                AND companies_id = :companies_id:
+                                AND system_modules_id = :system_modules_id:',
+                'bind' => [
+                    'id' => $params['id'],
+                    'apps_id' => $params['apps_id'],
+                    'companies_id' => $params['companies_id'],
+                    'system_modules_id' => $params['system_modules_id']
+                ]
             ]);
         }
 
@@ -87,13 +94,14 @@ trait CustomFilterTrait
      */
     public function processCriterias(CustomFilters $filter, array $criterias) : bool
     {
-        for ($i = 0 ; $i < count($criterias) ; $i++) {
+        for ($i = 0; $i < count($criterias); $i++) {
+
             //not an array then you are the conditional between the 2 operators
             if (!is_array($criterias[$i])) {
                 continue;
             }
 
-            //the last element of a criteria doesnt have a conditonal
+            //the last element of a criteria doesn't have a conditional
             $conditional = array_key_exists($i + 1, $criterias) ? $criterias[$i + 1] : ' ';
 
             $customFilterCondition = new Conditions();

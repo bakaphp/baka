@@ -4,63 +4,20 @@ namespace Baka\Database\CustomFilters;
 
 use Baka\Database\Exception\Exception;
 use Baka\Database\Model;
+use Baka\Database\SystemModules;
 
 class CustomFilters extends Model
 {
-    /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var int
-     */
-    public $system_modules_id;
-
-    /**
-     * @var int
-     */
-    public $user_id;
-
-    /**
-     * @var int
-     */
-    public $apps_id;
-
-    /**
-     * @var int
-     */
-    public $companies_id;
-
-    /**
-     * @var int
-     */
-    public $companies_branch_id;
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $sequence_logic;
-
-    /**
-     * @var string
-     */
-    public $description;
-
-    /**
-     * @var int
-     */
-    public $total_conditions;
-
-    /**
-     * @var int
-     */
-    public $fields_type_id;
+    public int $system_modules_id;
+    public int $user_id;
+    public int $apps_id;
+    public int $companies_id;
+    public int $companies_branch_id;
+    public string $name;
+    public string $sequence_logic;
+    public string $description;
+    public int $total_conditions = 0;
+    public int $fields_type_id;
 
     /**
      * Initialize some stuff.
@@ -70,8 +27,22 @@ class CustomFilters extends Model
     public function initialize() : void
     {
         $this->setSource('custom_filters');
-        $this->hasMany('id', '\Baka\Database\CustomFilters\Conditions', 'custom_filter_id', ['alias' => 'conditions']);
-        $this->belongsTo('system_modules_id', '\Baka\Database\SystemModules', 'id', ['alias' => 'systemModule']);
+        $this->hasMany(
+            'id',
+            Conditions::class,
+            'custom_filter_id',
+            [
+                'alias' => 'conditions'
+            ]
+        );
+        $this->belongsTo(
+            'system_modules_id',
+            SystemModules::class,
+            'id',
+            [
+                'alias' => 'systemModule'
+            ]
+        );
     }
 
     /**
@@ -81,7 +52,7 @@ class CustomFilters extends Model
      *
      * @throws Exception
      */
-    public function getQuery() : string
+    public function getSql() : string
     {
         $conditions = $this->conditions;
 
@@ -89,9 +60,9 @@ class CustomFilters extends Model
             throw new Exception('No conditions found on this filter to generate a query');
         }
 
-        $module = new $this->systemModule->model_name;
+        $model = new $this->systemModule->model_name();
 
-        $sql = 'SELECT * FROM ' . $module->getSource() . ' WHERE ' . $this->sequence_logic;
+        $sql = 'SELECT * FROM ' . $model->getSource() . ' WHERE ' . $this->sequence_logic;
 
         $replace = [];
         foreach ($conditions as $condition) {

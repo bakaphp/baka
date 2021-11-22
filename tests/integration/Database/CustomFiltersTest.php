@@ -97,6 +97,6 @@ class CustomFiltersTest extends PhalconUnitTestCase
     {
         $customFilter = CustomFilters::findFirst();
 
-        $this->assertTrue(!empty($customFilter->getQuery()));
+        $this->assertTrue(!empty($customFilter->getSql()));
     }
 }
