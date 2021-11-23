@@ -16,30 +16,22 @@ class Blameable extends Behavior implements BehaviorInterface
      * @var array
      */
     protected array $excludeFields = [];
-
-    /**
-     * @var array
-     */
-    protected $snapshot;
-
-    /**
-     * @var array
-     */
-    protected $changedFields;
+    protected array $snapshot = [];
+    protected array $changedFields = [];
 
     /**
      * custom fields from the current model.
      *
      * @var array
      */
-    protected $customFields = [];
+    protected array $customFields = [];
 
     /**
      * Can update custom fields.
      *
      * @var bool
      */
-    protected $canUpdateCustomField = false;
+    protected bool $canUpdateCustomField = false;
 
     public const DELETE = 'D';
     public const UPDATE = 'U';
@@ -50,6 +42,8 @@ class Blameable extends Behavior implements BehaviorInterface
      *
      * @param string eventType
      * @param \Phalcon\Mvc\ModelInterface $model
+     *
+     * @return mixed
      */
     public function notify($eventType, ModelInterface $model)
     {
@@ -95,10 +89,10 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * Creates an Audit instance based on the current environment.
      *
-     * @param  string                      $type
-     * @param  \Phalcon\Mvc\ModelInterface $model
+     * @param  string $type
+     * @param  ModelInterface $model
      *
-     * @return Audit
+     * @return Audits
      */
     public function createAudit($type, ModelInterface $model) : Audits
     {
@@ -142,11 +136,11 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * Audits an CREATE operation.
      *
-     * @param  \Phalcon\Mvc\ModelInterface $model
+     * @param ModelInterface $model
      *
-     * @return bool
+     * @return Audits
      */
-    public function auditAfterCreate(ModelInterface $model)
+    public function auditAfterCreate(ModelInterface $model) : ?Audits
     {
         $audit = $this->createAudit(self::CREATE, $model);
         $fields = $model->getModelsMetaData()->getAttributes($model);
@@ -238,11 +232,11 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * Audits an UPDATE operation.
      *
-     * @param  \Phalcon\Mvc\ModelInterface $model
+     * @param ModelInterface $model
      *
      * @return bool
      */
-    public function auditAfterUpdate(ModelInterface $model)
+    public function auditAfterUpdate(ModelInterface $model) : bool
     {
         $changedFields = $this->changedFields;
         $originalData = $this->snapshot;
@@ -365,10 +359,10 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * Creates an Audit instance based on the current environment.
      *
-     * @param  string                      $type
-     * @param  \Phalcon\Mvc\ModelInterface $model
+     * @param  string $type
+     * @param  ModelInterface $model
      *
-     * @return Audit
+     * @return bool
      */
     public function auditBeforeDelete(ModelInterface $model) : bool
     {
@@ -405,6 +399,8 @@ class Blameable extends Behavior implements BehaviorInterface
 
     /**
      * @param ModelInterface $model
+     *
+     * @return void
      */
     protected function collectData(ModelInterface $model) : void
     {

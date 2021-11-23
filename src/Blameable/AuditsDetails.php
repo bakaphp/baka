@@ -21,6 +21,10 @@ class AuditsDetails extends Model
     public function initialize()
     {
         $this->setSource('audits_details');
-        $this->belongsTo('audits_id', '\Baka\Blameable\Audits', 'id');
+        $this->belongsTo(
+            'audits_id',
+            Audits::class,
+            'id'
+        );
     }
 }
