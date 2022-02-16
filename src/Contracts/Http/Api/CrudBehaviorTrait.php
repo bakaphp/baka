@@ -12,7 +12,7 @@ use Exception;
 use PDO;
 use PDOException;
 use Phalcon\Http\RequestInterface;
-use Phalcon\Http\Response;
+use Illuminate\Http\Response;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleRecords;
 use Phalcon\Mvc\ModelInterface;
 

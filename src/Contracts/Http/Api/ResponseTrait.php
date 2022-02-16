@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Baka\Contracts\Http\Api;
 
-use Phalcon\Http\Response;
+use Illuminate\Http\Response;
 use Phalcon\Mvc\Micro;
 
 trait ResponseTrait
@@ -30,9 +30,9 @@ trait ResponseTrait
         }
 
         //in order to use the current response instead of having to create a new object , this is needed for swoole servers
-        $this->response->setStatusCode($statusCode, $statusMessage);
-        $this->response->setContentType('application/vnd.api+json', 'UTF-8');
-        $this->response->setJsonContent($content);
+        // $this->response->setStatusCode($statusCode, $statusMessage);
+        // $this->response->setContentType('application/vnd.api+json', 'UTF-8');
+        // $this->response->setJsonContent($content);
 
         return $this->response;
     }

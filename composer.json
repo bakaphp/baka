@@ -2,7 +2,10 @@
     "name": "baka/baka",
     "description": "Baka Packages",
     "license": "MIT",
-    "keywords": ["Saas", "Canvas"],
+    "keywords": [
+        "Saas",
+        "Canvas"
+    ],
     "authors": [{
         "name": "mctekk",
         "email": "max@mctekk.com"
@@ -35,7 +38,7 @@
         "codeception/verify": "*",
         "fzaninotto/faker": "^1.9",
         "odan/phinx-migrations-generator": "^5",
-        "phpunit/phpunit": "^9.1", 
+        "phpunit/phpunit": "^9.1",
         "squizlabs/php_codesniffer": "1.*",
         "symfony/var-dumper": "^4.3@dev",
         "phalcon/ide-stubs": "^4.1"
