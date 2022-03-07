@@ -6,6 +6,7 @@ namespace Baka\Filesystem;
 
 use Phalcon\Http\Request\File;
 use Phalcon\Http\Request\FileInterface;
+use Exception;
 
 class Helper
 {
