@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Baka\Filesystem;
 
+use Exception;
 use Phalcon\Http\Request\File;
 use Phalcon\Http\Request\FileInterface;
-use Exception;
 
 class Helper
 {
