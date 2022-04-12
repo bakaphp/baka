@@ -36,7 +36,7 @@ class Helper
 
         $extension = $file->getExtension();
         //if the extension has a weird character something is up, so we find the extension by it mine type
-        if (!preg_match('/[^a-zA-Z0-9]+/', $extension)) {
+        if (preg_match('/[^a-zA-Z0-9]+/', $extension)) {
             //if we cant find it -_- well , for now use the default
             $extension = self::mime2ext($file->getType()) ?? $file->getExtension();
         }
