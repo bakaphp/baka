@@ -272,7 +272,7 @@ class Route
      */
     public function middlewares(...$middlewares) : self
     {
-        $this->middlewares = $middlewares;
+        $this->middlewares = array_merge($this->middlewares, $middlewares);
 
         return $this;
     }
