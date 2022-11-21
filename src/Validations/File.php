@@ -43,6 +43,7 @@ class File
                 'application/pdf',
                 'audio/mpeg3',
                 'audio/x-mpeg-3',
+                'application/json',
                 'application/x-zip-compressed',
                 'application/zip',
                 'application/octet-stream',
