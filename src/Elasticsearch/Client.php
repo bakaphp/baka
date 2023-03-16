@@ -34,7 +34,7 @@ class Client
             }
 
             if (empty(current($config['hosts']->toArray()))) {
-                return ClientBuilder::create()->setElasticCloudId($config['cloudId'])->setApiKey($config['cloudApiKeyId'],$config['cloudApiKey'])->build();
+                return ClientBuilder::create()->setElasticCloudId($config['cloudId'])->setApiKey($config['cloudApiKeyId'], $config['cloudApiKey'])->build();
             }
 
             return ClientBuilder::create()->setHosts($config['hosts']->toArray())->build();

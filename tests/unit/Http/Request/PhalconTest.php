@@ -6,9 +6,9 @@ namespace Baka\Test\Unit\Http\Request;
 
 use Baka\Http\Request\Phalcon;
 use Baka\Test\Support\Http\PhpStream;
+use PhalconUnitTestCase;
 use function file_put_contents;
 use function json_encode;
-use PhalconUnitTestCase;
 use function stream_wrapper_register;
 use function stream_wrapper_unregister;
 

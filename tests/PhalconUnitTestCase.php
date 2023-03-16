@@ -1,7 +1,6 @@
 <?php
 
 use Baka\Database\Apps;
-use function Baka\envValue;
 use Baka\TestCase\PhalconUnit;
 use Elasticsearch\ClientBuilder;
 use Phalcon\Cache;
@@ -13,6 +12,7 @@ use Phalcon\Mvc\View\Simple;
 use Phalcon\Session\Adapter\Redis;
 use Phalcon\Storage\SerializerFactory;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use function Baka\envValue;
 
 class PhalconUnitTestCase extends PhalconUnit
 {

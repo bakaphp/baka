@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Baka\Validations;
 
-use function Baka\isCLI;
 use Baka\Validation as CanvasValidation;
 use Phalcon\Di;
 use Phalcon\Http\Request\FileInterface;
-
 use Phalcon\Validation\Validator\File as FileValidator;
+
+use function Baka\isCLI;
 
 class File
 {
