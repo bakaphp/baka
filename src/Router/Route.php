@@ -2,11 +2,11 @@
 
 namespace Baka\Router;
 
-use function array_intersect;
 use Baka\Router\Parsers\RouteParser;
 use Baka\Router\Utils\Helper;
 use Baka\Router\Utils\Http;
 use Baka\Support\Str;
+use function array_intersect;
 
 class Route
 {

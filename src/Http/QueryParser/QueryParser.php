@@ -336,12 +336,12 @@ class QueryParser
                     $parsedComparison['field'],
                     $parsedComparison['operator'],
                     $parsedComparison['values']
-                    ) = preg_split(
-                        $operatorsPattern,
-                        $comparison['comparison'],
-                        2,
-                        PREG_SPLIT_DELIM_CAPTURE
-                    );
+                ) = preg_split(
+                    $operatorsPattern,
+                    $comparison['comparison'],
+                    2,
+                    PREG_SPLIT_DELIM_CAPTURE
+                );
 
                 $sqlComparison = $this->parseComparison($parsedComparison);
             }

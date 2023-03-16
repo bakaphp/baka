@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Baka;
 
-use function function_exists;
-use function getenv;
 use JsonException;
 use ReflectionClass;
+use function function_exists;
+use function getenv;
 
 if (!function_exists('Baka\basePath')) {
     /**

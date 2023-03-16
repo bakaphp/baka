@@ -2,10 +2,10 @@
 
 namespace Baka\TestCase;
 
-use function Baka\appPath;
 use Phalcon\Di;
 use Phinx\Console\PhinxApplication;
 use Phinx\Wrapper\TextWrapper;
+use function Baka\appPath;
 
 class Phinx
 {

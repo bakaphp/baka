@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Baka\Http\Response;
 
-use function Baka\envValue;
 use Baka\Http\Exception\InternalServerErrorException;
 use Baka\Http\Request\Phalcon as Request;
 use Error;
 use Phalcon\Http\Response;
 use Throwable;
+use function Baka\envValue;
 
 class Phalcon extends Response
 {

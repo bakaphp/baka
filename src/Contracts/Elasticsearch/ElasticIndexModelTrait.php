@@ -7,8 +7,8 @@ namespace Baka\Contracts\Elasticsearch;
 use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Elasticsearch\Models\Documents;
 use Baka\Elasticsearch\Query;
-use function Baka\getShortClassName;
 use Phalcon\Mvc\Model\Query\Builder;
+use function Baka\getShortClassName;
 
 trait ElasticIndexModelTrait
 {

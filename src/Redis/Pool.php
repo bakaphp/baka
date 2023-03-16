@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Baka\Redis;
 
-use function Baka\envValue;
 use Redis;
 use RuntimeException;
 use Swoole\Coroutine\Channel;
+use function Baka\envValue;
 
 class Pool
 {

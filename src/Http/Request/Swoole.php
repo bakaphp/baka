@@ -7,7 +7,6 @@
 namespace Baka\Http\Request;
 
 use Baka\Contracts\Request\RequestJwtTrait;
-use function Baka\isJson;
 use Exception;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\FactoryDefault;
@@ -18,6 +17,7 @@ use Phalcon\Http\Request\File;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Text;
 use swoole_http_request;
+use function Baka\isJson;
 
 /**
  * Class SwooleRequest.

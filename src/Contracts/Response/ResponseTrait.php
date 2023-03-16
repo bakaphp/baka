@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Baka\Contracts\Response;
 
 use Baka\Http\Response\Phalcon as Response;
-use function Baka\isSwooleServer;
 use Phalcon\Mvc\Micro;
+use function Baka\isSwooleServer;
 
 /**
  * Trait ResponseTrait.

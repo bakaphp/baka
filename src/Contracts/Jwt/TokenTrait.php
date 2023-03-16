@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Baka\Contracts\Jwt;
 
-use function Baka\envValue;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Token;
+use function Baka\envValue;
 use function time;
 
 /**
