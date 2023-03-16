@@ -4,9 +4,9 @@
  * Setup autoloading.
  */
 
-use function Baka\appPath;
 use Dotenv\Dotenv;
 use Phalcon\Loader;
+use function Baka\appPath;
 
 require __DIR__.'/../src/functions.php';
 require __DIR__ . '/PhalconUnitTestCase.php';

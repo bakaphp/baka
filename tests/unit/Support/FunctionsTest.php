@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Baka\Test\Unit\Support;
 
+use Baka\Test\Support\Models\Leads;
+use PhalconUnitTestCase;
+use ReflectionClass;
 use function Baka\basePath;
 use function Baka\envValue;
 use function Baka\getShortClassName;
 use function Baka\isJson;
-use Baka\Test\Support\Models\Leads;
-use PhalconUnitTestCase;
-use ReflectionClass;
 
 class FunctionsTest extends PhalconUnitTestCase
 {

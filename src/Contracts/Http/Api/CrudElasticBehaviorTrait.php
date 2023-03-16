@@ -5,10 +5,10 @@ namespace Baka\Contracts\Http\Api;
 
 use Baka\Database\Exception\ModelNotFoundException;
 use Baka\Elasticsearch\Models\Documents;
-use function Baka\getShortClassName;
 use Baka\Http\QueryParser\QueryParser;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Http\Response;
+use function Baka\getShortClassName;
 
 trait CrudElasticBehaviorTrait
 {

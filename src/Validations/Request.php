@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Baka\Validations;
 
-use function Baka\appPath;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory;
+use function Baka\appPath;
 
 class Request
 {

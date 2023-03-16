@@ -331,7 +331,7 @@ class Blameable extends Behavior implements BehaviorInterface
             foreach ($model->customFields as $field => $value) {
                 if ((array_key_exists($field, $oldCustomFields)
                         && $oldCustomFields[$field] != $value && !empty($value))
-                    ) {
+                ) {
                     $auditDetail = new AuditsDetails();
                     $auditDetail->field_name = $field;
                     $auditDetail->old_value = $oldCustomFields[$field] ?? '';

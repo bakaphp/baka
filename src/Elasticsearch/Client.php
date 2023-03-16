@@ -33,8 +33,11 @@ class Client
                 throw new Exception('Please add the elasticSearch configuration.');
             }
 
-            // Instance the Elasticsearch client.
-            self::$instance = ClientBuilder::create()->setHosts($config['hosts']->toArray())->build();
+            if (empty(current($config['hosts']->toArray()))) {
+                return ClientBuilder::create()->setElasticCloudId($config['cloudId'])->setApiKey($config['cloudApiKeyId'], $config['cloudApiKey'])->build();
+            }
+
+            return ClientBuilder::create()->setHosts($config['hosts']->toArray())->build();
         }
 
         return self::$instance;

@@ -2,8 +2,8 @@
 
 namespace Baka\Router;
 
-use function array_push;
 use Baka\Router\Utils\Helper;
+use function array_push;
 
 class RouteGroup
 {

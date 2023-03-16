@@ -95,7 +95,6 @@ trait CustomFilterTrait
     public function processCriterias(CustomFilters $filter, array $criterias) : bool
     {
         for ($i = 0; $i < count($criterias); $i++) {
-
             //not an array then you are the conditional between the 2 operators
             if (!is_array($criterias[$i])) {
                 continue;
