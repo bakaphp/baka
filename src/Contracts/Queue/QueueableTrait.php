@@ -16,6 +16,20 @@ trait QueueableTrait
     public string $queue = Queue::JOBS;
 
     /**
+     * whether to retry the job on fail or not.
+     *
+     * @var bool
+     */
+    public bool $useRetry = false;
+
+    /**
+     * Max quantity of retries for each job.
+     *
+     * @var bool
+     */
+    public int $maxRetryQuantity = 0;
+
+    /**
      * Set the desired queue for the job.
      *
      * @param  string $queue
